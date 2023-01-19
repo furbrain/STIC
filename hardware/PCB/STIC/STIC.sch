@@ -35,8 +35,6 @@ Wire Wire Line
 Wire Wire Line
 	5500 3400 5900 3400
 Wire Wire Line
-	3850 2800 3500 2800
-Wire Wire Line
 	3850 2950 3500 2950
 Wire Wire Line
 	3850 3100 3500 3100
@@ -67,12 +65,6 @@ F 3 "~" H 2890 2300 50  0001 C CNN
 	1    2900 2350
 	-1   0    0    1   
 $EndComp
-Wire Wire Line
-	3300 2650 3300 2350
-Wire Wire Line
-	3300 2350 3100 2350
-Wire Wire Line
-	3300 2650 3850 2650
 $Comp
 L Device:Q_PMOS_GSD Q1
 U 1 1 634CB673
@@ -84,9 +76,9 @@ F 3 "~" H 6650 2700 50  0001 C CNN
 	1    6650 2700
 	0    1    1    0   
 $EndComp
-Text Label 3500 3400 2    50   ~ 0
+Text Label 3500 2650 2    50   ~ 0
 PERIPH_EN
-Text Label 3500 2800 2    50   ~ 0
+Text Label 3500 2950 2    50   ~ 0
 BUTTON
 Text Label 5900 3100 0    50   ~ 0
 Tx
@@ -143,7 +135,7 @@ Wire Wire Line
 	8750 2250 8550 2250
 Text Label 8550 2250 2    50   ~ 0
 BUTTON
-Text Label 3500 2950 2    50   ~ 0
+Text Label 3500 3100 2    50   ~ 0
 LED2_R
 Text Label 5900 3400 0    50   ~ 0
 LED2_G
@@ -155,7 +147,7 @@ NoConn ~ 4800 2050
 NoConn ~ 4950 2050
 Text Label 3500 3250 2    50   ~ 0
 SDA
-Text Label 3500 3100 2    50   ~ 0
+Text Label 3500 3400 2    50   ~ 0
 SCL
 Wire Wire Line
 	8750 2350 8550 2350
@@ -468,4 +460,12 @@ F 3 "" H 8750 2150 50  0001 C CNN
 	1    8750 2150
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	3850 2650 3500 2650
+Wire Wire Line
+	3850 2800 3650 2800
+Wire Wire Line
+	3650 2800 3650 2350
+Wire Wire Line
+	3100 2350 3650 2350
 $EndSCHEMATC
