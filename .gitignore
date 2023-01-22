@@ -127,3 +127,21 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# freecad backups, 3d models, printer files, dxfs
+*.FCStd1
+*.stl
+*.fpp
+*.dxf
+
+# gerber files and gcode files
+gcode/
+fab/
+
+# kicad backup files
+*pcb-bak
+*sch-bak
+fp-info-cache
+
+# pdfs in docs
+/docs/*.pdf
