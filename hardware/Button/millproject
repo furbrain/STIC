@@ -1,0 +1,60 @@
+# files
+
+drill=./fab/Button.drl
+front=./fab/Button-F_Cu.gtl
+#back=./fab/Button-B_Cu.gbl
+outline=./fab/Button-Edge_Cuts.gm1
+output-dir=./gcode
+
+# sides
+drill-side=front
+cut-side=back
+
+#tiling
+tile-x=1
+tile-y=1
+
+# output types
+metric=true
+metricoutput=true
+mirror-absolute=true
+
+# command set
+nog64=true
+nog81=true
+nog91-1=true
+
+#Etching
+optimise=true
+tolerance=0.0100
+vectorial=false
+zchange=1.5000
+zchange-absolute=false
+zero-start=true
+zsafe=1.5000
+extra-passes=1
+mill-feed=100
+mill-speed=10000
+offset=0.2000
+voronoi=false
+zwork=-0.0800
+
+# drilling
+milldrill-diameter=1.0000
+drill-feed=50
+drill-speed=10000
+milldrill=true
+onedrill=true
+zdrill=-2.5000
+
+# outline
+cutter-diameter=1.0000
+bridges=0.5000
+bridgesnum=2
+cut-feed=100
+cut-infeed=0.8000
+cut-speed=10000
+fill-outline=true
+zbridges=-0.0000
+zcut=-2.0000
+
