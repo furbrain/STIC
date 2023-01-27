@@ -8,7 +8,7 @@ output-dir=./gcode
 
 # sides
 drill-side=front
-cut-side=back
+cut-side=front
 
 #tiling
 tile-x=1

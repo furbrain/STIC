@@ -34,7 +34,7 @@
   )
 
   (setup
-    (last_trace_width 1)
+    (last_trace_width 0.25)
     (user_trace_width 1)
     (trace_clearance 0.2)
     (zone_clearance 0.508)
@@ -65,7 +65,7 @@
     (visible_elements FFFFFF7F)
     (pcbplotparams
       (layerselection 0x010a0_7fffffff)
-      (usegerberextensions false)
+      (usegerberextensions true)
       (usegerberattributes false)
       (usegerberadvancedattributes false)
       (creategerberjobfile false)
@@ -280,7 +280,7 @@
   )
 
   (module Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Horizontal (layer F.Cu) (tedit 5A19A42D) (tstamp 63CDB2E2)
-    (at 153.86 88.33 180)
+    (at 153.36 88.23 180)
     (descr "Through hole angled socket strip, 1x06, 2.54mm pitch, 8.51mm socket length, single row (from Kicad 4.0.7), script generated")
     (tags "Through hole angled socket strip THT 1x06 2.54mm single row")
     (path /63C7BE05)
