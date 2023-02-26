@@ -1,6 +1,7 @@
 # Write your code here :-)
 """Example for Seeed Studio XIAO nRF52840. Blinks the built-in LED."""
 import time
+
 import board
 import digitalio
 import pwmio

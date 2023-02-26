@@ -1,12 +1,13 @@
+import time
+
+import adafruit_displayio_ssd1306
+import board
 import busio
 import digitalio
-import board
-import time
-import rm3100
 import displayio
-import adafruit_displayio_ssd1306
-from adafruit_display_text import label
+import rm3100
 import terminalio
+from adafruit_display_text import label
 
 WIDTH=64
 HEIGHT=48
