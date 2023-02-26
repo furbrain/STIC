@@ -60,7 +60,7 @@ U 1 1 634C8FE1
 P 2900 2350
 F 0 "LS1" H 2863 1933 50  0000 C CNN
 F 1 "Speaker" H 2863 2024 50  0000 C CNN
-F 2 "Buzzer_Beeper:Buzzer_D14mm_H7mm_P10mm" H 2900 2150 50  0001 C CNN
+F 2 "Buzzer_Beeper:Buzzer_15x7.5RM7.6" H 2900 2150 50  0001 C CNN
 F 3 "~" H 2890 2300 50  0001 C CNN
 	1    2900 2350
 	-1   0    0    1   
