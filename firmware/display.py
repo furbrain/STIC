@@ -7,6 +7,7 @@ import digitalio
 import displayio
 import rm3100
 import terminalio
+import seeed_xiao_nrf52840
 from adafruit_display_text import label
 
 WIDTH=64
