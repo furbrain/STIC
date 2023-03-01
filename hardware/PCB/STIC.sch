@@ -135,9 +135,9 @@ Wire Wire Line
 	8750 2250 8550 2250
 Text Label 8550 2250 2    50   ~ 0
 BUTTON
-Text Label 3500 3100 2    50   ~ 0
-LED2_R
 Text Label 5900 3400 0    50   ~ 0
+LED2_R
+Text Label 3500 3100 2    50   ~ 0
 LED2_G
 Text Label 5900 3250 0    50   ~ 0
 LED2_B
@@ -155,9 +155,9 @@ Wire Wire Line
 	8750 2450 8550 2450
 Wire Wire Line
 	8750 2550 8550 2550
-Text Label 8550 2350 2    50   ~ 0
-LED2_R
 Text Label 8550 2450 2    50   ~ 0
+LED2_R
+Text Label 8550 2350 2    50   ~ 0
 LED2_G
 Text Label 8550 2550 2    50   ~ 0
 LED2_B

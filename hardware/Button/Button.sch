@@ -34,25 +34,14 @@ F 13 "" H 6000 2550 50  0001 L CNN "Mouser Testing Price/Stock"
 	1    4750 3550
 	1    0    0    -1  
 $EndComp
-Text Label 8050 3850 2    50   ~ 0
+Text Label 8300 3550 2    50   ~ 0
 BUTTON
-Text Label 8050 3650 2    50   ~ 0
+Text Label 8300 3750 2    50   ~ 0
 LED2_R
-Text Label 8050 3750 2    50   ~ 0
+Text Label 8300 3650 2    50   ~ 0
 LED2_G
-Text Label 8250 3550 2    50   ~ 0
+Text Label 8300 3850 2    50   ~ 0
 LED2_B
-$Comp
-L Connector_Generic:Conn_01x06 J2
-U 1 1 63C7BE05
-P 8450 3650
-F 0 "J2" H 8530 3692 50  0000 L CNN
-F 1 "Button connector" H 8530 3601 50  0000 L CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Horizontal" H 8450 3650 50  0001 C CNN
-F 3 "~" H 8450 3650 50  0001 C CNN
-	1    8450 3650
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:GND #PWR0103
 U 1 1 63C9D06D
@@ -75,86 +64,99 @@ F 3 "" H 8250 3450 50  0001 C CNN
 	1    8250 3450
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	6600 3450 6600 3850
-Wire Wire Line
-	6600 3850 6150 3850
-Connection ~ 8250 3450
-Wire Wire Line
-	6450 3950 6450 3650
-Wire Wire Line
-	6450 3650 6150 3650
-Connection ~ 8250 3950
-Wire Wire Line
-	6450 3950 8250 3950
-$Comp
-L Device:R R3
-U 1 1 63CD680C
-P 7600 3650
-F 0 "R3" V 7500 3500 50  0000 C CNN
-F 1 "150R" V 7500 3700 50  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal" V 7485 3650 50  0001 C CNN
-F 3 "~" H 7600 3650 50  0001 C CNN
-	1    7600 3650
-	0    1    1    0   
-$EndComp
 $Comp
 L Device:R R2
-U 1 1 63CDB348
-P 7300 3750
-F 0 "R2" V 7200 3600 50  0000 C CNN
-F 1 "150R" V 7200 3800 50  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal" V 7185 3750 50  0001 C CNN
-F 3 "~" H 7300 3750 50  0001 C CNN
-	1    7300 3750
+U 1 1 63CD680C
+P 7350 3750
+F 0 "R2" V 7250 3650 50  0000 C CNN
+F 1 "150R" V 7250 3850 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal" V 7235 3750 50  0001 C CNN
+F 3 "~" H 7350 3750 50  0001 C CNN
+	1    7350 3750
 	0    1    1    0   
 $EndComp
 $Comp
 L Device:R R1
 U 1 1 63CDB62E
-P 7100 3550
-F 0 "R1" V 7000 3400 50  0000 C CNN
-F 1 "150R" V 7000 3600 50  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal" V 6985 3550 50  0001 C CNN
-F 3 "~" H 7100 3550 50  0001 C CNN
-	1    7100 3550
+P 7650 3850
+F 0 "R1" V 7550 3750 50  0000 C CNN
+F 1 "150R" V 7550 3950 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal" V 7535 3850 50  0001 C CNN
+F 3 "~" H 7650 3850 50  0001 C CNN
+	1    7650 3850
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	7450 3750 8250 3750
-Wire Wire Line
-	7150 3750 6150 3750
-Wire Wire Line
-	7450 3650 6850 3650
-Wire Wire Line
-	6850 3650 6850 3050
-Wire Wire Line
-	6850 3050 4350 3050
-Wire Wire Line
-	4350 3050 4350 3750
-Wire Wire Line
-	4350 3750 4750 3750
-Wire Wire Line
-	7750 3650 8250 3650
+	7500 3750 8300 3750
 NoConn ~ 4750 3550
+$Comp
+L Connector_Generic:Conn_01x06 J2
+U 1 1 63C7BE05
+P 8500 3650
+F 0 "J2" H 8580 3692 50  0000 L CNN
+F 1 "Button connector" H 8580 3601 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Horizontal" H 8500 3650 50  0001 C CNN
+F 3 "~" H 8500 3650 50  0001 C CNN
+	1    8500 3650
+	1    0    0    -1  
+$EndComp
+Connection ~ 8250 3450
 Wire Wire Line
-	6750 3850 8250 3850
+	8250 3450 8300 3450
+Connection ~ 8250 3950
 Wire Wire Line
-	6750 3850 6750 3250
+	8250 3950 8300 3950
 Wire Wire Line
-	6750 3250 6150 3250
+	6500 3950 8250 3950
 Wire Wire Line
-	6150 3250 6150 3550
+	6650 3450 8250 3450
 Wire Wire Line
-	6600 3450 8250 3450
+	6500 3950 6500 3650
 Wire Wire Line
-	8250 3550 7250 3550
+	6500 3650 6150 3650
 Wire Wire Line
-	6950 3550 6950 4050
+	6650 3450 6650 3850
 Wire Wire Line
-	6950 4050 4550 4050
+	6650 3850 6150 3850
 Wire Wire Line
-	4550 4050 4550 3650
+	6150 3550 8300 3550
 Wire Wire Line
-	4550 3650 4750 3650
+	6800 3650 6800 3750
+Wire Wire Line
+	6800 3750 6150 3750
+Wire Wire Line
+	6800 3650 7500 3650
+Wire Wire Line
+	7200 3750 6950 3750
+Wire Wire Line
+	6950 3750 6950 4100
+Wire Wire Line
+	6950 4100 4750 4100
+Wire Wire Line
+	4750 4100 4750 3750
+Wire Wire Line
+	7500 3850 7200 3850
+Wire Wire Line
+	7200 3850 7200 4200
+Wire Wire Line
+	7200 4200 4650 4200
+Wire Wire Line
+	4650 4200 4650 3650
+Wire Wire Line
+	4650 3650 4750 3650
+Wire Wire Line
+	7800 3850 8300 3850
+Wire Wire Line
+	7800 3650 8300 3650
+$Comp
+L Device:R R3
+U 1 1 63CDB348
+P 7650 3650
+F 0 "R3" V 7550 3500 50  0000 C CNN
+F 1 "150R" V 7550 3700 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal" V 7535 3650 50  0001 C CNN
+F 3 "~" H 7650 3650 50  0001 C CNN
+	1    7650 3650
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC
