@@ -133,6 +133,8 @@ dmypy.json
 *.stl
 *.fpp
 *.dxf
+*.lbrn2
+*.lbrn
 
 # gerber files and gcode files
 gcode/
