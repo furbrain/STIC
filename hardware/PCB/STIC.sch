@@ -33,8 +33,6 @@ Wire Wire Line
 Wire Wire Line
 	5500 3250 5900 3250
 Wire Wire Line
-	5500 3400 5900 3400
-Wire Wire Line
 	3850 2950 3500 2950
 Wire Wire Line
 	3850 3100 3500 3100
@@ -43,218 +41,57 @@ Wire Wire Line
 Wire Wire Line
 	3850 3400 3500 3400
 $Comp
-L OPL_Connector:DIP-JST-2P-2.0 J1
-U 1 1 634C7BE7
-P 8850 4900
-F 0 "J1" H 9128 4942 45  0000 L CNN
-F 1 "DIP-JST-2P-2.0" H 9128 4858 45  0000 L CNN
-F 2 "Connector_JST:JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal" H 8850 4900 50  0001 C CNN
-F 3 "" H 8850 4900 50  0001 C CNN
-F 4 "320110049" H 8880 5050 20  0001 C CNN "SKU"
-	1    8850 4900
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:Speaker LS1
 U 1 1 634C8FE1
-P 2900 2350
-F 0 "LS1" H 2863 1933 50  0000 C CNN
-F 1 "Speaker" H 2863 2024 50  0000 C CNN
-F 2 "Buzzer_Beeper:Buzzer_15x7.5RM7.6" H 2900 2150 50  0001 C CNN
-F 3 "~" H 2890 2300 50  0001 C CNN
-	1    2900 2350
+P 2100 6500
+F 0 "LS1" H 2063 6083 50  0000 C CNN
+F 1 "Speaker" H 2063 6174 50  0000 C CNN
+F 2 "KiCad_imports:SPKR_AST1240MLTRQ" H 2100 6300 50  0001 C CNN
+F 3 "~" H 2090 6450 50  0001 C CNN
+	1    2100 6500
 	-1   0    0    1   
 $EndComp
-$Comp
-L Device:Q_PMOS_GSD Q1
-U 1 1 634CB673
-P 6650 2700
-F 0 "Q1" V 6899 2700 50  0000 C CNN
-F 1 "Q_PMOS_GSD" V 6990 2700 50  0000 C CNN
-F 2 "Package_TO_SOT_SMD:TSOT-23_HandSoldering" H 6850 2800 50  0001 C CNN
-F 3 "~" H 6650 2700 50  0001 C CNN
-	1    6650 2700
-	0    1    1    0   
-$EndComp
-Text Label 3500 2650 2    50   ~ 0
+Text Label 3500 3250 2    50   ~ 0
 PERIPH_EN
 Text Label 3500 2950 2    50   ~ 0
-BUTTON
-Text Label 5900 3100 0    50   ~ 0
+BUTTON_A
+Text Label 3500 2800 2    50   ~ 0
 Tx
-Text Label 5900 2950 0    50   ~ 0
+Text Label 3500 2650 2    50   ~ 0
 Rx
-$Comp
-L power:+3V3 #PWR0101
-U 1 1 634D0DE5
-P 7400 2800
-F 0 "#PWR0101" H 7400 2650 50  0001 C CNN
-F 1 "+3V3" H 7415 2973 50  0000 C CNN
-F 2 "" H 7400 2800 50  0001 C CNN
-F 3 "" H 7400 2800 50  0001 C CNN
-	1    7400 2800
-	1    0    0    -1  
-$EndComp
-Text Label 6650 2300 1    50   ~ 0
-PERIPH_EN
-Wire Wire Line
-	6650 2500 6650 2300
 NoConn ~ 5900 2500
 Wire Wire Line
-	6850 2800 7400 2800
-Wire Wire Line
-	6050 2650 6050 2400
-Wire Wire Line
-	6050 2400 6400 2400
-Wire Wire Line
 	5500 2650 6050 2650
-$Comp
-L power:GND #PWR0102
-U 1 1 634D92EC
-P 6400 2400
-F 0 "#PWR0102" H 6400 2150 50  0001 C CNN
-F 1 "GND" H 6405 2227 50  0000 C CNN
-F 2 "" H 6400 2400 50  0001 C CNN
-F 3 "" H 6400 2400 50  0001 C CNN
-	1    6400 2400
-	1    0    0    -1  
-$EndComp
 NoConn ~ 4800 3800
-$Comp
-L power:GND #PWR0105
-U 1 1 6350236B
-P 8750 4950
-F 0 "#PWR0105" H 8750 4700 50  0001 C CNN
-F 1 "GND" H 8755 4777 50  0000 C CNN
-F 2 "" H 8750 4950 50  0001 C CNN
-F 3 "" H 8750 4950 50  0001 C CNN
-	1    8750 4950
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	8750 2250 8550 2250
-Text Label 8550 2250 2    50   ~ 0
-BUTTON
-Text Label 5900 3400 0    50   ~ 0
-LED2_R
 Text Label 3500 3100 2    50   ~ 0
-LED2_G
-Text Label 5900 3250 0    50   ~ 0
-LED2_B
+BUTTON_B
+Text Label 3500 2500 2    50   ~ 0
+LASER_EN
 NoConn ~ 4500 2050
 NoConn ~ 4650 2050
 NoConn ~ 4800 2050
 NoConn ~ 4950 2050
-Text Label 3500 3250 2    50   ~ 0
+Text Label 5900 3400 0    50   ~ 0
 SDA
-Text Label 3500 3400 2    50   ~ 0
+Text Label 5900 3250 0    50   ~ 0
 SCL
-Wire Wire Line
-	8750 2350 8550 2350
-Wire Wire Line
-	8750 2450 8550 2450
-Wire Wire Line
-	8750 2550 8550 2550
-Text Label 8550 2450 2    50   ~ 0
-LED2_R
-Text Label 8550 2350 2    50   ~ 0
-LED2_G
-Text Label 8550 2550 2    50   ~ 0
-LED2_B
-Wire Wire Line
-	5500 2800 6250 2800
 Wire Wire Line
 	4600 3800 4600 3950
 $Comp
 L Device:R R1
 U 1 1 6354E502
-P 3450 2250
-F 0 "R1" V 3243 2250 50  0000 C CNN
-F 1 "1k" V 3334 2250 50  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 3380 2250 50  0001 C CNN
-F 3 "~" H 3450 2250 50  0001 C CNN
-	1    3450 2250
+P 2650 6400
+F 0 "R1" V 2443 6400 50  0000 C CNN
+F 1 "1k" V 2534 6400 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 2580 6400 50  0001 C CNN
+F 3 "~" H 2650 6400 50  0001 C CNN
+	1    2650 6400
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	3850 2500 3750 2500
+	2950 6400 2800 6400
 Wire Wire Line
-	3750 2500 3750 2250
-Wire Wire Line
-	3750 2250 3600 2250
-Wire Wire Line
-	3300 2250 3100 2250
-$Comp
-L Connector_Generic:Conn_01x08 J4
-U 1 1 63C70FB4
-P 8950 3950
-F 0 "J4" H 9030 3942 50  0000 L CNN
-F 1 "Laser B" H 9030 3851 50  0000 L CNN
-F 2 "Connector_Wuerth:Wuerth_WR-WTB_64800811622_1x08_P1.50mm_Vertical" H 8950 3950 50  0001 C CNN
-F 3 "~" H 8950 3950 50  0001 C CNN
-	1    8950 3950
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	8750 3250 8550 3250
-Wire Wire Line
-	8750 3350 8550 3350
-Wire Wire Line
-	8750 4150 8550 4150
-Wire Wire Line
-	8750 4350 8550 4350
-$Comp
-L power:+3V3 #PWR04
-U 1 1 63C77D0F
-P 8550 4150
-F 0 "#PWR04" H 8550 4000 50  0001 C CNN
-F 1 "+3V3" H 8565 4323 50  0000 C CNN
-F 2 "" H 8550 4150 50  0001 C CNN
-F 3 "" H 8550 4150 50  0001 C CNN
-	1    8550 4150
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR05
-U 1 1 63C78777
-P 8550 4350
-F 0 "#PWR05" H 8550 4100 50  0001 C CNN
-F 1 "GND" H 8555 4177 50  0000 C CNN
-F 2 "" H 8550 4350 50  0001 C CNN
-F 3 "" H 8550 4350 50  0001 C CNN
-	1    8550 4350
-	1    0    0    -1  
-$EndComp
-Text Label 8550 3250 2    50   ~ 0
-Rx
-Text Label 8550 3350 2    50   ~ 0
-Tx
-$Comp
-L Connector_Generic:Conn_01x06 J2
-U 1 1 63C7BE05
-P 8950 2350
-F 0 "J2" H 9030 2392 50  0000 L CNN
-F 1 "Button connector" H 9030 2301 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical" H 8950 2350 50  0001 C CNN
-F 3 "~" H 8950 2350 50  0001 C CNN
-	1    8950 2350
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:+3.3VA #PWR03
-U 1 1 63C8FD79
-P 6250 2800
-F 0 "#PWR03" H 6250 2650 50  0001 C CNN
-F 1 "+3.3VA" H 6265 2973 50  0000 C CNN
-F 2 "" H 6250 2800 50  0001 C CNN
-F 3 "" H 6250 2800 50  0001 C CNN
-	1    6250 2800
-	1    0    0    -1  
-$EndComp
-Connection ~ 6250 2800
-Wire Wire Line
-	6250 2800 6450 2800
-NoConn ~ 6550 5300
+	2500 6400 2300 6400
 Text Label 4750 4350 1    50   ~ 0
 SCL
 Text Label 4900 4350 1    50   ~ 0
@@ -296,12 +133,12 @@ Wire Wire Line
 $Comp
 L power:+3V3 #PWR01
 U 1 1 63531813
-P 5500 4400
-F 0 "#PWR01" H 5500 4250 50  0001 C CNN
-F 1 "+3V3" H 5515 4573 50  0000 C CNN
-F 2 "" H 5500 4400 50  0001 C CNN
-F 3 "" H 5500 4400 50  0001 C CNN
-	1    5500 4400
+P 3500 4450
+F 0 "#PWR01" H 3500 4300 50  0001 C CNN
+F 1 "+3V3" H 3515 4623 50  0000 C CNN
+F 2 "" H 3500 4450 50  0001 C CNN
+F 3 "" H 3500 4450 50  0001 C CNN
+	1    3500 4450
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -394,38 +231,6 @@ Connection ~ 4750 4750
 Wire Wire Line
 	4750 4750 4750 4350
 $Comp
-L Connector_Generic:Conn_01x06 J3
-U 1 1 63C70171
-P 8950 3150
-F 0 "J3" H 9030 3142 50  0000 L CNN
-F 1 "Laser A" H 9030 3051 50  0000 L CNN
-F 2 "Connector_Wuerth:Wuerth_WR-WTB_64800611622_1x06_P1.50mm_Vertical" H 8950 3150 50  0001 C CNN
-F 3 "~" H 8950 3150 50  0001 C CNN
-	1    8950 3150
-	1    0    0    -1  
-$EndComp
-NoConn ~ 8750 2950
-NoConn ~ 8750 3050
-NoConn ~ 8750 3150
-NoConn ~ 8750 3450
-NoConn ~ 8750 3650
-NoConn ~ 8750 3750
-NoConn ~ 8750 3850
-NoConn ~ 8750 3950
-NoConn ~ 8750 4050
-NoConn ~ 8750 4250
-$Comp
-L power:+BATT #PWR08
-U 1 1 63CC8399
-P 8750 4850
-F 0 "#PWR08" H 8750 4700 50  0001 C CNN
-F 1 "+BATT" H 8765 5023 50  0000 C CNN
-F 2 "" H 8750 4850 50  0001 C CNN
-F 3 "" H 8750 4850 50  0001 C CNN
-	1    8750 4850
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:+BATT #PWR07
 U 1 1 63CCA817
 P 4450 3950
@@ -438,34 +243,303 @@ F 3 "" H 4450 3950 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4450 3950 4600 3950
-$Comp
-L power:GND #PWR0103
-U 1 1 63C9D06D
-P 8750 2650
-F 0 "#PWR0103" H 8750 2400 50  0001 C CNN
-F 1 "GND" H 8755 2477 50  0000 C CNN
-F 2 "" H 8750 2650 50  0001 C CNN
-F 3 "" H 8750 2650 50  0001 C CNN
-	1    8750 2650
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:+3V3 #PWR0104
-U 1 1 63C9E7C1
-P 8750 2150
-F 0 "#PWR0104" H 8750 2000 50  0001 C CNN
-F 1 "+3V3" H 8765 2323 50  0000 C CNN
-F 2 "" H 8750 2150 50  0001 C CNN
-F 3 "" H 8750 2150 50  0001 C CNN
-	1    8750 2150
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	3850 2650 3500 2650
 Wire Wire Line
-	3850 2800 3650 2800
+	2300 6500 2950 6500
 Wire Wire Line
-	3650 2800 3650 2350
+	5500 2800 5900 2800
+NoConn ~ 5900 2800
+$Comp
+L power:GND #PWR0101
+U 1 1 64109B4A
+P 6050 2650
+F 0 "#PWR0101" H 6050 2400 50  0001 C CNN
+F 1 "GND" H 6055 2477 50  0000 C CNN
+F 2 "" H 6050 2650 50  0001 C CNN
+F 3 "" H 6050 2650 50  0001 C CNN
+	1    6050 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L SamacSys:NCP59301DS33R4G IC1
+U 1 1 6410E34A
+P 1900 4450
+F 0 "IC1" H 2550 4715 50  0000 C CNN
+F 1 "NCP59301DS33R4G" H 2550 4624 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:TO-263-5_TabPin6" H 3050 4550 50  0001 L CNN
+F 3 "http://uk.rs-online.com/web/p/products/1245368" H 3050 4450 50  0001 L CNN
+F 4 "ON SEMICONDUCTOR - NCP59301DS33R4G - Fixed LDO Voltage Regulator, 2.24 V to 13.5 V input, 400 mV Dropout, 3.3 V / 3 A out, TO-263-5" H 3050 4350 50  0001 L CNN "Description"
+F 5 "4.572" H 3050 4250 50  0001 L CNN "Height"
+F 6 "1245368" H 3050 4150 50  0001 L CNN "RS Part Number"
+F 7 "http://uk.rs-online.com/web/p/products/1245368" H 3050 4050 50  0001 L CNN "RS Price/Stock"
+F 8 "onsemi" H 3050 3950 50  0001 L CNN "Manufacturer_Name"
+F 9 "NCP59301DS33R4G" H 3050 3850 50  0001 L CNN "Manufacturer_Part_Number"
+F 10 "70340955" H 3050 3750 50  0001 L CNN "Allied_Number"
+	1    1900 4450
+	1    0    0    -1  
+$EndComp
 Wire Wire Line
-	3100 2350 3650 2350
+	1900 4450 1400 4450
+$Comp
+L power:+BATT #PWR0102
+U 1 1 64117D3F
+P 1750 4750
+F 0 "#PWR0102" H 1750 4600 50  0001 C CNN
+F 1 "+BATT" H 1765 4923 50  0000 C CNN
+F 2 "" H 1750 4750 50  0001 C CNN
+F 3 "" H 1750 4750 50  0001 C CNN
+	1    1750 4750
+	1    0    0    -1  
+$EndComp
+Text Label 1400 4450 2    50   ~ 0
+PERIPH_EN
+NoConn ~ 3200 4750
+Wire Wire Line
+	2400 5150 2500 5150
+Wire Wire Line
+	1750 4750 1900 4750
+Wire Wire Line
+	3200 4450 3350 4450
+$Comp
+L Device:CP C2
+U 1 1 641277B7
+P 3350 4850
+F 0 "C2" H 3468 4896 50  0000 L CNN
+F 1 "47uF" H 3468 4805 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L7.2mm_W5.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" H 3388 4700 50  0001 C CNN
+F 3 "~" H 3350 4850 50  0001 C CNN
+	1    3350 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C1
+U 1 1 641289B2
+P 1900 4950
+F 0 "C1" H 2018 4996 50  0000 L CNN
+F 1 "1uF" H 2018 4905 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" H 1938 4800 50  0001 C CNN
+F 3 "~" H 1900 4950 50  0001 C CNN
+	1    1900 4950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1900 4800 1900 4750
+Connection ~ 1900 4750
+Wire Wire Line
+	1900 5100 1900 5150
+Wire Wire Line
+	1900 5150 2400 5150
+Connection ~ 2400 5150
+Wire Wire Line
+	2600 5150 3350 5150
+Wire Wire Line
+	3350 5150 3350 5000
+Connection ~ 2600 5150
+Wire Wire Line
+	3350 4700 3350 4450
+Connection ~ 3350 4450
+Wire Wire Line
+	3350 4450 3500 4450
+$Comp
+L power:GND #PWR0103
+U 1 1 6412FBEB
+P 2500 5150
+F 0 "#PWR0103" H 2500 4900 50  0001 C CNN
+F 1 "GND" H 2505 4977 50  0000 C CNN
+F 2 "" H 2500 5150 50  0001 C CNN
+F 3 "" H 2500 5150 50  0001 C CNN
+	1    2500 5150
+	1    0    0    -1  
+$EndComp
+Connection ~ 2500 5150
+Wire Wire Line
+	2500 5150 2600 5150
+$Comp
+L SamacSys:22-03-5035 J1
+U 1 1 64142FDF
+P 7700 4650
+F 0 "J1" H 8328 4596 50  0000 L CNN
+F 1 "22-03-5035" H 8328 4505 50  0000 L CNN
+F 2 "Connector_Molex:Molex_SPOX_5267-03A_1x03_P2.50mm_Vertical" H 8350 4750 50  0001 L CNN
+F 3 "http://uk.rs-online.com/web/p/products/6878048P" H 8350 4650 50  0001 L CNN
+F 4 "Header 2.5mm SPOX,WTB,vert, shrouded, 3w Molex SPOX Series, Series Number 5267, 2.5mm Pitch 3 Way 1 Row Straight PCB Header, Solder Termination, 3A" H 8350 4550 50  0001 L CNN "Description"
+F 5 "5.9" H 8350 4450 50  0001 L CNN "Height"
+F 6 "6878048P" H 8350 4350 50  0001 L CNN "RS Part Number"
+F 7 "http://uk.rs-online.com/web/p/products/6878048P" H 8350 4250 50  0001 L CNN "RS Price/Stock"
+F 8 "Molex" H 8350 4150 50  0001 L CNN "Manufacturer_Name"
+F 9 "22-03-5035" H 8350 4050 50  0001 L CNN "Manufacturer_Part_Number"
+F 10 "70248167" H 8350 3950 50  0001 L CNN "Allied_Number"
+	1    7700 4650
+	1    0    0    -1  
+$EndComp
+NoConn ~ 7700 4750
+Wire Wire Line
+	7700 4650 7450 4650
+Wire Wire Line
+	7450 4650 7450 4500
+Wire Wire Line
+	7700 4850 7450 4850
+Wire Wire Line
+	7450 4850 7450 5050
+$Comp
+L power:+BATT #PWR0104
+U 1 1 6414D1D6
+P 7450 4500
+F 0 "#PWR0104" H 7450 4350 50  0001 C CNN
+F 1 "+BATT" H 7465 4673 50  0000 C CNN
+F 2 "" H 7450 4500 50  0001 C CNN
+F 3 "" H 7450 4500 50  0001 C CNN
+	1    7450 4500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0105
+U 1 1 6414EDB3
+P 7450 5050
+F 0 "#PWR0105" H 7450 4800 50  0001 C CNN
+F 1 "GND" H 7455 4877 50  0000 C CNN
+F 2 "" H 7450 5050 50  0001 C CNN
+F 3 "" H 7450 5050 50  0001 C CNN
+	1    7450 5050
+	1    0    0    -1  
+$EndComp
+$Comp
+L SamacSys:53047-0510 J2
+U 1 1 64150606
+P 7750 2850
+F 0 "J2" H 8378 2696 50  0000 L CNN
+F 1 "53047-0510" H 8378 2605 50  0000 L CNN
+F 2 "Connector_Molex:Molex_PicoBlade_53047-0510_1x05_P1.25mm_Vertical" H 8400 2950 50  0001 L CNN
+F 3 "http://uk.rs-online.com/web/p/products/4476596P" H 8400 2850 50  0001 L CNN
+F 4 "Headers & Wire Housings VERTICAL HDR 5P" H 8400 2750 50  0001 L CNN "Description"
+F 5 "4.4" H 8400 2650 50  0001 L CNN "Height"
+F 6 "4476596P" H 8400 2550 50  0001 L CNN "RS Part Number"
+F 7 "http://uk.rs-online.com/web/p/products/4476596P" H 8400 2450 50  0001 L CNN "RS Price/Stock"
+F 8 "Molex" H 8400 2350 50  0001 L CNN "Manufacturer_Name"
+F 9 "53047-0510" H 8400 2250 50  0001 L CNN "Manufacturer_Part_Number"
+F 10 "70266929" H 8400 2150 50  0001 L CNN "Allied_Number"
+	1    7750 2850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7750 2850 7350 2850
+Wire Wire Line
+	7350 2850 7350 2700
+Wire Wire Line
+	7750 2950 7200 2950
+Wire Wire Line
+	7750 3050 7200 3050
+Wire Wire Line
+	7750 3150 7200 3150
+Wire Wire Line
+	7750 3250 7350 3250
+$Comp
+L power:+3V3 #PWR0106
+U 1 1 6415A414
+P 5500 4400
+F 0 "#PWR0106" H 5500 4250 50  0001 C CNN
+F 1 "+3V3" H 5515 4573 50  0000 C CNN
+F 2 "" H 5500 4400 50  0001 C CNN
+F 3 "" H 5500 4400 50  0001 C CNN
+	1    5500 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0107
+U 1 1 6415A885
+P 7350 2700
+F 0 "#PWR0107" H 7350 2550 50  0001 C CNN
+F 1 "+3V3" H 7365 2873 50  0000 C CNN
+F 2 "" H 7350 2700 50  0001 C CNN
+F 3 "" H 7350 2700 50  0001 C CNN
+	1    7350 2700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0108
+U 1 1 6415ABF4
+P 7350 3250
+F 0 "#PWR0108" H 7350 3000 50  0001 C CNN
+F 1 "GND" H 7355 3077 50  0000 C CNN
+F 2 "" H 7350 3250 50  0001 C CNN
+F 3 "" H 7350 3250 50  0001 C CNN
+	1    7350 3250
+	1    0    0    -1  
+$EndComp
+Text Label 7200 2950 2    50   ~ 0
+Tx
+Text Label 7200 3050 2    50   ~ 0
+Rx
+Text Label 7200 3150 2    50   ~ 0
+LASER_EN
+$Comp
+L SamacSys:53047-0310 J3
+U 1 1 6415C76C
+P 7750 3850
+F 0 "J3" H 8378 3796 50  0000 L CNN
+F 1 "53047-0310" H 8378 3705 50  0000 L CNN
+F 2 "Connector_Molex:Molex_PicoBlade_53047-0310_1x03_P1.25mm_Vertical" H 8400 3950 50  0001 L CNN
+F 3 "http://uk.rs-online.com/web/p/products/3191064P" H 8400 3850 50  0001 L CNN
+F 4 "Headers & Wire Housings VERTICAL HDR 3P" H 8400 3750 50  0001 L CNN "Description"
+F 5 "4.4" H 8400 3650 50  0001 L CNN "Height"
+F 6 "3191064P" H 8400 3550 50  0001 L CNN "RS Part Number"
+F 7 "http://uk.rs-online.com/web/p/products/3191064P" H 8400 3450 50  0001 L CNN "RS Price/Stock"
+F 8 "Molex" H 8400 3350 50  0001 L CNN "Manufacturer_Name"
+F 9 "53047-0310" H 8400 3250 50  0001 L CNN "Manufacturer_Part_Number"
+F 10 "70266925" H 8400 3150 50  0001 L CNN "Allied_Number"
+	1    7750 3850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7750 3850 7650 3850
+Text Label 7650 3850 2    50   ~ 0
+BUTTON_A
+Text Label 7650 4050 2    50   ~ 0
+BUTTON_B
+$Comp
+L power:GND #PWR0109
+U 1 1 641648B2
+P 7050 3950
+F 0 "#PWR0109" H 7050 3700 50  0001 C CNN
+F 1 "GND" H 7055 3777 50  0000 C CNN
+F 2 "" H 7050 3950 50  0001 C CNN
+F 3 "" H 7050 3950 50  0001 C CNN
+	1    7050 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 64125787
+P 7700 4650
+F 0 "#FLG0101" H 7700 4725 50  0001 C CNN
+F 1 "PWR_FLAG" H 7700 4823 50  0000 C CNN
+F 2 "" H 7700 4650 50  0001 C CNN
+F 3 "~" H 7700 4650 50  0001 C CNN
+	1    7700 4650
+	1    0    0    -1  
+$EndComp
+Connection ~ 7700 4650
+Wire Wire Line
+	3500 2500 3850 2500
+Wire Wire Line
+	3850 2800 3500 2800
+Text Label 5900 2950 0    50   ~ 0
+BUZZER_A
+Text Label 3500 3400 2    50   ~ 0
+BUZZER_B
+Text Label 2950 6400 0    50   ~ 0
+BUZZER_A
+Text Label 2950 6500 0    50   ~ 0
+BUZZER_B
+Text Label 6550 5300 0    50   ~ 0
+DRDY
+Wire Wire Line
+	5500 3400 5900 3400
+Text Label 5900 3100 0    50   ~ 0
+DRDY
+Wire Wire Line
+	7650 4050 7750 4050
+Wire Wire Line
+	7750 3950 7050 3950
 $EndSCHEMATC

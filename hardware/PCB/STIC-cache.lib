@@ -1,89 +1,23 @@
 EESchema-LIBRARY Version 2.4
 #encoding utf-8
 #
-# Connector_Generic_Conn_01x06
+# Device_CP
 #
-DEF Connector_Generic_Conn_01x06 J 0 40 Y N 1 F N
-F0 "J" 0 300 50 H V C CNN
-F1 "Connector_Generic_Conn_01x06" 0 -400 50 H V C CNN
-F2 "" 0 0 50 H I C CNN
+DEF Device_CP C 0 10 N Y 1 F N
+F0 "C" 25 100 50 H V L CNN
+F1 "Device_CP" 25 -100 50 H V L CNN
+F2 "" 38 -150 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
- Connector*:*_1x??_*
+ CP_*
 $ENDFPLIST
 DRAW
-S -50 -295 0 -305 1 1 6 N
-S -50 -195 0 -205 1 1 6 N
-S -50 -95 0 -105 1 1 6 N
-S -50 5 0 -5 1 1 6 N
-S -50 105 0 95 1 1 6 N
-S -50 205 0 195 1 1 6 N
-S -50 250 50 -350 1 1 10 f
-X Pin_1 1 -200 200 150 R 50 50 1 1 P
-X Pin_2 2 -200 100 150 R 50 50 1 1 P
-X Pin_3 3 -200 0 150 R 50 50 1 1 P
-X Pin_4 4 -200 -100 150 R 50 50 1 1 P
-X Pin_5 5 -200 -200 150 R 50 50 1 1 P
-X Pin_6 6 -200 -300 150 R 50 50 1 1 P
-ENDDRAW
-ENDDEF
-#
-# Connector_Generic_Conn_01x08
-#
-DEF Connector_Generic_Conn_01x08 J 0 40 Y N 1 F N
-F0 "J" 0 400 50 H V C CNN
-F1 "Connector_Generic_Conn_01x08" 0 -500 50 H V C CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-$FPLIST
- Connector*:*_1x??_*
-$ENDFPLIST
-DRAW
-S -50 -395 0 -405 1 1 6 N
-S -50 -295 0 -305 1 1 6 N
-S -50 -195 0 -205 1 1 6 N
-S -50 -95 0 -105 1 1 6 N
-S -50 5 0 -5 1 1 6 N
-S -50 105 0 95 1 1 6 N
-S -50 205 0 195 1 1 6 N
-S -50 305 0 295 1 1 6 N
-S -50 350 50 -450 1 1 10 f
-X Pin_1 1 -200 300 150 R 50 50 1 1 P
-X Pin_2 2 -200 200 150 R 50 50 1 1 P
-X Pin_3 3 -200 100 150 R 50 50 1 1 P
-X Pin_4 4 -200 0 150 R 50 50 1 1 P
-X Pin_5 5 -200 -100 150 R 50 50 1 1 P
-X Pin_6 6 -200 -200 150 R 50 50 1 1 P
-X Pin_7 7 -200 -300 150 R 50 50 1 1 P
-X Pin_8 8 -200 -400 150 R 50 50 1 1 P
-ENDDRAW
-ENDDEF
-#
-# Device_Q_PMOS_GSD
-#
-DEF Device_Q_PMOS_GSD Q 0 0 Y N 1 F N
-F0 "Q" 200 50 50 H V L CNN
-F1 "Device_Q_PMOS_GSD" 200 -50 50 H V L CNN
-F2 "" 200 100 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-DRAW
-C 65 0 110 0 1 10 N
-C 100 -70 10 0 1 0 F
-C 100 70 10 0 1 0 F
-P 2 0 1 0 10 0 -100 0 N
-P 2 0 1 10 10 75 10 -75 N
-P 2 0 1 10 30 -50 30 -90 N
-P 2 0 1 10 30 20 30 -20 N
-P 2 0 1 10 30 90 30 50 N
-P 2 0 1 0 100 100 100 70 N
-P 3 0 1 0 100 -100 100 0 30 0 N
-P 4 0 1 0 30 70 130 70 130 -70 30 -70 N
-P 4 0 1 0 90 0 50 15 50 -15 90 0 F
-P 4 0 1 0 110 -20 115 -15 145 -15 150 -10 N
-P 4 0 1 0 130 -15 115 10 145 10 130 -15 N
-X G 1 -200 0 100 R 50 50 1 1 I
-X S 2 100 -200 100 U 50 50 1 1 P
-X D 3 100 200 100 D 50 50 1 1 P
+S -90 20 90 40 0 1 0 N
+S 90 -20 -90 -40 0 1 0 F
+P 2 0 1 0 -70 90 -30 90 N
+P 2 0 1 0 -50 110 -50 70 N
+X ~ 1 0 150 110 D 50 50 1 1 P
+X ~ 2 0 -150 110 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
@@ -135,28 +69,96 @@ X SDA 4 300 -100 100 L 50 50 0 0 B
 ENDDRAW
 ENDDEF
 #
-# OPL_Connector_DIP-JST-2P-2.0
+# SamacSys_22-03-5035
 #
-DEF OPL_Connector_DIP-JST-2P-2.0 J 0 40 N Y 1 L N
-F0 "J" -150 150 45 H V L BNN
-F1 "OPL_Connector_DIP-JST-2P-2.0" 100 150 45 H V L BNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-F4 "320110049" 30 150 20 H I C CNN "SKU"
-$FPLIST
- *H2-2.0-6X4.5MM*
-$ENDFPLIST
+DEF SamacSys_22-03-5035 J 0 30 Y Y 1 F N
+F0 "J" 650 300 50 H V L CNN
+F1 "SamacSys_22-03-5035" 650 200 50 H V L CNN
+F2 "SHDR3W60P0X250_1X3_990X490X590P" 650 100 50 H I L CNN
+F3 "http://uk.rs-online.com/web/p/products/6878048P" 650 0 50 H I L CNN
+F4 "Header 2.5mm SPOX,WTB,vert, shrouded, 3w Molex SPOX Series, Series Number 5267, 2.5mm Pitch 3 Way 1 Row Straight PCB Header, Solder Termination, 3A" 650 -100 50 H I L CNN "Description"
+F5 "5.9" 650 -200 50 H I L CNN "Height"
+F6 "6878048P" 650 -300 50 H I L CNN "RS Part Number"
+F7 "http://uk.rs-online.com/web/p/products/6878048P" 650 -400 50 H I L CNN "RS Price/Stock"
+F8 "Molex" 650 -500 50 H I L CNN "Manufacturer_Name"
+F9 "22-03-5035" 650 -600 50 H I L CNN "Manufacturer_Part_Number"
+F10 "70248167" 650 -700 50 H I L CNN "Allied_Number"
 DRAW
-P 2 1 0 0 0 -50 50 -50 N
-P 2 1 0 0 0 50 50 50 N
-P 2 1 0 0 50 -100 50 -50 N
-P 2 1 0 0 50 -50 50 50 N
-P 2 1 0 0 50 50 50 100 N
-P 2 1 0 0 50 100 250 100 N
-P 2 1 0 0 250 -100 50 -100 N
-P 2 1 0 0 250 100 250 -100 N
-X P$1 1 -100 50 100 R 40 40 1 1 B
-X P$2 2 -100 -50 100 R 40 40 1 1 B
+P 5 0 1 6 200 100 600 100 600 -300 200 -300 200 100 N
+X 1 1 0 0 200 R 50 50 0 0 P
+X 2 2 0 -100 200 R 50 50 0 0 P
+X 3 3 0 -200 200 R 50 50 0 0 P
+ENDDRAW
+ENDDEF
+#
+# SamacSys_53047-0310
+#
+DEF SamacSys_53047-0310 J 0 30 Y Y 1 F N
+F0 "J" 650 300 50 H V L CNN
+F1 "SamacSys_53047-0310" 650 200 50 H V L CNN
+F2 "530470310" 650 100 50 H I L CNN
+F3 "http://uk.rs-online.com/web/p/products/3191064P" 650 0 50 H I L CNN
+F4 "Headers & Wire Housings VERTICAL HDR 3P" 650 -100 50 H I L CNN "Description"
+F5 "4.4" 650 -200 50 H I L CNN "Height"
+F6 "3191064P" 650 -300 50 H I L CNN "RS Part Number"
+F7 "http://uk.rs-online.com/web/p/products/3191064P" 650 -400 50 H I L CNN "RS Price/Stock"
+F8 "Molex" 650 -500 50 H I L CNN "Manufacturer_Name"
+F9 "53047-0310" 650 -600 50 H I L CNN "Manufacturer_Part_Number"
+F10 "70266925" 650 -700 50 H I L CNN "Allied_Number"
+DRAW
+P 5 0 1 6 200 100 600 100 600 -300 200 -300 200 100 N
+X 1 1 0 -200 200 R 50 50 0 0 P
+X 2 2 0 -100 200 R 50 50 0 0 P
+X 3 3 0 0 200 R 50 50 0 0 P
+ENDDRAW
+ENDDEF
+#
+# SamacSys_53047-0510
+#
+DEF SamacSys_53047-0510 J 0 30 Y Y 1 F N
+F0 "J" 650 300 50 H V L CNN
+F1 "SamacSys_53047-0510" 650 200 50 H V L CNN
+F2 "SHDR5W27P0X125_1X5_800X320X440P" 650 100 50 H I L CNN
+F3 "http://uk.rs-online.com/web/p/products/4476596P" 650 0 50 H I L CNN
+F4 "Headers & Wire Housings VERTICAL HDR 5P" 650 -100 50 H I L CNN "Description"
+F5 "4.4" 650 -200 50 H I L CNN "Height"
+F6 "4476596P" 650 -300 50 H I L CNN "RS Part Number"
+F7 "http://uk.rs-online.com/web/p/products/4476596P" 650 -400 50 H I L CNN "RS Price/Stock"
+F8 "Molex" 650 -500 50 H I L CNN "Manufacturer_Name"
+F9 "53047-0510" 650 -600 50 H I L CNN "Manufacturer_Part_Number"
+F10 "70266929" 650 -700 50 H I L CNN "Allied_Number"
+DRAW
+P 5 0 1 6 200 100 600 100 600 -500 200 -500 200 100 N
+X 1 1 0 0 200 R 50 50 0 0 P
+X 2 2 0 -100 200 R 50 50 0 0 P
+X 3 3 0 -200 200 R 50 50 0 0 P
+X 4 4 0 -300 200 R 50 50 0 0 P
+X 5 5 0 -400 200 R 50 50 0 0 P
+ENDDRAW
+ENDDEF
+#
+# SamacSys_NCP59301DS33R4G
+#
+DEF SamacSys_NCP59301DS33R4G IC 0 30 Y Y 1 F N
+F0 "IC" 1150 300 50 H V L CNN
+F1 "SamacSys_NCP59301DS33R4G" 1150 200 50 H V L CNN
+F2 "NCP59301DS33R4G" 1150 100 50 H I L CNN
+F3 "http://uk.rs-online.com/web/p/products/1245368" 1150 0 50 H I L CNN
+F4 "ON SEMICONDUCTOR - NCP59301DS33R4G - Fixed LDO Voltage Regulator, 2.24 V to 13.5 V input, 400 mV Dropout, 3.3 V / 3 A out, TO-263-5" 1150 -100 50 H I L CNN "Description"
+F5 "4.572" 1150 -200 50 H I L CNN "Height"
+F6 "1245368" 1150 -300 50 H I L CNN "RS Part Number"
+F7 "http://uk.rs-online.com/web/p/products/1245368" 1150 -400 50 H I L CNN "RS Price/Stock"
+F8 "onsemi" 1150 -500 50 H I L CNN "Manufacturer_Name"
+F9 "NCP59301DS33R4G" 1150 -600 50 H I L CNN "Manufacturer_Part_Number"
+F10 "70340955" 1150 -700 50 H I L CNN "Allied_Number"
+DRAW
+P 5 0 1 6 200 100 1100 100 1100 -500 200 -500 200 100 N
+X EN 1 0 0 200 R 50 50 0 0 P
+X VIN 2 0 -300 200 R 50 50 0 0 W
+X GND 3 500 -700 200 U 50 50 0 0 W
+X VOUT 4 1300 0 200 L 50 50 0 0 w
+X FLG 5 1300 -300 200 L 50 50 0 0 P
+X TAB_GND 6 700 -700 200 U 50 50 0 0 P
 ENDDRAW
 ENDDEF
 #
@@ -213,21 +215,6 @@ X P1.13_D8_SCK 9 800 -300 100 L 50 50 1 1 B
 ENDDRAW
 ENDDEF
 #
-# power_+3.3VA
-#
-DEF power_+3.3VA #PWR 0 0 Y Y 1 F P
-F0 "#PWR" 0 -150 50 H I C CNN
-F1 "power_+3.3VA" 0 140 50 H V C CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-DRAW
-P 2 0 1 0 -30 50 0 100 N
-P 2 0 1 0 0 0 0 100 N
-P 2 0 1 0 0 100 30 50 N
-X +3.3VA 1 0 0 0 U 50 50 1 1 W N
-ENDDRAW
-ENDDEF
-#
 # power_+3V3
 #
 DEF power_+3V3 #PWR 0 0 Y Y 1 F P
@@ -269,6 +256,19 @@ F3 "" 0 0 50 H I C CNN
 DRAW
 P 6 0 1 0 0 0 0 -50 50 -50 0 -100 -50 -50 0 -50 N
 X GND 1 0 0 0 D 50 50 1 1 W N
+ENDDRAW
+ENDDEF
+#
+# power_PWR_FLAG
+#
+DEF power_PWR_FLAG #FLG 0 0 N N 1 F P
+F0 "#FLG" 0 75 50 H I C CNN
+F1 "power_PWR_FLAG" 0 150 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+P 6 0 1 0 0 0 0 50 -40 75 0 100 40 75 0 50 N
+X pwr 1 0 0 0 U 50 50 0 0 w
 ENDDRAW
 ENDDEF
 #

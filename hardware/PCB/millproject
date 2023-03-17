@@ -25,9 +25,7 @@ nog81=true
 nog91-1=true
 
 #Etching
-optimise=true
 tolerance=0.0100
-vectorial=false
 zchange=1.5000
 zchange-absolute=false
 zero-start=true
@@ -38,13 +36,16 @@ mill-speed=10000
 offset=0.2000
 voronoi=false
 zwork=-0.0800
+preserve-thermal-reliefs=true
 
 # drilling
 milldrill-diameter=1.0000
 drill-feed=50
 drill-speed=10000
 milldrill=true
-onedrill=true
+onedrill=false
+drills-available=0.5mm:0.1mm,1.0mm:0.2mm
+min-milldrill-hole-diameter=1.1mm
 zdrill=-2.5000
 
 # outline
