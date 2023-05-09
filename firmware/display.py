@@ -1,67 +1,90 @@
 import time
+import atexit
 
-import adafruit_displayio_ssd1306
-import board
+import adafruit_displayio_sh1106
 import busio
-import digitalio
 import displayio
-import rm3100
 import terminalio
-import seeed_xiao_nrf52840
+
+import hardware
 from adafruit_display_text import label
+from adafruit_bitmap_font import bitmap_font
 
-WIDTH=64
-HEIGHT=48
-BORDER=2
-scl = board.D6
-sda = board.D5
+from data import Readings, Leg
 
-def create_display(i2c_bus):
-    bus = displayio.I2CDisplay(i2c_bus, device_address=0x3c)
-    display = adafruit_displayio_ssd1306.SSD1306(bus, width=WIDTH, height=HEIGHT+40, rotation=270)
-
-    splash = displayio.Group(y=40)
-    display.show(splash)
-
-    color_bitmap = displayio.Bitmap(WIDTH, HEIGHT, 1)
-    color_palette = displayio.Palette(1)
-    color_palette[0] = 0xFFFFFF  # White
-
-    bg_sprite = displayio.TileGrid(color_bitmap, pixel_shader=color_palette, x=0, y=0)
-    splash.append(bg_sprite)
-
-    # Draw a smaller inner rectangle
-    inner_bitmap = displayio.Bitmap(WIDTH - BORDER * 2, HEIGHT - BORDER * 2, 1)
-    inner_palette = displayio.Palette(1)
-    inner_palette[0] = 0x000000  # Black
-    inner_sprite = displayio.TileGrid(
-        inner_bitmap, pixel_shader=inner_palette, x=BORDER, y=BORDER
-    )
-    splash.append(inner_sprite)
-
-    # Draw a label
-    text = "Hello!   "
-    text_area = label.Label(
-        terminalio.FONT, text=text, color=0xFFFFFF, x=10, y=HEIGHT // 2 - 1
-    )
-    splash.append(text_area)
-    return text_area
+WIDTH = 132
+HEIGHT = 64
 
 
-displayio.release_displays()
-periph_en = digitalio.DigitalInOut(board.D1)
-periph_en.switch_to_output()
-periph_en.value = 0
+class Display:
+    MEASURE = 0
+    MENU = 1
 
-time.sleep(0.01)
+    def __init__(self, mode: int = MEASURE):
+        self.mode: int = mode
+        self.display = self.create_display()
+        atexit.register(displayio.release_displays) # stops hang on crashes
+        self.display.refresh()
+        self.azimuth: label.Label = None
+        self.inclination: label.Label = None
+        self.distance: label.Label = None
+        self.reading_index: label.Label = None
+        self.measurement_group = self.create_measurement_group()
+        self.menu_group = None
+        self.set_mode(mode)
 
-i2c = busio.I2C(scl,sda)
-if i2c.try_lock():
-    print(i2c.scan())
-i2c.unlock()
+    def set_mode(self, mode: int):
+        self.mode = mode
+        if self.mode == self.MEASURE:
+            self.display.root_group = self.measurement_group
+        elif self.mode == self.MENU:
+            self.display.root_group = self.menu_group
+        else:
+            raise ValueError("Mode must be either MEASURE or MENU")
 
-text = create_display(i2c)
-rm = rm3100.RM3100_I2C(i2c)
-while True:
-    text.text = f"{rm.magnetic[0]: 04.1f}"
-    time.sleep(0.1)
+    def create_display(self) -> displayio.Display:
+        ...
+
+    def create_measurement_group(self) -> displayio.Group:
+        ...
+
+
+    def update_measurement(self, leg: Leg, reading_index: int):
+        self.azimuth.text = str(leg.azimuth)
+        self.inclination.text = str(leg.inclination)
+        self.distance.text = str(leg.distance)
+        self.reading_index = str(reading_index)
+        self.refresh()
+
+    def refresh(self):
+        self.display.refresh()
+
+
+class SH1106_Display(Display):
+    def __init__(self, i2c: busio.I2C, mode: int = Display.MEASURE):
+        self.i2c = i2c
+        super().__init__(mode)
+
+    def create_display(self) -> displayio.Display:
+        bus = displayio.I2CDisplay(self.i2c, device_address=0x3c)
+        display = adafruit_displayio_sh1106.SH1106(bus, width=WIDTH, height=HEIGHT, rotation=0,
+                                                   auto_refresh=True)
+        return display
+
+    def create_measurement_group(self) -> displayio.Group:
+        font_20 = bitmap_font.load_font("/fonts/OpenSans-20.bdf")
+        font_term = terminalio.FONT
+        measurement_group = displayio.Group()
+        text = " " * 20
+        self.azimuth = label.Label(font_20, text=text, color=0xffffff, x=1, y=10)
+        self.inclination = label.Label(font_20, text=text, color=0xffffff, x=1, y=31)
+        self.distance = label.Label(font_20, text=text, color=0xffffff, x=1, y=52)
+        self.reading_index = label.Label(font_20, text="  ", color=0xffffff, x=100, y=52)
+        measurement_group.append(self.azimuth)
+        measurement_group.append(self.inclination)
+        measurement_group.append(self.distance)
+        measurement_group.append(self.reading_index)
+        return measurement_group
+
+
+

@@ -1,9 +1,8 @@
-import digitalio
-import microcontroller
 import pwmio
-import uctypes # note this class needs uctypes which is not compiled as standard
 import sys
 from microcontroller import Pin
+
+from utils import get_uint32_at, set_uint32_at, get_uint16_at, set_uint16_at, get_pin_no
 
 PWM_BASE_ADDRS = [
     0x4001C000,
@@ -14,55 +13,29 @@ PWM_BASE_ADDRS = [
 
 PSEL = 0x560
 SEQ_PTR = 0x520
+TASK_SEQSTART = 0x008
 
 class InvertingPWMOut:
-    def _get_pin_no(self, pin):
-        for p in dir(microcontroller.pin):
-            if pin is getattr(microcontroller.pin, p):
-                port, pin_no = p[1:].split("_")
-                port = int(port)
-                pin_no = int(pin_no)
-                return port*32 + pin_no
-        return None
 
     def _find_pwm_module_and_channel(self, pin: Pin):
-        pin_no = self._get_pin_no(pin)
+        pin_no = get_pin_no(pin)
         for i, addr in enumerate(PWM_BASE_ADDRS):
             for j in range(4):
-                data = self._get_uint32_at(addr + PSEL + j * 4)
+                data = get_uint32_at(addr + PSEL + j * 4)
                 if data == pin_no:
                     return i, j
         return None, None
 
     def _set_pwm_channel(self, module: int, channel: int, value: int):
         addr = PWM_BASE_ADDRS[module] + PSEL + channel * 4
-        self._set_uint32_at(addr, value)
+        set_uint32_at(addr, value)
 
     def _set_pwm_module_and_channel(self, module: int, channel: int, pin: Pin):
-        pin_no = self._get_pin_no(pin)
+        pin_no = get_pin_no(pin)
         self._set_pwm_channel(module, channel, pin_no)
 
     def _clear_pwm_channel(self, module: int, channel: int):
         self._set_pwm_channel(module, channel, 0xffffffff)
-    def _get_uint32_at(self, addr: int):
-        mem = uctypes.bytearray_at(addr, 4)
-        data = int.from_bytes(mem, sys.byteorder)
-        return data
-
-    def _set_uint32_at(self, addr: int, value: int):
-        data = value.to_bytes(4, sys.byteorder)
-        mem = uctypes.bytearray_at(addr, 4)
-        mem[:] = data
-
-    def _get_uint16_at(self, addr: int):
-        mem = uctypes.bytearray_at(addr, 2)
-        data = int.from_bytes(mem, sys.byteorder)
-        return data
-
-    def _set_uint16_at(self, addr: int, value: int):
-        data = value.to_bytes(2, sys.byteorder)
-        mem = uctypes.bytearray_at(addr, 2)
-        mem[:] = data
 
 
     def __init__(self, pin_a: Pin, pin_b: Pin):
@@ -79,10 +52,12 @@ class InvertingPWMOut:
 
     def _update_inverted_duty_cycle(self):
         addr = PWM_BASE_ADDRS[self.module]
-        seq_addr = self._get_uint32_at(addr+SEQ_PTR)
-        duty_cycle = self._get_uint16_at(seq_addr)
-        duty_cycle ^= 0x8000 # invert polarity
-        self._set_uint16_at(seq_addr+2, duty_cycle)
+        seq_addr = get_uint32_at(addr+SEQ_PTR)
+        duty_cycle = get_uint16_at(seq_addr)
+        if duty_cycle not in (0, 0x8000):
+            duty_cycle ^= 0x8000 # invert polarity
+        set_uint16_at(seq_addr+2, duty_cycle)
+        set_uint32_at(addr+TASK_SEQSTART, 1)
 
     @property
     def frequency(self):

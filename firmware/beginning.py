@@ -6,7 +6,7 @@ import board
 import busio
 import digitalio
 import pwmio
-import pins
+import hardware
 import laser_at
 
 leds = [digitalio.DigitalInOut(x) for x in [pins.LED_R, pins.LED_B]]
