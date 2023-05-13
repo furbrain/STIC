@@ -1,4 +1,4 @@
 Reference, Value, Footprint, Datasheet, Allied_Number, Description, Height, Manufacturer_Name, Manufacturer_Part_Number, RS Part Number, RS Price/Stock
 "J1","53047-0310","Connector_Molex:Molex_PicoBlade_53048-0310_1x03_P1.25mm_Horizontal","http://uk.rs-online.com/web/p/products/3191064P","70266925","Headers & Wire Housings VERTICAL HDR 3P","4.4","Molex","53047-0310","3191064P","http://uk.rs-online.com/web/p/products/3191064P"
-"SW1","SW_Push","KiCad_imports:FSM4JRT","~"
-"SW2","SW_Push","KiCad_imports:FSM4JRT","~"
+"SW1","SW_Push","KiCad_imports:FSM4JRT","~","","","","","FSM4JRT","",""
+"SW2","SW_Push","KiCad_imports:FSM4JRT","~","","","","","FSM4JRT","",""

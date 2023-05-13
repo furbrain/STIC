@@ -18,16 +18,14 @@ L SamacSys:53047-0310 J1
 U 1 1 6415C76C
 P 7750 3850
 F 0 "J1" H 8378 3796 50  0000 L CNN
-F 1 "53047-0310" H 8378 3705 50  0000 L CNN
+F 1 "53048-0310" H 8378 3705 50  0000 L CNN
 F 2 "Connector_Molex:Molex_PicoBlade_53048-0310_1x03_P1.25mm_Horizontal" H 8400 3950 50  0001 L CNN
 F 3 "http://uk.rs-online.com/web/p/products/3191064P" H 8400 3850 50  0001 L CNN
 F 4 "Headers & Wire Housings VERTICAL HDR 3P" H 8400 3750 50  0001 L CNN "Description"
 F 5 "4.4" H 8400 3650 50  0001 L CNN "Height"
-F 6 "3191064P" H 8400 3550 50  0001 L CNN "RS Part Number"
-F 7 "http://uk.rs-online.com/web/p/products/3191064P" H 8400 3450 50  0001 L CNN "RS Price/Stock"
-F 8 "Molex" H 8400 3350 50  0001 L CNN "Manufacturer_Name"
-F 9 "53047-0310" H 8400 3250 50  0001 L CNN "Manufacturer_Part_Number"
-F 10 "70266925" H 8400 3150 50  0001 L CNN "Allied_Number"
+F 6 "Molex" H 8400 3350 50  0001 L CNN "Manufacturer_Name"
+F 7 "53048-0310" H 8400 3250 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "70266925" H 8400 3150 50  0001 L CNN "Allied_Number"
 	1    7750 3850
 	1    0    0    -1  
 $EndComp

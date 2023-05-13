@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>/home/phil/Projects/STIC/hardware/Button/Button.sch</source>
-    <date>Fri 12 May 2023 23:20:45 BST</date>
+    <date>Sat 13 May 2023 15:52:45 BST</date>
     <tool>Eeschema 5.1.5+dfsg1-2build2</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -40,6 +40,9 @@
       <value>SW_Push</value>
       <footprint>KiCad_imports:FSM4JRT</footprint>
       <datasheet>~</datasheet>
+      <fields>
+        <field name="Manufacturer_Part_Number">FSM4JRT</field>
+      </fields>
       <libsource lib="Switch" part="SW_Push" description="Push button switch, generic, two pins"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>6415EC68</tstamp>
@@ -48,6 +51,9 @@
       <value>SW_Push</value>
       <footprint>KiCad_imports:FSM4JRT</footprint>
       <datasheet>~</datasheet>
+      <fields>
+        <field name="Manufacturer_Part_Number">FSM4JRT</field>
+      </fields>
       <libsource lib="Switch" part="SW_Push" description="Push button switch, generic, two pins"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>6415FF63</tstamp>
