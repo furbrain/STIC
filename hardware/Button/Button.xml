@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/phil/Projects/STIC/hardware/Button/Button.sch</source>
+    <date>Fri 12 May 2023 23:20:45 BST</date>
+    <tool>Eeschema 5.1.5+dfsg1-2build2</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>Button.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="J1">
+      <value>53047-0310</value>
+      <footprint>Connector_Molex:Molex_PicoBlade_53048-0310_1x03_P1.25mm_Horizontal</footprint>
+      <datasheet>http://uk.rs-online.com/web/p/products/3191064P</datasheet>
+      <fields>
+        <field name="Allied_Number">70266925</field>
+        <field name="Description">Headers &amp; Wire Housings VERTICAL HDR 3P</field>
+        <field name="Height">4.4</field>
+        <field name="Manufacturer_Name">Molex</field>
+        <field name="Manufacturer_Part_Number">53047-0310</field>
+        <field name="RS Part Number">3191064P</field>
+        <field name="RS Price/Stock">http://uk.rs-online.com/web/p/products/3191064P</field>
+      </fields>
+      <libsource lib="SamacSys" part="53047-0310" description="Headers &amp; Wire Housings VERTICAL HDR 3P"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>6415C76C</tstamp>
+    </comp>
+    <comp ref="SW1">
+      <value>SW_Push</value>
+      <footprint>KiCad_imports:FSM4JRT</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Switch" part="SW_Push" description="Push button switch, generic, two pins"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>6415EC68</tstamp>
+    </comp>
+    <comp ref="SW2">
+      <value>SW_Push</value>
+      <footprint>KiCad_imports:FSM4JRT</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Switch" part="SW_Push" description="Push button switch, generic, two pins"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>6415FF63</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="SamacSys" part="53047-0310">
+      <description>Headers &amp; Wire Housings VERTICAL HDR 3P</description>
+      <docs>http://uk.rs-online.com/web/p/products/3191064P</docs>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">53047-0310</field>
+        <field name="Footprint">530470310</field>
+        <field name="Datasheet">http://uk.rs-online.com/web/p/products/3191064P</field>
+        <field name="Description">Headers &amp; Wire Housings VERTICAL HDR 3P</field>
+        <field name="Height">4.4</field>
+        <field name="RS Part Number">3191064P</field>
+        <field name="RS Price/Stock">http://uk.rs-online.com/web/p/products/3191064P</field>
+        <field name="Manufacturer_Name">Molex</field>
+        <field name="Manufacturer_Part_Number">53047-0310</field>
+        <field name="Allied_Number">70266925</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Switch" part="SW_Push">
+      <description>Push button switch, generic, two pins</description>
+      <docs>~</docs>
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">SW_Push</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="SamacSys">
+      <uri>/home/phil/KiCad_imports/SamacSys_Parts.lib</uri>
+    </library>
+    <library logical="Switch">
+      <uri>/usr/share/kicad/library/Switch.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="GND">
+      <node ref="J1" pin="2"/>
+      <node ref="SW1" pin="2"/>
+      <node ref="SW2" pin="2"/>
+    </net>
+    <net code="2" name="/BUTTON_B">
+      <node ref="J1" pin="1"/>
+      <node ref="SW2" pin="1"/>
+    </net>
+    <net code="3" name="/BUTTON_A">
+      <node ref="SW1" pin="1"/>
+      <node ref="J1" pin="3"/>
+    </net>
+  </nets>
+</export>
