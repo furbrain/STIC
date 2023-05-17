@@ -1,0 +1,6 @@
+Get double click startup working
+Get lazy loading of libraries working
+Get calibration routine running - and axis and laser calibration
+Maybe work out how screen should work
+Quick non-linear for both mag and grav.
+Abstract out most run-time code into separate file?

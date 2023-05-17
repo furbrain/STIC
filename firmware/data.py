@@ -68,3 +68,4 @@ class Readings:
         return self.current_reading is not None
 
 
+readings = Readings()

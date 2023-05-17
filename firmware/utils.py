@@ -1,8 +1,8 @@
 import microcontroller
 import memorymap
+import alarm
 import sys
 import time
-import alarm
 
 
 def get_int_at(addr: int, num_bytes: int) -> int:
@@ -50,7 +50,7 @@ def usb_power_connected() -> bool:
     return bool(data & 0x01)
 
 
-def true_deep_sleep(*pins: alarm.pin.PinAlarm, pull: bool = True):
+def true_deep_sleep(*pins: "alarm.pin.PinAlarm", pull: bool = True):
     # set up pins
     for pin in pins:
         pin_no = get_pin_no(pin.pin)
@@ -71,15 +71,26 @@ def true_deep_sleep(*pins: alarm.pin.PinAlarm, pull: bool = True):
             if pull:
                 data |= 0x00000008
         set_uint32_at(pin_cnf_addr, data)
-    # turn off QSPI
-    # qspi_base_addr = 0x40029000
-    # ifconfig0 = get_uint32_at(qspi_base_addr + 0x544)
-    # ifconfig0 |= 0x80
-    # set_uint32_at(qspi_base_addr + 0x544, ifconfig0)
-    # ifconfig1 = get_uint32_at(qspi_base_addr + 0x600)
-    # ifconfig1 |= 0x01000000
-    # set_uint32_at(qspi_base_addr + 0x600, ifconfig1)
-    # set_uint32_at(qspi_base_addr + 0x614, 0x00010001)
-    # time.sleep(0.1)
-    # aaand shutdown
     set_uint32_at(0x40000500, 1)
+
+
+_NOT_FOUND = object()
+
+
+class cached_property:
+    """
+    Copy of functools cached_property
+    """
+    def __init__(self, func):
+        self.func = func
+        self.cached_name = f"_{func.__name__}"
+        if hasattr(func, "__doc__"):
+            self.__doc__ = func.__doc__
+
+    def __get__(self, instance, owner=None):
+        if hasattr(instance, self.cached_name):
+            return getattr(instance, self.cached_name)
+        else:
+            result = self.func(instance)
+            setattr(instance, self.cached_name, result)
+            return result

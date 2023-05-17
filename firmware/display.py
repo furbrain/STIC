@@ -23,8 +23,7 @@ class Display:
     def __init__(self, mode: int = MEASURE):
         self.mode: int = mode
         self.display = self.create_display()
-        atexit.register(displayio.release_displays) # stops hang on crashes
-        self.display.refresh()
+        # self.display.refresh()
         self.azimuth: label.Label = None
         self.inclination: label.Label = None
         self.distance: label.Label = None
@@ -65,15 +64,17 @@ class SH1106_Display(Display):
         self.i2c = i2c
         super().__init__(mode)
 
+
     def create_display(self) -> displayio.Display:
-        bus = displayio.I2CDisplay(self.i2c, device_address=0x3c)
-        display = adafruit_displayio_sh1106.SH1106(bus, width=WIDTH, height=HEIGHT, rotation=0,
+        i2c = self.i2c
+        self.bus = displayio.I2CDisplay(i2c, device_address=0x3c)
+        display = adafruit_displayio_sh1106.SH1106(self.bus, width=WIDTH, height=HEIGHT, rotation=0,
                                                    auto_refresh=True)
         return display
 
     def create_measurement_group(self) -> displayio.Group:
-        font_20 = bitmap_font.load_font("/fonts/OpenSans-20.bdf")
-        font_term = terminalio.FONT
+        #font_20 = bitmap_font.load_font("/fonts/OpenSans-20.bdf")
+        font_20 = terminalio.FONT
         measurement_group = displayio.Group()
         text = " " * 20
         self.azimuth = label.Label(font_20, text=text, color=0xffffff, x=1, y=10)
