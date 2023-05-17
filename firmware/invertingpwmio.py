@@ -79,5 +79,5 @@ class InvertingPWMOut:
 
 
     def deinit(self):
-        self.pwm.deinit()
         self._clear_pwm_channel(self.module, 1)
+        self.pwm.deinit()
