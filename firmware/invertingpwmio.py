@@ -50,6 +50,12 @@ class InvertingPWMOut:
                              " pin")
         self._set_pwm_module_and_channel(self.module, 1, pin_b)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.deinit()
+
     def _update_inverted_duty_cycle(self):
         addr = PWM_BASE_ADDRS[self.module]
         seq_addr = get_uint32_at(addr+SEQ_PTR)
