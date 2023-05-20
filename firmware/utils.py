@@ -52,6 +52,7 @@ def usb_power_connected() -> bool:
 
 def true_deep_sleep(*pins: "alarm.pin.PinAlarm", pull: bool = True):
     # set up pins
+    global deep_sleep_wrapped
     for pin in pins:
         pin_no = get_pin_no(pin.pin)
         if pin_no >= 32:
@@ -74,8 +75,13 @@ def true_deep_sleep(*pins: "alarm.pin.PinAlarm", pull: bool = True):
     set_uint32_at(0x40000500, 1)
 
 
-_NOT_FOUND = object()
+def clear_deep_sleep():
+    data = get_uint32_at(0x40000400)
+    print(f"reset field {data:x}")
+    #set_uint32_at(0x40000400, data & 0xffff0000)
 
+
+_NOT_FOUND = object()
 
 class cached_property:
     """
@@ -94,3 +100,9 @@ class cached_property:
             result = self.func(instance)
             setattr(instance, self.cached_name, result)
             return result
+
+
+def partial(func, *args, **kwargs):
+    def f():
+        return func(*args, **kwargs)
+    return f
