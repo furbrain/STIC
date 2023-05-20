@@ -203,6 +203,10 @@ class App:
                 "Sensors": partial(self.start_menu_item, calibrate.calibrate),
                 "Laser": self.dummy,
                 "Axes": self.freeze},
+            "Test": {
+                "Simple Test": partial(self.start_menu_item, self.menu_item_test),
+                "Value Error": partial(self.start_menu_item, self.breaker),
+                "Freeze": self.freeze},
             "Settings": {
                 "Units": Options(
                     value=self.config.units,

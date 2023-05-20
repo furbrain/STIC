@@ -1,4 +1,5 @@
 import pins
+from utils import usb_power_connected
 
 try:
     from typing import List, Awaitable, Coroutine, Callable
@@ -15,6 +16,8 @@ import gc
 import app
 import microcontroller
 import adafruit_logging as logging
+import storage
+import board
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -50,8 +53,11 @@ async def main(mode):
             traceback.print_exception(err)
 
 
+app_used = False
 while True:
-    app_used = False
+    if usb_power_connected() != storage.getmount("/").readonly:
+        logger.info("Restarting microcontroller so can correctly mount flash")
+        microcontroller.reset()
     if double_click_start():
         gc.collect()
         logger.info("Double click")
@@ -68,15 +74,20 @@ while True:
         asyncio.run(main(mode))
     else:
         logger.info("no double click")
+    # shutdown watchdog before sleep
+    if microcontroller.watchdog.mode != None:
+        logger.debug("Disabling watchdog prior to sleep")
+        microcontroller.watchdog.deinit()
     pin_alarm = alarm.pin.PinAlarm(pins.BUTTON_A, value=False, pull=True)
+    usb_alarm = alarm.pin.PinAlarm(board.CHARGE_STATUS, value=False, pull=False)
     if app_used:
         logger.debug("App has been used, so starting a timed sleep")
         time_alarm = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + LIGHT_SLEEP_TIMEOUT)
-        wakeup = alarm.light_sleep_until_alarms(time_alarm, pin_alarm)
+        wakeup = alarm.light_sleep_until_alarms(time_alarm, pin_alarm, usb_alarm)
         if wakeup == time_alarm:
             logger.info("Resetting after period of disuse")
             # ensure device resets after a period if been used
             microcontroller.reset()
     else:
         logger.debug("App not used so indefinite sleep, waiting for pin press")
-        alarm.light_sleep_until_alarms(pin_alarm)
+        alarm.light_sleep_until_alarms(pin_alarm, usb_alarm)
