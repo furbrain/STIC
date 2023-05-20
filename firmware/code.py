@@ -10,9 +10,15 @@ import time
 import asyncio
 import traceback
 import pins
+import alarm
+import gc
+import app
+import microcontroller
+import adafruit_logging as logging
 
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 LIGHT_SLEEP_TIMEOUT = 6*60*60 # light sleep for 6 hours
-
 
 def double_click_start() -> bool:
     with digitalio.DigitalInOut(pins.BUTTON_A) as button_a:
@@ -33,36 +39,43 @@ def double_click_start() -> bool:
 
 #main
 
+async def main(mode):
+    with app.App(mode) as main_app:
+        try:
+            logger.info("Starting main app")
+            await main_app.main()
+        except Exception as err:
+            logger.warning("Exception received in main outer layer:")
+            traceback.print_exception(err)
+
+
 while True:
+    app_used = False
     if double_click_start():
-        print("double click!")
-        import gc
         gc.collect()
-        print(f"Mem left: {gc.mem_free()}")
+        logger.info("Double click")
+        logger.debug(f"Memory left: {gc.mem_free()}")
         with digitalio.DigitalInOut(pins.BUTTON_B) as button_b:
+            app_used = True
             button_b.switch_to_input(digitalio.Pull.UP)
-            from app import App
             if button_b.value == False:
                 # button b is pressed
-                mode = App.MENU
+                mode = app.App.MENU
             else:
-                mode = App.MEASURE
-        with App(mode) as main_app:
-            try:
-                asyncio.run(main_app.main())
-            except Exception as err:
-                print("exception!")
-                traceback.print_exception(err)
+                mode = app.App.MEASURE
+            logger.debug(f"App mode is {mode}")
+        asyncio.run(main(mode))
     else:
-        print("no double click")
-    import alarm # delayed import to speed startup
-    import displayio
-    displayio.release_displays()
-    time_alarm = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + LIGHT_SLEEP_TIMEOUT)
+        logger.info("no double click")
     pin_alarm = alarm.pin.PinAlarm(pins.BUTTON_A, value=False, pull=True)
-    wakeup = alarm.light_sleep_until_alarms(time_alarm, pin_alarm)
-    if wakeup == time_alarm:
-        # we've slept lightly for 6 hours, now go into true deep sleep
-        import utils
-        utils.true_deep_sleep(pin_alarm)
-
+    if app_used:
+        logger.debug("App has been used, so starting a timed sleep")
+        time_alarm = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + LIGHT_SLEEP_TIMEOUT)
+        wakeup = alarm.light_sleep_until_alarms(time_alarm, pin_alarm)
+        if wakeup == time_alarm:
+            logger.info("Resetting after period of disuse")
+            # ensure device resets after a period if been used
+            microcontroller.reset()
+    else:
+        logger.debug("App not used so indefinite sleep, waiting for pin press")
+        alarm.light_sleep_until_alarms(pin_alarm)

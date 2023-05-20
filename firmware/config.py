@@ -1,4 +1,7 @@
 import json
+import adafruit_logging as logging
+
+logger = logging.getLogger()
 
 _CONFIG_FILE = "/config.json"
 
@@ -9,11 +12,11 @@ class Config:
     IMPERIAL = 1
 
     def __init__(self,
-                 timeout: int = 120,
-                 display_style: int = DEGREES,
+                 timeout: int = 10,
+                 angles: int = DEGREES,
                  units: int = METRIC):
         self.timeout = timeout
-        self.display_style = display_style
+        self.angles = angles
         self.units = units
 
     def as_dict(self):
