@@ -208,13 +208,13 @@ class App:
                     value=self.config.units,
                     options = [Config.METRIC, Config.IMPERIAL],
                     option_labels = ["Metric", "Imperial"],
-                    on_value_set = lambda x: setattr(self.config, "units", x)
+                    on_value_set = lambda x: self.config.set_var("units", x)
                 ),
                 "Angles": Options(
                     value=self.config.angles,
                     options = [Config.DEGREES, Config.GRADS],
                     option_labels = ["Degrees", "Grads"],
-                    on_value_set = lambda x: setattr(self.config, "angles", x)
+                    on_value_set = lambda x: self.config.set_var("angles", x)
                 )
             }
         }
@@ -257,6 +257,7 @@ class App:
         for t in all_background_tasks:
             t.cancel()
         self.current_task.cancel()
+        self.config.save_if_changed()
         await asyncio.sleep(0) # allow everything to stop
         if self.exception_context:
             if isinstance(self.exception_context["exception"], Shutdown):

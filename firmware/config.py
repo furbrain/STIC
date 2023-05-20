@@ -48,6 +48,7 @@ class Config:
     def save(self):
         with open(_CONFIG_FILE, "w") as f:
             json.dump(self.as_dict(),f)
+        self._dirty = False
 
     @classmethod
     def load(cls) -> "Config":
@@ -58,7 +59,7 @@ class Config:
             dct = {}
         return cls(**dct)
 
-    def set_var_and_save(self, varname, value):
+    def set_var(self, varname, value):
         setattr(self, varname, value)
-        self.save()
+        self._dirty = True
 
