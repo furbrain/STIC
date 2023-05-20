@@ -46,6 +46,12 @@ class Hardware:
         self.periph_enable_io = digitalio.DigitalInOut(pins.PERIPH_EN)
         self.periph_enable_io.switch_to_output(True)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.deinit()
+
     @cached_property
     def button_a(self) -> async_button.Button:
         """ Async Button for Button A"""

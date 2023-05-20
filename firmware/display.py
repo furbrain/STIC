@@ -96,6 +96,10 @@ class Display:
         logterm.write(text)
         self.oled.refresh()
 
+    def show_group(self, group: displayio.Group):
+        self.oled.show(group)
+        self.refresh()
+
     def deinit(self):
         #added for completeness, currently does nothing
         pass
