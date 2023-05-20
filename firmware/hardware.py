@@ -31,6 +31,9 @@ import digitalio
 # Pin definitions
 
 HAPPY = (("C6", 50), ("E6", 50), ("G6", 50), ("C7", 50))
+BIP = (("A7", 50),)
+BOP = (("C7", 50),)
+SAD = (("G6", 100), ("C6", 200))
 
 
 # noinspection PyAttributeOutsideInit
@@ -53,7 +56,7 @@ class Hardware:
     def button_b(self) -> async_button.Button:
         """ Async Button for Button B"""
         import async_button
-        return async_button.Button(pins.BUTTON_B, value_when_pressed=False)
+        return async_button.Button(pins.BUTTON_B, value_when_pressed=False, long_click_enable=True)
 
     @cached_property
     def both_buttons(self) -> async_button.MultiButton:
@@ -106,22 +109,28 @@ class Hardware:
         import seeed_xiao_nrf52840
         return seeed_xiao_nrf52840.IMU()
 
-    @cached_property
-    def display(self) -> display.Display:
-        from display import SH1106_Display
-        return SH1106_Display(self.i2c)
-
     def beep_happy(self):
         self.buzzer.play(HAPPY)
 
     def beep_shutdown(self):
         self.buzzer.play(reversed(HAPPY))
 
+    def beep_bip(self):
+        self.buzzer.play(BIP)
+
+    def beep_bop(self):
+        self.buzzer.play(BOP)
+
+    def beep_sad(self):
+        self.buzzer.play(SAD)
+
     async def beep_wait(self):
         await self.buzzer.wait()
 
     def deinit(self):
         # release display
+        import displayio
+        displayio.release_displays()
         for attr in self.__dict__.values():
             if attr is not None and hasattr(attr, "deinit"):
                 attr.deinit()
