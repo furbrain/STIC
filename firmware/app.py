@@ -1,6 +1,7 @@
 import asyncio
 import time
 
+import calibrate
 from display import Display
 from utils import usb_power_connected, partial, simplify
 
@@ -199,8 +200,8 @@ class App:
         await asyncio.sleep(0.1)
         items = {
             "Calibrate": {
-                "Sensors": partial(self.start_menu_item, self.menu_item_test),
-                "Laser": partial(self.start_menu_item, self.breaker),
+                "Sensors": partial(self.start_menu_item, calibrate.calibrate),
+                "Laser": self.dummy,
                 "Axes": self.freeze},
             "Settings": {
                 "Units": Options(
