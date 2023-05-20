@@ -45,7 +45,8 @@ async def main(mode):
             logger.info("Starting main app")
             await main_app.main()
         except Exception as err:
-            logger.warning("Exception received in main outer layer:")
+            #don't try and report this as system likely in an iffy state - just exit
+            logger.error("Exception received in main outer layer:")
             traceback.print_exception(err)
 
 

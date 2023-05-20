@@ -101,6 +101,15 @@ class cached_property:
             setattr(instance, self.cached_name, result)
             return result
 
+def simplify(formatted_exception:str):
+    lines = formatted_exception.splitlines()
+    import re
+    pattern = r'File "(.*)", line (\d+), in (.*)$'
+    matches = re.search(pattern, lines[-2])
+    if matches:
+        return ':'.join(matches.groups())+'\r\n'+lines[-1]
+    else:
+        return '\r\n'.join(lines[-2:])
 
 def partial(func, *args, **kwargs):
     def f():

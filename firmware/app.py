@@ -2,7 +2,7 @@ import asyncio
 import time
 
 from display import Display
-from utils import usb_power_connected, partial
+from utils import usb_power_connected, partial, simplify
 
 try:
     from typing import List, Coroutine
@@ -89,6 +89,9 @@ class App:
             await asyncio.sleep(1)
             display.show_info(f"MENU TEST: {i}\r\nPhil was here\r\nHere is a very long line " +
                                 f"indeed")
+
+    async def breaker(self, devices, config, display):
+        a = b
 
     async def measure_task(self):
         """
@@ -197,7 +200,7 @@ class App:
         items = {
             "Calibrate": {
                 "Sensors": partial(self.start_menu_item, self.menu_item_test),
-                "Laser": self.dummy,
+                "Laser": partial(self.start_menu_item, self.breaker),
                 "Axes": self.freeze},
             "Settings": {
                 "Units": Options(
@@ -256,7 +259,7 @@ class App:
         await asyncio.sleep(0) # allow everything to stop
         if self.exception_context:
             if isinstance(self.exception_context["exception"], Shutdown):
-                # this is a planned shut down, no logging  needed
+                # this is a planned shut down, no display or file write needed
                 logger.info(f"Planned shutdown: {self.exception_context['exception'].args[0]}")
             else:
                 import traceback
@@ -268,7 +271,21 @@ class App:
                         f.flush()
                 except OSError:
                     #unable to save to disk, probably connected via USB, so print
-                    print(output[0])
+                    logger.error(output[0])
+                try:
+                    brief_output = simplify(output[0])
+                    self.display.show_info(brief_output)
+                    from microcontroller import watchdog as w
+                    for i in range(10):
+                        await asyncio.sleep(1)
+                        if w.mode != None:
+                            w.feed()
+
+                except Exception as exc:
+                    # error displaying: give up
+                    logger.error("Error displaying error¬")
+                    logger.error(traceback.format_exception(exc)[0])
+                    pass
         self.devices.beep_shutdown()
         await self.devices.beep_wait()
         from microcontroller import watchdog
