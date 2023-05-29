@@ -5,8 +5,8 @@ from mag_cal import Calibration
 logger = logging.getLogger()
 
 _CONFIG_FILE = "/config.json"
-_DEFAULT_AXES_MAG = "-Y+X+Z"
-_DEFAULT_AXES_GRAV = "+Y-X-Z"
+_DEFAULT_AXES_MAG = "+X+Y-Z"
+_DEFAULT_AXES_GRAV = "-Y-X+Z"
 class Config:
     DEGREES = 0
     GRADS = 1
@@ -14,7 +14,7 @@ class Config:
     IMPERIAL = 1
 
     def __init__(self,
-                 timeout: int = 10,
+                 timeout: int = 60,
                  angles: int = DEGREES,
                  units: int = METRIC,
                  mag_axes: str = _DEFAULT_AXES_MAG,
