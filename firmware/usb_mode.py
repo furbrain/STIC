@@ -1,13 +1,22 @@
 import time
 
+import board
+import digitalio
+import terminalio
 from adafruit_progressbar.horizontalprogressbar import HorizontalProgressBar, \
     HorizontalFillDirection
-
+from adafruit_display_text import label
 import config
 import hardware
 import display
 import displayio
 import seeed_xiao_nrf52840
+import adafruit_logging as logging
+
+logger = logging.getLogger()
+
+
+import utils
 
 BAR_HEIGHT = 18
 
@@ -38,12 +47,29 @@ def usb_charge_monitor():
             min_value=0, max_value=BAR_WIDTH, bar_color=0xffffff, margin_size=0, border_thickness=0
         )
         group.append(progress_bar)
+        status_label = label.Label(terminalio.FONT, text=" "*13)
+        status_label.anchored_position = (64,52)
+        status_label.anchor_point = (0.5, 0.0)
+        group.append(status_label)
+
         disp.show_group(group)
+        disconnnected_count = 0
         while True:
-            progress = 20
-            #progress = convert_voltage_to_progress(devices.batt_voltage, BAR_WIDTH)
+            if not devices.battery.charge_status:
+                progress = BAR_WIDTH
+                status_label.text = "Fully Charged"
+            else:
+                progress = convert_voltage_to_progress(devices.batt_voltage, BAR_WIDTH)
+                percent_progress = convert_voltage_to_progress(devices.batt_voltage, 100)
+                status_label.text = f"Charging {percent_progress}%"
             while progress <= BAR_WIDTH + 2:
                 progress_bar.value = min(progress, BAR_WIDTH-1)
                 disp.refresh()
                 progress += 1
                 time.sleep(0.1)
+                if utils.usb_power_connected():
+                    disconnnected_count = 0
+                else:
+                    disconnnected_count +=1
+                if disconnnected_count > 5:
+                    return
