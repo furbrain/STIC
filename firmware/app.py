@@ -2,6 +2,7 @@ import asyncio
 import time
 
 import calibrate
+import config
 from display import Display
 from utils import usb_power_connected, partial, simplify
 
@@ -120,7 +121,7 @@ class App:
         await self.devices.laser.set_laser(True)
         #self.devices.display.set_mode(self.devices.display.MEASURE)
         # FIXME we've just bodged the calibration for now...
-        cal = get_null_calibration()
+        cal = get_null_calibration(self.config)
         while True:
             btn, click = await self.devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
             if btn == "a":
@@ -130,7 +131,6 @@ class App:
                 logger.debug(f"Mag: {mag}")
                 grav = self.devices.accelerometer.acceleration
                 logger.debug(f"Grav: {grav}")
-                cal = get_null_calibration()
                 # FIXME maybe need to protect magnetometer from stray currents etc and maybe use
                 # direct procedural calls...
                 azimuth, inclination, _ =  cal.get_angles(mag, grav)
@@ -323,9 +323,9 @@ class App:
         asyncio.get_event_loop().set_exception_handler(exception_handler)
 
 
-def get_null_calibration():
+def get_null_calibration(cfg: config.Config):
     from ulab import numpy as np
-    cal = mag_cal.Calibration()
+    cal = mag_cal.Calibration(mag_axes=cfg.mag_axes, grav_axes=cfg.grav_axes)
     cal.mag.transform = np.eye(3)
     cal.mag.centre = np.array([0.0,0,0])
     cal.grav.transform = cal.mag.transform
