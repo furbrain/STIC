@@ -91,6 +91,19 @@ class App:
             display.show_info(f"MENU TEST: {i}\r\nPhil was here\r\nHere is a very long line " +
                                 f"indeed")
 
+    async def raw_readings_item(self, devices: hardware.Hardware, config, display):
+        while True:
+            try:
+                await asyncio.wait_for(devices.button_a.wait_for_click(),0.5)
+                return
+            except asyncio.TimeoutError:
+                pass
+            acc = devices.accelerometer.acceleration
+            mag = devices.magnetometer.magnetic
+            text = "Raw Accel Mag\r\n"
+            for axis,a,m in zip("XYZ",acc,mag):
+                text += f"{axis}   {a:05.3f} {m:05.2f}\r\n"
+            display.show_info(text)
     async def breaker(self, devices, config, display):
         a = b
 
@@ -205,6 +218,7 @@ class App:
                 "Axes": self.freeze},
             "Test": {
                 "Simple Test": partial(self.start_menu_item, self.menu_item_test),
+                "Raw Data": partial(self.start_menu_item, self.raw_readings_item),
                 "Value Error": partial(self.start_menu_item, self.breaker),
                 "Freeze": self.freeze},
             "Settings": {
