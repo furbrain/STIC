@@ -26,6 +26,9 @@ except ImportError:
 
 import busio
 import digitalio
+import adafruit_logging as logging
+
+logger = logging.getLogger()
 
 
 # Pin definitions
@@ -39,6 +42,7 @@ SAD = (("G6", 100), ("C6", 200))
 # noinspection PyAttributeOutsideInit
 class Hardware:
     def __init__(self):
+        logger.debug("Initialising hardware")
         import displayio
         displayio.release_displays()
         self.las_en_pin = digitalio.DigitalInOut(pins.LASER_EN)
@@ -140,4 +144,7 @@ class Hardware:
         self.las_en_pin.value = False
         for attr in self.__dict__.values():
             if attr is not None and hasattr(attr, "deinit"):
+                logger.debug(f"Deiniting {attr}")
                 attr.deinit()
+        #self.periph_enable_io.value = False
+        #time.sleep(0.01)

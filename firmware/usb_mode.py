@@ -34,7 +34,9 @@ def convert_voltage_to_progress(voltage:float, maximum:int):
 
 
 def usb_charge_monitor():
+    logger.debug("Releasing displays")
     displayio.release_displays()
+    logger.debug("Showing Charging symbol")
     with hardware.Hardware() as devices:
         cfg = config.Config.load()
         disp = display.Display(devices, cfg)
