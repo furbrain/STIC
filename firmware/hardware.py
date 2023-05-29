@@ -137,6 +137,7 @@ class Hardware:
         # release display
         import displayio
         displayio.release_displays()
+        self.las_en_pin.value = False
         for attr in self.__dict__.values():
             if attr is not None and hasattr(attr, "deinit"):
                 attr.deinit()
