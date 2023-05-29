@@ -1,4 +1,5 @@
 import pins
+import usb_mode
 from utils import usb_power_connected
 
 try:
@@ -58,22 +59,30 @@ while True:
     if usb_power_connected() != storage.getmount("/").readonly:
         logger.info("Restarting microcontroller so can correctly mount flash")
         microcontroller.reset()
-    if double_click_start():
-        gc.collect()
-        logger.info("Double click")
-        logger.debug(f"Memory left: {gc.mem_free()}")
-        with digitalio.DigitalInOut(pins.BUTTON_B) as button_b:
-            app_used = True
-            button_b.switch_to_input(digitalio.Pull.UP)
-            if button_b.value == False:
-                # button b is pressed
-                mode = app.App.MENU
-            else:
-                mode = app.App.MEASURE
-            logger.debug(f"App mode is {mode}")
-        asyncio.run(main(mode))
-    else:
-        logger.info("no double click")
+    try:
+        if double_click_start():
+            gc.collect()
+            logger.info("Double click")
+            logger.debug(f"Memory left: {gc.mem_free()}")
+            with digitalio.DigitalInOut(pins.BUTTON_B) as button_b:
+                app_used = True
+                button_b.switch_to_input(digitalio.Pull.UP)
+                if button_b.value == False:
+                    # button b is pressed
+                    mode = app.App.MENU
+                else:
+                    mode = app.App.MEASURE
+                logger.debug(f"App mode is {mode}")
+            asyncio.run(main(mode))
+        else:
+            logger.info("no double click")
+            time.sleep(0.1)
+            if usb_power_connected():
+                usb_mode.usb_charge_monitor()
+    except Exception as exc:
+        # do not go in to REPL on exception
+        logger.debug(traceback.format_exception(exc))
+        pass
     # shutdown watchdog before sleep
     if microcontroller.watchdog.mode != None:
         logger.debug("Disabling watchdog prior to sleep")
@@ -89,5 +98,7 @@ while True:
             # ensure device resets after a period if been used
             microcontroller.reset()
     else:
-        logger.debug("App not used so indefinite sleep, waiting for pin press")
-        alarm.light_sleep_until_alarms(pin_alarm, usb_alarm)
+        logger.debug("App not used so indefinite sleep, waiting for pin press or usb connection")
+        wakeup = alarm.light_sleep_until_alarms(pin_alarm, usb_alarm)
+    if wakeup == usb_alarm:
+        time.sleep(0.1)
