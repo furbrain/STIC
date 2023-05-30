@@ -50,20 +50,32 @@ def usb_charge_monitor():
         )
         group.append(progress_bar)
         status_label = label.Label(terminalio.FONT, text=" "*13)
-        status_label.anchored_position = (64,52)
+        status_label.anchored_position = (64, 52)
         status_label.anchor_point = (0.5, 0.0)
+        percentage_label = label.Label(terminalio.FONT, text=" "*4)
+        percentage_label.anchored_position = (127,0)
+        percentage_label.anchor_point = (1.0, 0.0)
+        voltage_label = label.Label(terminalio.FONT, text=" "*5)
+        voltage_label.anchored_position = (0,0)
+        voltage_label.anchor_point = (0.0, 0.0)
+        group.append(percentage_label)
+        group.append(voltage_label)
+
         group.append(status_label)
 
         disp.show_group(group)
         disconnnected_count = 0
         while True:
+            voltage = devices.batt_voltage
+            voltage_label.text = f"{voltage:4.2f}V"
+            percent_progress = convert_voltage_to_progress(voltage, 100)
+            percentage_label.text = f"{percent_progress}%"
             if not devices.battery.charge_status:
                 progress = BAR_WIDTH
                 status_label.text = "Fully Charged"
             else:
-                progress = convert_voltage_to_progress(devices.batt_voltage, BAR_WIDTH)
-                percent_progress = convert_voltage_to_progress(devices.batt_voltage, 100)
-                status_label.text = f"Charging {percent_progress}%"
+                progress = convert_voltage_to_progress(voltage, BAR_WIDTH)
+                status_label.text = f"Charging"
             while progress <= BAR_WIDTH + 2:
                 progress_bar.value = min(progress, BAR_WIDTH-1)
                 disp.refresh()

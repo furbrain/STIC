@@ -63,7 +63,6 @@ class App:
     def deinit(self):
         self.display.deinit()
         self.devices.deinit()
-        self.display.deinit()
 
 
     async def switch_task(self, mode: int):
