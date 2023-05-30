@@ -92,6 +92,7 @@ class Hardware:
         from laser_egismos import AsyncLaser
         import busio
         self.uart = busio.UART(pins.TX, pins.RX, baudrate=9600)
+        self.uart.reset_input_buffer()
         return AsyncLaser(self.uart)
 
     def laser_enable(self, value: bool) -> None:
@@ -143,8 +144,10 @@ class Hardware:
         displayio.release_displays()
         self.las_en_pin.value = False
         for attr in self.__dict__.values():
-            if attr is not None and hasattr(attr, "deinit"):
+            if attr is not None and hasattr(attr, "deinit") and attr is not self.periph_enable_io:
                 logger.debug(f"Deiniting {attr}")
                 attr.deinit()
-        #self.periph_enable_io.value = False
-        #time.sleep(0.01)
+        logger.debug("turning off peripherals")
+        self.periph_enable_io.value = False
+        time.sleep(0.1)
+        self.periph_enable_io.deinit()
