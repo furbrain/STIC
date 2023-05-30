@@ -111,5 +111,5 @@ def get_laser_bitmap_group():
     return group
     # Add the Group to the Display
 
-font_20 = bitmap_font.load_font("/fonts/OpenSans-20.bdf")
+font_20 = bitmap_font.load_font("/fonts/terminus_20.pcf")
 laser_group = get_laser_bitmap_group()
