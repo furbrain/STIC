@@ -77,7 +77,7 @@ while True:
         else:
             logger.info("no double click")
             time.sleep(0.1)
-            if usb_power_connected():
+            if usb_power_connected() and logger.getEffectiveLevel() != logging.DEBUG:
                 usb_mode.usb_charge_monitor()
     except Exception as exc:
         # do not go in to REPL on exception
