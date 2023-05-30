@@ -2,11 +2,14 @@ import json
 import adafruit_logging as logging
 from mag_cal import Calibration
 
+_GRADS_PER_DEGREE = 400 / 360.0
+
 logger = logging.getLogger()
 
 _CONFIG_FILE = "/config.json"
 _DEFAULT_AXES_MAG = "+X+Y-Z"
 _DEFAULT_AXES_GRAV = "-Y-X+Z"
+_FEET_PER_METRE = 3.28084
 class Config:
     DEGREES = 0
     GRADS = 1
@@ -62,4 +65,27 @@ class Config:
     def set_var(self, varname, value):
         setattr(self, varname, value)
         self._dirty = True
+
+    def get_azimuth_text(self, azimuth: float) -> str:
+        azimuth = azimuth % 360  # move to proper range
+        if self.angles == self.DEGREES:
+            return f"{azimuth:05.1f}°"
+        elif self.angles == self.GRADS:
+            azimuth *= _GRADS_PER_DEGREE  # convert to grads
+            return f"{azimuth:05.1f}g"
+
+    def get_inclination_text(self, inclination: float) -> str:
+        if self.angles == self.DEGREES:
+            return f"{inclination:+05.1f}°"
+        elif self.angles == self.GRADS:
+            inclination *= _GRADS_PER_DEGREE # convert to grads
+            return f"{inclination:+05.1f}g"
+
+    def get_distance_text(self, distance: float) -> str:
+        if self.units == self.METRIC:
+            return f"{distance:.3f}m"
+        elif self.units == self.IMPERIAL:
+            distance *= _FEET_PER_METRE
+            return f"{distance:.3f}'"
+
 

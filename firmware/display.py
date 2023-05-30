@@ -45,10 +45,10 @@ class Display:
 
     def update_measurement(self, leg: Leg, reading_index: int):
         self.oled.show(self.measurement_group)
-        self.azimuth.text = str(leg.azimuth)
-        self.inclination.text = str(leg.inclination)
-        self.distance.text = str(leg.distance)
-        self.reading_index = str(reading_index)
+        self.azimuth.text = self.config.get_azimuth_text(leg.azimuth)
+        self.inclination.text = self.config.get_inclination_text(leg.inclination)
+        self.distance.text = self.config.get_distance_text(leg.distance)
+        self.reading_index.text = str(reading_index)
         self.refresh()
 
     def refresh(self):

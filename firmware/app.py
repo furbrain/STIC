@@ -61,6 +61,7 @@ class App:
 
 
     def deinit(self):
+        self.display.deinit()
         self.devices.deinit()
         self.display.deinit()
 
