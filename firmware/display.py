@@ -104,8 +104,10 @@ class Display:
         #added for completeness, currently does nothing
         pass
 def get_laser_bitmap_group():
-    laser_bitmap = displayio.OnDiskBitmap("laser2.bmp")
-    tile_grid = displayio.TileGrid(laser_bitmap, pixel_shader=laser_bitmap.pixel_shader)
+    laser_bitmap = displayio.OnDiskBitmap("images/laser.bmp")
+    x = (WIDTH-laser_bitmap.width)//2
+    y = (HEIGHT-laser_bitmap.height)//2
+    tile_grid = displayio.TileGrid(laser_bitmap, pixel_shader=laser_bitmap.pixel_shader,x=x,y=y)
     group = displayio.Group()
     group.append(tile_grid)
     return group
