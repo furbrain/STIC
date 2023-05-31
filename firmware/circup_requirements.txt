@@ -16,4 +16,5 @@ adafruit-circuitpython-displayio-sh1106
 adafruit_display_text
 adafruit_bitmapsaver
 adafruit_circuitpython_progressbar
+adafruit_logging
 # fruity_menu : currently needs manual_install

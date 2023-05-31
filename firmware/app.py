@@ -118,12 +118,11 @@ class App:
         logger.debug("Showing start screen")
         self.display.show_start_screen()
         logger.debug("turning on laser")
-        #self.devices.laser_enable(True)
+        self.devices.laser_enable(True)
         await asyncio.sleep(0.1)
         logger.debug("turning on laser light")
-        #await self.devices.laser.set_laser(True)
+        await self.devices.laser.set_laser(True)
         logger.debug("loading calibration")
-        #self.devices.display.set_mode(self.devices.display.MEASURE)
         # FIXME we've just bodged the calibration for now...
         cal = get_null_calibration(self.config)
         while True:
