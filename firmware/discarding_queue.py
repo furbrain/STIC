@@ -43,5 +43,4 @@ class DiscardingQueue:
         return iter(self.queue)
 
     def __getitem__(self, i: int):
-        print(f"len is {len(self.queue)}, index is {i}")
         return self.queue[i]
