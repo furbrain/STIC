@@ -1,6 +1,8 @@
 import asyncio
 import time
 
+from laser_egismos import LaserError
+
 import calibrate
 import config
 from display import Display
@@ -121,11 +123,11 @@ class App:
         self.devices.laser_enable(True)
         await asyncio.sleep(0.1)
         logger.debug("turning on laser light")
-        await self.devices.laser.set_laser(True)
         logger.debug("loading calibration")
         # FIXME we've just bodged the calibration for now...
         cal = get_null_calibration(self.config)
         while True:
+            await self.devices.laser.set_laser(True)
             btn, click = await self.devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
             if btn == "a":
                 # take a reading
@@ -142,8 +144,10 @@ class App:
                     logger.debug(f"Distance: {distance}m")
                     readings.store_reading(Leg(azimuth, inclination, distance))
                     self.devices.beep_bip()
-                except TimeoutError:
+                except LaserError as exc:
                     logger.info("Laser read failed")
+                    logger.info(exc)
+                    self.display.show_big_info(f"Laser Fail:\n{exc.__class__.__name__}\n{exc}")
                     self.devices.beep_sad()
                     continue
             elif btn == "b":

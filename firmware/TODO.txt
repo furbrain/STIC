@@ -7,6 +7,4 @@ Abstract out most run-time code into separate file DONE - app.py
 further refactoring needed - make each mode its own file...
 Generate error when trying to do reading without calibration
 
-Add timeout to laser egismos
-
-Fix azimuth issue in mag_cal
+Check charging and shutdown current consumption

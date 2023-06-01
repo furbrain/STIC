@@ -96,6 +96,12 @@ class Display:
         logterm.write(text)
         self.oled.refresh()
 
+    def show_big_info(self, text):
+        lines = text.splitlines()
+        for lbl, line in zip((self.azimuth,self.inclination,self.distance), lines):
+            lbl.text = line
+        self.show_group(self.measurement_group)
+
     def show_group(self, group: displayio.Group):
         self.oled.show(group)
         self.refresh()
