@@ -34,7 +34,7 @@ async def calibrate(devices: hardware.Hardware, cfg: config.Config, disp: displa
             json.dump({"mag": mags, "grav": gravs}, f)
     except OSError:
         pass
-    accuracy = cal.calibrate(np.array(mags), np.array(gravs),mag_cal.Calibration.AXIS_CORRECTION)
+    accuracy = cal.calibrate(np.array(mags), np.array(gravs))
     if accuracy < 0.25:
         quality = "excellent"
     elif accuracy < 0.5:

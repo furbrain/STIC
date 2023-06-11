@@ -2,25 +2,17 @@ import atexit
 import time
 
 import laser_egismos
-import pwmio
 
 import pins
-from utils import cached_property
-
+import async_button
+import async_buzzer
+import displayio
+import rm3100
+import invertingpwmio
+import seeed_xiao_nrf52840
 
 try:
     from typing import Optional
-    import display
-    import async_button
-    import async_buzzer
-    import displayio
-    import rm3100
-    import invertingpwmio
-    import seeed_xiao_nrf52840
-    from laser_egismos import Laser
-
-    from busio import I2C
-
 except ImportError:
     pass
 
@@ -49,6 +41,21 @@ class Hardware:
         self.las_en_pin.switch_to_output(False)
         self.periph_enable_io = digitalio.DigitalInOut(pins.PERIPH_EN)
         self.periph_enable_io.switch_to_output(True)
+        time.sleep(0.1)
+        self.button_a = async_button.Button(pins.BUTTON_A, value_when_pressed=False)
+        self.button_b = async_button.Button(pins.BUTTON_B, value_when_pressed=False, long_click_enable=True)
+        self.both_buttons = async_button.MultiButton(a=self.button_a, b=self.button_b)
+        self.i2c = busio.I2C(scl=pins.SCL, sda=pins.SDA, frequency=4000000)
+        self.drdy_io = digitalio.DigitalInOut(pins.DRDY)
+        self.drdy_io.direction = digitalio.Direction.INPUT
+        self.magnetometer = rm3100.RM3100_I2C(self.i2c, drdy_pin=self.drdy_io)
+        self.uart = busio.UART(pins.TX, pins.RX, baudrate=9600)
+        self.uart.reset_input_buffer()
+        self.laser = laser_egismos.AsyncLaser(self.uart)
+        self.pwm = invertingpwmio.InvertingPWMOut(pins.BUZZER_A, pins.BUZZER_B)
+        self.buzzer = async_buzzer.Buzzer(self.pwm)
+        self.battery = seeed_xiao_nrf52840.Battery()
+        self.accelerometer = seeed_xiao_nrf52840.IMU()
 
     def __enter__(self):
         return self
@@ -56,69 +63,12 @@ class Hardware:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.deinit()
 
-    @cached_property
-    def button_a(self) -> async_button.Button:
-        """ Async Button for Button A"""
-        import async_button
-        return async_button.Button(pins.BUTTON_A, value_when_pressed=False)
-
-    @cached_property
-    def button_b(self) -> async_button.Button:
-        """ Async Button for Button B"""
-        import async_button
-        return async_button.Button(pins.BUTTON_B, value_when_pressed=False, long_click_enable=True)
-
-    @cached_property
-    def both_buttons(self) -> async_button.MultiButton:
-        """ Multibutton for both buttons"""
-        import async_button
-        return async_button.MultiButton(a=self.button_a, b=self.button_b)
-
-    @cached_property
-    def magnetometer(self) -> rm3100._RM3100:
-        """ RM3100 magnetometer """
-        import rm3100
-        self.drdy_io = digitalio.DigitalInOut(pins.DRDY)
-        self.drdy_io.direction = digitalio.Direction.INPUT
-        return rm3100.RM3100_I2C(self.i2c, drdy_pin=self.drdy_io)
-
-    @cached_property
-    def i2c(self) -> busio.I2C:
-        from busio import I2C
-        return I2C(scl=pins.SCL, sda=pins.SDA, frequency=4000000)
-
-    @cached_property
-    def laser(self) -> laser_egismos.AsyncLaser:
-        from laser_egismos import AsyncLaser
-        import busio
-        self.uart = busio.UART(pins.TX, pins.RX, baudrate=9600)
-        self.uart.reset_input_buffer()
-        return AsyncLaser(self.uart)
-
     def laser_enable(self, value: bool) -> None:
         self.las_en_pin.value = value
-
-    @cached_property
-    def buzzer(self) -> async_buzzer.Buzzer:
-        """Buzzer"""
-        import async_buzzer
-        import invertingpwmio
-        self.pwm = invertingpwmio.InvertingPWMOut(pins.BUZZER_A, pins.BUZZER_B)
-        return async_buzzer.Buzzer(self.pwm)
-
-    @cached_property
-    def battery(self) -> seeed_xiao_nrf52840.Battery:
-        import seeed_xiao_nrf52840
-        return seeed_xiao_nrf52840.Battery()
 
     @property
     def batt_voltage(self) -> float:
         return self.battery.voltage
-
-    @cached_property
-    def accelerometer(self):
-        import seeed_xiao_nrf52840
-        return seeed_xiao_nrf52840.IMU()
 
     def beep_happy(self):
         self.buzzer.play(HAPPY)
@@ -140,14 +90,18 @@ class Hardware:
 
     def deinit(self):
         # release display
-        import displayio
         displayio.release_displays()
+        time.sleep(0.1)
         self.las_en_pin.value = False
-        for attr in self.__dict__.values():
-            if attr is not None and hasattr(attr, "deinit") and attr is not self.periph_enable_io:
-                logger.debug(f"Deiniting {attr}")
-                attr.deinit()
-        logger.debug("turning off peripherals")
+        self.accelerometer.deinit()
+        self.battery.deinit()
+        self.pwm.deinit()
+        self.uart.deinit()
+        self.i2c.deinit()
+        self.drdy_io.deinit()
+        self.button_b.deinit()
+        self.button_a.deinit()
         self.periph_enable_io.value = False
         time.sleep(0.1)
+        self.las_en_pin.deinit()
         self.periph_enable_io.deinit()

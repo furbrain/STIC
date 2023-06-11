@@ -1,20 +1,23 @@
+#PRE_INSTALLED
 #board
-seeed_xiao_nrf52840
+#seeed_xiao_nrf52840
 
 #async stuff
-asyncio
-async_buzzer
-async_button
+#asyncio
+#async_buzzer
+#async_button
 
 #sensors
-rm3100
-mag_cal
-laser_egismos
+#rm3100
+#mag_cal
+#laser_egismos
 
 #display
-adafruit-circuitpython-displayio-sh1106
-adafruit_display_text
-adafruit_bitmapsaver
-adafruit_circuitpython_progressbar
+#adafruit-circuitpython-displayio-sh1106
+#adafruit_display_text
+#adafruit_bitmapsaver
 adafruit_logging
+
+
+#Note fruity menu needs manual install
 # fruity_menu : currently needs manual_install

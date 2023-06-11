@@ -1,5 +1,8 @@
 import asyncio
 import time
+import traceback
+import microcontroller
+from watchdog import WatchDogMode
 
 from laser_egismos import LaserError
 
@@ -186,17 +189,15 @@ class App:
             logger.info(f"Count: {i}")
 
     async def watchdog(self):
-        from microcontroller import watchdog as w
-        from watchdog import WatchDogMode
         logger.debug("Watchdog task started")
-        w.timeout = 5 # 5 second watchdog timeout
-        w.mode = WatchDogMode.RAISE
+        microcontroller.watchdog.timeout = 5 # 5 second watchdog timeout
+        microcontroller.watchdog.mode = WatchDogMode.RAISE
         exception_count = 0
         try:
             while True:
                 await asyncio.sleep(1)
                 try:
-                    w.feed()
+                    microcontroller.watchdog.feed()
                 except ValueError:
                     # for some reason we get an extra run through after the watchdog fires
                     # can't feed it any more, but ignore this exception so we get the correct
@@ -206,7 +207,7 @@ class App:
                     else:
                         raise
         finally:
-            w.deinit()
+            microcontroller.watchdog.deinit()
     def dummy(self):
         pass
 
@@ -267,6 +268,7 @@ class App:
 
     async def main(self):
         # set up exception handling
+        clean_shutdown = True
         logger.debug("Main app routine started")
         self.setup_exception_handler()
         all_background_tasks = [asyncio.create_task(t) for t in self.background_tasks]
@@ -289,7 +291,7 @@ class App:
                 # this is a planned shut down, no display or file write needed
                 logger.info(f"Planned shutdown: {self.exception_context['exception'].args[0]}")
             else:
-                import traceback
+                clean_shutdown = False
                 output = traceback.format_exception(self.exception_context["exception"])
                 # FIXME implement nicer exception handling
                 try:
@@ -302,21 +304,20 @@ class App:
                 try:
                     brief_output = simplify(output[0])
                     self.display.show_info(brief_output)
-                    from microcontroller import watchdog as w
                     for i in range(10):
                         await asyncio.sleep(1)
-                        if w.mode != None:
-                            w.feed()
+                        if microcontroller.watchdog.mode != None:
+                            microcontroller.watchdog.feed()
 
                 except Exception as exc:
                     # error displaying: give up
-                    logger.error("Error displaying error¬")
+                    logger.error("Error displaying error")
                     logger.error(traceback.format_exception(exc)[0])
                     pass
         self.devices.beep_shutdown()
         await self.devices.beep_wait()
-        from microcontroller import watchdog
-        watchdog.deinit()
+        microcontroller.watchdog.deinit()
+        return clean_shutdown
 
     def setup_exception_handler(self):
         logger.debug("Asyncio exception handler created")
