@@ -62,9 +62,9 @@ async def main(mode):
 app_used = False
 while True:
     clean_shutdown = False
-    #if usb_power_connected() != storage.getmount("/").readonly:
-    #    logger.info("Restarting microcontroller so can correctly mount flash")
-    #    microcontroller.reset()
+    if usb_power_connected() != storage.getmount("/").readonly:
+        logger.info("Restarting microcontroller so can correctly mount flash")
+        microcontroller.reset()
     try:
         if double_click_start():
             gc.collect()

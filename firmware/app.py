@@ -1,15 +1,12 @@
 import asyncio
-import time
 import traceback
 import microcontroller
 from watchdog import WatchDogMode
 
-from mag_cal import MagneticAnomalyError, DipAnomalyError, GravityAnomalyError, NotCalibrated, Calibration
-from laser_egismos import LaserError
-
-import calibrate
 import config
 from display import Display
+from measure import measure
+from menu import menu
 from utils import simplify
 
 try:
@@ -18,11 +15,9 @@ except ImportError:
     pass
 
 from async_button import Button
-from fruity_menu.builder import Options, Action, build_menu
 
 import hardware
 from config import Config
-from data import Readings, Leg
 import adafruit_logging as logging
 
 logger = logging.getLogger()
@@ -42,11 +37,6 @@ class App:
         self.display = Display(self.devices, self.config)
         self.mode = mode
         self.menu_action = None
-        self.interfaces = {
-            self.MEASURE: self.measure_task,
-            self.MENU: self.menu_task,
-            self.MENU_ITEM: self.menu_item_task
-        }
         self.background_tasks: List[Coroutine] = [
             self.quitter_task(),
             self.timeout(),
@@ -76,103 +66,20 @@ class App:
         if self.current_task:
             self.current_task.cancel()
         self.mode = mode
-        self.current_task = asyncio.create_task(self.interfaces[self.mode]())
+        if mode == self.MEASURE:
+            self.current_task = asyncio.create_task(measure(self.devices, self.config,
+                                                            self.display))
+        elif mode == self.MENU:
+            self.current_task = asyncio.create_task(menu(self.devices, self.config, self.display))
 
     async def switch_mode_monitor(self):
         while True:
             await self.devices.button_b.wait(Button.LONG)
-            print("switching mode")
+            logger.info("switching mode")
             if self.mode in (self.MEASURE, self.MENU_ITEM):
                 await self.switch_task(self.MENU)
             else:
                 await self.switch_task(self.MEASURE)
-
-    def start_menu_item(self, func):
-        self.menu_action = func
-        asyncio.create_task(self.switch_task(self.MENU_ITEM))
-
-    async def menu_item_test(self, devices, config, display):
-        for i in range(5):
-            await asyncio.sleep(1)
-            display.show_info(f"MENU TEST: {i}\r\nPhil was here\r\nHere is a very long line " +
-                                f"indeed")
-
-    async def raw_readings_item(self, devices: hardware.Hardware, config, display):
-        while True:
-            try:
-                await asyncio.wait_for(devices.button_a.wait_for_click(),0.5)
-                return
-            except asyncio.TimeoutError:
-                pass
-            acc = devices.accelerometer.acceleration
-            mag = devices.magnetometer.magnetic
-            text = "Raw Accel Mag\r\n"
-            for axis,a,m in zip("XYZ",acc,mag):
-                text += f"{axis}   {a:05.3f} {m:05.2f}\r\n"
-            display.show_info(text)
-    async def breaker(self, devices, config, display):
-        a = b
-
-    async def measure_task(self):
-        """
-        This is the main measurement task
-        :return:
-        """
-        from data import readings
-        #need to switch display to measurement here...
-        logger.debug("Showing start screen")
-        self.display.show_start_screen()
-        logger.debug("turning on laser")
-        self.devices.laser_enable(True)
-        await asyncio.sleep(0.1)
-        logger.debug("turning on laser light")
-        logger.debug("loading calibration")
-        # FIXME we've just bodged the calibration for now...
-        while True:
-            await self.devices.laser.set_laser(True)
-            btn, click = await self.devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
-            if btn == "a":
-                # take a reading
-                logger.info("Taking a reading")
-                mag = self.devices.magnetometer.magnetic
-                logger.debug(f"Mag: {mag}")
-                grav = self.devices.accelerometer.acceleration
-                logger.debug(f"Grav: {grav}")
-                try:
-                    azimuth, inclination, _ = self.config.calib.get_angles(mag, grav)
-                    distance = await asyncio.wait_for(self.devices.laser.measure(),3.0) / 1000
-                    logger.debug(f"Distance: {distance}m")
-                    self.config.calib.raise_if_anomaly(mag, grav, self.config.anomaly_strictness)
-                except LaserError as exc:
-                    logger.info("Laser read failed")
-                    logger.info(exc)
-                    self.display.show_big_info(f"Laser Fail:\n{exc.__class__.__name__}\n{exc}")
-                    self.devices.beep_sad()
-                    continue
-                except (MagneticAnomalyError,DipAnomalyError) as exc:
-                    logger.info("Magnetic Anomaly")
-                    logger.info(exc)
-                    self.display.show_big_info("Magnetic\nAnomaly:\nIron nearby?")
-                    self.devices.beep_sad()
-                    continue
-                except GravityAnomalyError as exc:
-                    logger.info("Gravity Anomaly")
-                    logger.info(exc)
-                    self.display.show_big_info("Device\nMovement\nDetected")
-                    self.devices.beep_sad()
-                    continue
-                except NotCalibrated as exc:
-                    logger.info("Device not calibrated")
-                    logger.info(exc)
-                    self.displat.show_big_info("Calibration\nneeded\nHold B 3s")
-                    self.devices.beep_sad()
-                readings.store_reading(Leg(azimuth, inclination, distance))
-                self.devices.beep_bip()
-            elif btn == "b":
-                logger.debug("B pressed")
-                readings.get_prev_reading()
-            if readings.current_reading is not None:
-                self.display.update_measurement(readings.current, readings.current_reading)
 
     async def quitter_task(self):
         """
@@ -180,6 +87,7 @@ class App:
         """
         logger.debug("Quitter task started")
         await self.devices.button_a.wait(Button.DOUBLE)
+        logger.info("Double click detected, quitting")
         raise Shutdown("quit!")
 
     async def timeout(self):
@@ -193,6 +101,7 @@ class App:
                                                                       b=Button.ANY_CLICK),
                                        self.config.timeout)
             except asyncio.TimeoutError:
+                logger.info("Timed out, quitting")
                 raise Shutdown(f"Timeout after {self.config.timeout} seconds inactivity")
 
     async def counter(self):
@@ -223,75 +132,6 @@ class App:
                         raise
         finally:
             microcontroller.watchdog.deinit()
-    def dummy(self):
-        pass
-
-    def freeze(self):
-        #stop everything for 10 seconds - should trigger watchdog
-        time.sleep(10)
-        time.sleep(10)
-
-    async def menu_task(self):
-        logger.debug("Menu task started")
-        await asyncio.sleep(0.1)
-        items = [
-            ("Calibrate", [
-                ("Sensors", Action(self.start_menu_item, calibrate.calibrate)),
-                ("Laser", self.dummy),
-                ("Axes", self.freeze),
-                ]),
-            ("Test", [
-                ("Simple Test", Action(self.start_menu_item, self.menu_item_test)),
-                ("Raw Data", Action(self.start_menu_item, self.raw_readings_item)),
-                ("Value Error", Action(self.start_menu_item, self.breaker)),
-                ("Freeze", self.freeze),
-                ]),
-            ("Settings", [
-                ("Units", Options(
-                    value=self.config.units,
-                    options = [
-                        ("Metric", Config.METRIC),
-                        ("Imperial", Config.IMPERIAL)],
-                    on_value_set = lambda x: self.config.set_var("units", x)
-                    )),
-                ("Angles", Options(
-                    value=self.config.angles,
-                    options=[
-                        ("Degrees", Config.DEGREES),
-                        ("Grads", Config.GRADS)],
-                    on_value_set = lambda x: self.config.set_var("angles", x)
-                    )),
-                ("Anomaly Detection", Options(
-                    value=self.config.anomaly_strictness,
-                    options=[
-                        ("Off", Calibration.OFF),
-                        ("Soft", Calibration.SOFT),
-                        ("Hard", Calibration.HARD)],
-                    on_value_set=lambda x: self.config.set_var("anomaly_strictness", x)
-                    )),
-                ]),
-            ]
-        menu = self.display.get_menu()
-        build_menu(menu, items)
-        await self.display.show_and_run_menu(menu)
-        menu.show_menu()
-        self.devices.display.refresh()
-        while True:
-            button, _ = await self.devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
-            if button == "a":
-                logger.debug("Menu: Click")
-                menu.click()
-                menu.show_menu()
-                self.devices.display.refresh()
-            elif button == "b":
-                logger.debug("Menu: Scroll")
-                menu.scroll(1)
-                menu.show_menu()
-                self.devices.display.refresh()
-
-    async def menu_item_task(self):
-        await self.menu_action(self.devices, self.config, self.display)
-        asyncio.create_task(self.switch_task(self.MENU)) #schedule task switch
 
     async def main(self):
         # set up exception handling
@@ -356,16 +196,6 @@ class App:
 
         # self.devices.beep_happy()
         asyncio.get_event_loop().set_exception_handler(exception_handler)
-
-
-def get_null_calibration(cfg: config.Config):
-    from ulab import numpy as np
-    cal = mag_cal.Calibration(mag_axes=cfg.mag_axes, grav_axes=cfg.grav_axes)
-    cal.mag.transform = np.eye(3)
-    cal.mag.centre = np.array([0.0,0,0])
-    cal.grav.transform = cal.mag.transform
-    cal.grav.centre = cal.mag.centre
-    return cal
 
 
 class Shutdown(Exception):

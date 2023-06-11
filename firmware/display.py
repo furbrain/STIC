@@ -57,24 +57,6 @@ class Display:
     def get_menu(self):
         return Menu(self.oled, HEIGHT, WIDTH, False, "Menu")
 
-    async def show_and_run_menu(self, menu):
-        menu.show_menu()
-        self.oled.refresh()
-        while True:
-            button, _ = await self.devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
-            if button == "a":
-                logger.debug("Menu: Click")
-                self.devices.beep_bip()
-                menu.click()
-                menu.show_menu()
-                self.oled.refresh()
-            elif button == "b":
-                logger.debug("Menu: Scroll")
-                self.devices.beep_bop()
-                menu.scroll(1)
-                menu.show_menu()
-                self.oled.refresh()
-
     def show_info(self, text):
         splash = displayio.Group()
         fontx, fonty = terminalio.FONT.get_bounding_box()
