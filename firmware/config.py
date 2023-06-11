@@ -22,12 +22,14 @@ class Config:
                  units: int = METRIC,
                  mag_axes: str = _DEFAULT_AXES_MAG,
                  grav_axes: str = _DEFAULT_AXES_GRAV,
+                 anomaly_strictness: int = Calibration.SOFT,
                  calib: dict = None):
         self.timeout = timeout
         self.angles = angles
         self.units = units
         self.mag_axes = mag_axes
         self.grav_axes = grav_axes
+        self.anomaly_strictness = anomaly_strictness
         self._dirty = False
         if calib:
             self.calib = Calibration.from_dict(calib)

@@ -4,21 +4,21 @@ import traceback
 import microcontroller
 from watchdog import WatchDogMode
 
+from mag_cal import MagneticAnomalyError, DipAnomalyError, GravityAnomalyError, NotCalibrated, Calibration
 from laser_egismos import LaserError
 
 import calibrate
 import config
 from display import Display
-from utils import usb_power_connected, partial, simplify
+from utils import simplify
 
 try:
     from typing import List, Coroutine
 except ImportError:
     pass
 
-import mag_cal
 from async_button import Button
-from fruity_menu.builder import Options, build_menu
+from fruity_menu.builder import Options, Action, build_menu
 
 import hardware
 from config import Config
@@ -128,7 +128,6 @@ class App:
         logger.debug("turning on laser light")
         logger.debug("loading calibration")
         # FIXME we've just bodged the calibration for now...
-        cal = get_null_calibration(self.config)
         while True:
             await self.devices.laser.set_laser(True)
             btn, click = await self.devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
@@ -139,20 +138,36 @@ class App:
                 logger.debug(f"Mag: {mag}")
                 grav = self.devices.accelerometer.acceleration
                 logger.debug(f"Grav: {grav}")
-                # FIXME maybe need to protect magnetometer from stray currents etc and maybe use
-                # direct procedural calls...
-                azimuth, inclination, _ =  cal.get_angles(mag, grav)
                 try:
+                    azimuth, inclination, _ = self.config.calib.get_angles(mag, grav)
                     distance = await asyncio.wait_for(self.devices.laser.measure(),3.0) / 1000
                     logger.debug(f"Distance: {distance}m")
-                    readings.store_reading(Leg(azimuth, inclination, distance))
-                    self.devices.beep_bip()
+                    self.config.calib.raise_if_anomaly(mag, grav, self.config.anomaly_strictness)
                 except LaserError as exc:
                     logger.info("Laser read failed")
                     logger.info(exc)
                     self.display.show_big_info(f"Laser Fail:\n{exc.__class__.__name__}\n{exc}")
                     self.devices.beep_sad()
                     continue
+                except (MagneticAnomalyError,DipAnomalyError) as exc:
+                    logger.info("Magnetic Anomaly")
+                    logger.info(exc)
+                    self.display.show_big_info("Magnetic\nAnomaly:\nIron nearby?")
+                    self.devices.beep_sad()
+                    continue
+                except GravityAnomalyError as exc:
+                    logger.info("Gravity Anomaly")
+                    logger.info(exc)
+                    self.display.show_big_info("Device\nMovement\nDetected")
+                    self.devices.beep_sad()
+                    continue
+                except NotCalibrated as exc:
+                    logger.info("Device not calibrated")
+                    logger.info(exc)
+                    self.displat.show_big_info("Calibration\nneeded\nHold B 3s")
+                    self.devices.beep_sad()
+                readings.store_reading(Leg(azimuth, inclination, distance))
+                self.devices.beep_bip()
             elif btn == "b":
                 logger.debug("B pressed")
                 readings.get_prev_reading()
@@ -219,31 +234,43 @@ class App:
     async def menu_task(self):
         logger.debug("Menu task started")
         await asyncio.sleep(0.1)
-        items = {
-            "Calibrate": {
-                "Sensors": partial(self.start_menu_item, calibrate.calibrate),
-                "Laser": self.dummy,
-                "Axes": self.freeze},
-            "Test": {
-                "Simple Test": partial(self.start_menu_item, self.menu_item_test),
-                "Raw Data": partial(self.start_menu_item, self.raw_readings_item),
-                "Value Error": partial(self.start_menu_item, self.breaker),
-                "Freeze": self.freeze},
-            "Settings": {
-                "Units": Options(
+        items = [
+            ("Calibrate", [
+                ("Sensors", Action(self.start_menu_item, calibrate.calibrate)),
+                ("Laser", self.dummy),
+                ("Axes", self.freeze),
+                ]),
+            ("Test", [
+                ("Simple Test", Action(self.start_menu_item, self.menu_item_test)),
+                ("Raw Data", Action(self.start_menu_item, self.raw_readings_item)),
+                ("Value Error", Action(self.start_menu_item, self.breaker)),
+                ("Freeze", self.freeze),
+                ]),
+            ("Settings", [
+                ("Units", Options(
                     value=self.config.units,
-                    options = [Config.METRIC, Config.IMPERIAL],
-                    option_labels = ["Metric", "Imperial"],
+                    options = [
+                        ("Metric", Config.METRIC),
+                        ("Imperial", Config.IMPERIAL)],
                     on_value_set = lambda x: self.config.set_var("units", x)
-                ),
-                "Angles": Options(
+                    )),
+                ("Angles", Options(
                     value=self.config.angles,
-                    options = [Config.DEGREES, Config.GRADS],
-                    option_labels = ["Degrees", "Grads"],
+                    options=[
+                        ("Degrees", Config.DEGREES),
+                        ("Grads", Config.GRADS)],
                     on_value_set = lambda x: self.config.set_var("angles", x)
-                )
-            }
-        }
+                    )),
+                ("Anomaly Detection", Options(
+                    value=self.config.anomaly_strictness,
+                    options=[
+                        ("Off", Calibration.OFF),
+                        ("Soft", Calibration.SOFT),
+                        ("Hard", Calibration.HARD)],
+                    on_value_set=lambda x: self.config.set_var("anomaly_strictness", x)
+                    )),
+                ]),
+            ]
         menu = self.display.get_menu()
         build_menu(menu, items)
         await self.display.show_and_run_menu(menu)
