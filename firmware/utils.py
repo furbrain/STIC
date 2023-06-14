@@ -115,3 +115,15 @@ def partial(func, *args, **kwargs):
     def f():
         return func(*args, **kwargs)
     return f
+
+
+def convert_voltage_to_progress(voltage:float, maximum:int):
+    if voltage < MIN_VOLTAGE:
+        return 0
+    if voltage > MAX_VOLTAGE:
+        return maximum
+    return int(maximum*(voltage-MIN_VOLTAGE)/(MAX_VOLTAGE-MIN_VOLTAGE))
+
+
+MIN_VOLTAGE=3.5
+MAX_VOLTAGE=4.2

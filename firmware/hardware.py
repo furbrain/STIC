@@ -3,6 +3,7 @@ import time
 
 import laser_egismos
 
+import bluetooth
 import pins
 import async_button
 import async_buzzer
@@ -56,6 +57,7 @@ class Hardware:
         self.buzzer = async_buzzer.Buzzer(self.pwm)
         self.battery = seeed_xiao_nrf52840.Battery()
         self.accelerometer = seeed_xiao_nrf52840.IMU()
+        self.bt = bluetooth.BluetoothServices(self.battery)
 
     def __enter__(self):
         return self
@@ -93,6 +95,7 @@ class Hardware:
         displayio.release_displays()
         time.sleep(0.1)
         self.las_en_pin.value = False
+        self.bt.deinit()
         self.accelerometer.deinit()
         self.battery.deinit()
         self.pwm.deinit()

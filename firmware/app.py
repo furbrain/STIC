@@ -41,7 +41,9 @@ class App:
             self.quitter_task(),
             self.timeout(),
             self.switch_mode_monitor(),
-            self.watchdog()
+            self.watchdog(),
+            self.devices.bt.battery_background_task(),
+            self.devices.bt.disto_background_task(),
         ]
         if logger.getEffectiveLevel() <= logging.INFO:
             self.background_tasks.append(self.counter())
@@ -175,7 +177,6 @@ class App:
                         await asyncio.sleep(1)
                         if microcontroller.watchdog.mode != None:
                             microcontroller.watchdog.feed()
-
                 except Exception as exc:
                     # error displaying: give up
                     logger.error("Error displaying error")

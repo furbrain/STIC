@@ -86,6 +86,10 @@ while True:
             if usb_power_connected() and logger.getEffectiveLevel() != logging.DEBUG:
                 usb_mode.usb_charge_monitor()
             clean_shutdown = True
+    except MemoryError:
+        # limited debugging as can't do anything as no memory
+        clean_shutdown = False
+        logger.debug("Outer memory error")
     except Exception as exc:
         # do not go in to REPL on exception
         clean_shutdown = False

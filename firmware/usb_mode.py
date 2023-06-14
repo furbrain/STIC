@@ -1,7 +1,5 @@
 import time
 
-import board
-import digitalio
 import terminalio
 from adafruit_progressbar.horizontalprogressbar import HorizontalProgressBar, \
     HorizontalFillDirection
@@ -10,8 +8,9 @@ import config
 import hardware
 import display
 import displayio
-import seeed_xiao_nrf52840
 import adafruit_logging as logging
+
+from utils import convert_voltage_to_progress
 
 logger = logging.getLogger()
 
@@ -20,17 +19,7 @@ import utils
 
 BAR_HEIGHT = 18
 
-MIN_VOLTAGE=3.5
-MAX_VOLTAGE=4.2
-
 BAR_WIDTH = 40
-
-def convert_voltage_to_progress(voltage:float, maximum:int):
-    if voltage < MIN_VOLTAGE:
-        return 0
-    if voltage > MAX_VOLTAGE:
-        return maximum
-    return int(maximum*(voltage-MIN_VOLTAGE)/(MAX_VOLTAGE-MIN_VOLTAGE))
 
 
 def usb_charge_monitor():

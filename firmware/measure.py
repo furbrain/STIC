@@ -62,6 +62,7 @@ async def measure(devices, config, display):
                 display.show_big_info("Calibration\nneeded\nHold B 3s")
                 devices.beep_sad()
             readings.store_reading(Leg(azimuth, inclination, distance))
+            devices.bt.disto.send_data(azimuth, inclination, distance)
             devices.beep_bip()
         elif btn == "b":
             logger.debug("B pressed")
