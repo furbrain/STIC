@@ -10,6 +10,7 @@ import display
 import displayio
 import adafruit_logging as logging
 
+from bitmaps import bitmaps, palette
 from utils import convert_voltage_to_progress
 
 logger = logging.getLogger()
@@ -30,8 +31,8 @@ def usb_charge_monitor():
         cfg = config.Config.load()
         disp = display.Display(devices, cfg)
         group = displayio.Group()
-        battery_bmp = displayio.OnDiskBitmap("/images/battery.bmp")
-        battery_tile = displayio.TileGrid(battery_bmp,pixel_shader=battery_bmp.pixel_shader, x=32, y=14)
+        battery_bmp = bitmaps['battery']
+        battery_tile = displayio.TileGrid(battery_bmp, pixel_shader=palette, x=32, y=14)
         group.append(battery_tile)
         progress_bar = HorizontalProgressBar(
             (41,23), (BAR_WIDTH, BAR_HEIGHT), direction=HorizontalFillDirection.LEFT_TO_RIGHT,

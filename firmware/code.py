@@ -9,8 +9,8 @@ except ImportError:
 import adafruit_logging as logging
 import storage
 logger = logging.getLogger()
-if not storage.getmount("/").readonly:
-    logger.addHandler(logging.FileHandler("log.txt"))
+#if not storage.getmount("/").readonly:
+#    logger.addHandler(logging.FileHandler("log.txt"))
 logger.setLevel(logging.DEBUG)
 logger.debug("Starting log")
 

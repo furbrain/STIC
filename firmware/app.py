@@ -44,6 +44,7 @@ class App:
             self.watchdog(),
             self.devices.bt.battery_background_task(),
             self.devices.bt.disto_background_task(),
+            self.bt_connection_monitor(),
         ]
         if logger.getEffectiveLevel() <= logging.INFO:
             self.background_tasks.append(self.counter())
@@ -134,6 +135,11 @@ class App:
                         raise
         finally:
             microcontroller.watchdog.deinit()
+
+    async def bt_connection_monitor(self):
+        while True:
+            await asyncio.sleep(0.5)
+            self.display.set_bt_connected(self.devices.bt.connected)
 
     async def main(self):
         # set up exception handling

@@ -14,7 +14,7 @@ logger = logging.getLogger()
 
 class BluetoothServices:
     disto = distox.DistoXService()
-    disto_protocol = distox.DistoXProtocolService()
+    disto_protocol = distox.SurveyProtocolService()
     batt_service = BatteryService()
     advertisement = ProvideServicesAdvertisement(disto,
                                                  disto_protocol,
@@ -44,6 +44,10 @@ class BluetoothServices:
             print("Connections: ",self.ble.connections)
             self.batt_service.level = utils.convert_voltage_to_progress(self.battery.voltage, 100)
             await asyncio.sleep(1)
+
+    @property
+    def connected(self):
+        return self.ble.connected
 
     def deinit(self):
         if self.ble.advertising:
