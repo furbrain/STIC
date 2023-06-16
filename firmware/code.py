@@ -1,3 +1,5 @@
+import seeed_xiao_nrf52840
+
 import pins
 import usb_mode
 
@@ -30,6 +32,12 @@ import board
 LIGHT_SLEEP_TIMEOUT = 6*60*60 # light sleep for 6 hours
 
 def double_click_start() -> bool:
+    #first check voltage and return false if too low...
+    with seeed_xiao_nrf52840.Battery() as batt:
+        voltage = batt.voltage
+        if voltage < 3.2:
+            logger.info(f"Low voltage {voltage:3.1f}v")
+            return False
     with digitalio.DigitalInOut(pins.BUTTON_A) as button_a:
         button_a.switch_to_input(digitalio.Pull.UP)
         # wait for release

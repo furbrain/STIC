@@ -3,6 +3,7 @@ import displayio
 import terminalio
 from adafruit_bitmap_font import bitmap_font
 from adafruit_display_text import label
+from adafruit_progressbar.verticalprogressbar import VerticalProgressBar
 from displayio import TileGrid
 from fruity_menu.menu import Menu
 
@@ -12,6 +13,7 @@ from data import Leg
 import adafruit_logging as logging
 
 from bitmaps import bitmaps, palette
+from utils import convert_voltage_to_progress
 
 logger = logging.getLogger()
 
@@ -30,26 +32,31 @@ class Display:
         self.oled = adafruit_displayio_sh1106.SH1106(bus, width=WIDTH, height=HEIGHT,
                                                      rotation=0, auto_refresh=False, colstart=2)
         text = " " * 20
+
+        self.measurement_group = displayio.Group()
         self.azimuth = label.Label(font_20, text=text, color=0xffffff, x=1, y=10)
         self.inclination = label.Label(font_20, text=text, color=0xffffff, x=1, y=31)
         self.distance = label.Label(font_20, text=text, color=0xffffff, x=1, y=52)
         self.reading_index = label.Label(terminalio.FONT, text="  ", color=0xffffff)
-        self.reading_index.anchored_position = (127, 63)
-        self.reading_index.anchor_point = (1.0, 1.0)
+        self.reading_index.anchored_position = (127, 32)
+        self.reading_index.anchor_point = (1.0, 0.5)
+        self.measurement_group.append(self.azimuth)
+        self.measurement_group.append(self.inclination)
+        self.measurement_group.append(self.distance)
+        self.measurement_group.append(self.reading_index)
 
-        print(bitmaps['bt'].width)
-        print(bitmaps['bt'].height)
         self.icon_group = displayio.Group()
         self.bt_icon = TileGrid(bitmaps['bt'], pixel_shader=palette,
                                 width=1, height=1,
                                 tile_width=11, tile_height=16,
                                 x=115, y=1)
-        self.measurement_group = displayio.Group()
-        self.measurement_group.append(self.azimuth)
-        self.measurement_group.append(self.inclination)
-        self.measurement_group.append(self.distance)
-        self.measurement_group.append(self.reading_index)
+        batt_icon = TileGrid(bitmaps['batt_icon'], pixel_shader=palette, x=115, y=48)
+        self.batt_level = VerticalProgressBar((118,53), (6,8), max_value=100, border_thickness=0)
         self.icon_group.append(self.bt_icon)
+        self.icon_group.append(batt_icon)
+        self.icon_group.append(self.batt_level)
+
+
         self.laser_group = displayio.Group()
         self.laser_group.append(laser_group)
 
@@ -77,6 +84,10 @@ class Display:
             self.bt_icon[0] = 1
         else:
             self.bt_icon[0] = 0
+        self.refresh()
+
+    def set_batt_level(self, voltage):
+        self.batt_level.value = convert_voltage_to_progress(voltage, 100)
         self.refresh()
 
     def refresh(self):

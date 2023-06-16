@@ -45,6 +45,7 @@ class App:
             self.devices.bt.battery_background_task(),
             self.devices.bt.disto_background_task(),
             self.bt_connection_monitor(),
+            self.batt_monitor(),
         ]
         if logger.getEffectiveLevel() <= logging.INFO:
             self.background_tasks.append(self.counter())
@@ -141,6 +142,16 @@ class App:
             await asyncio.sleep(0.5)
             self.display.set_bt_connected(self.devices.bt.connected)
 
+    async def batt_monitor(self):
+        while True:
+            voltage = self.devices.batt_voltage
+            if voltage < 3.4:
+                self.devices.beep_sad()
+                raise LowBattery(f"Battery low ({voltage:3.1f}v)")
+            self.display.set_batt_level(voltage)
+            await asyncio.sleep(0.3)
+
+
     async def main(self):
         # set up exception handling
         clean_shutdown = True
@@ -208,4 +219,9 @@ class App:
 class Shutdown(Exception):
     """
     This represents a planned shutdown
+    """
+
+class LowBattery(Exception):
+    """
+    This represents a shutdown due to low battery
     """
