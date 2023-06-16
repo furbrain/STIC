@@ -1,4 +1,5 @@
 import asyncio
+import gc
 import time
 
 try:
@@ -31,6 +32,7 @@ def start_menu_item(func):
 async def menu(devices: hardware.Hardware, config: config.Config, display: display.Display):
     global action_item
     logger.debug("Menu task started")
+    gc.collect()
     await asyncio.sleep(0.1)
     items = [
         ("Calibrate", [
@@ -78,6 +80,7 @@ async def menu(devices: hardware.Hardware, config: config.Config, display: displ
         if button == "a":
             devices.beep_bip()
             logger.debug("Menu: Click")
+            gc.collect()
             menu.click()
             if action_item is not None:
                 logger.debug(f"Running {action_item}")
@@ -87,6 +90,7 @@ async def menu(devices: hardware.Hardware, config: config.Config, display: displ
             display.refresh()
         elif button == "b":
             logger.debug("Menu: Scroll")
+            gc.collect()
             devices.beep_bop()
             menu.scroll(1)
             menu.show_menu()
