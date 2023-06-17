@@ -1,4 +1,5 @@
 import asyncio
+import time
 
 import seeed_xiao_nrf52840
 from adafruit_ble import BLERadio
@@ -53,6 +54,7 @@ class BluetoothServices:
         if self.ble.advertising:
             logger.debug("Stopping BT advertisement")
             self.ble.stop_advertising()
-        pass
+        self.ble.stop_scan()
+        time.sleep(0.1)
 
 #ble = BLERadio()

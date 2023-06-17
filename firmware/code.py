@@ -28,6 +28,7 @@ import gc
 import app
 import microcontroller
 import board
+import _bleio
 
 LIGHT_SLEEP_TIMEOUT = 6*60*60 # light sleep for 6 hours
 
@@ -110,6 +111,8 @@ while True:
     if microcontroller.watchdog.mode != None:
         logger.debug("Disabling watchdog prior to sleep")
         microcontroller.watchdog.deinit()
+    _bleio.adapter.stop_advertising()
+    _bleio.adapter.stop_scan()
     pin_alarm = alarm.pin.PinAlarm(pins.BUTTON_A, value=False, pull=True)
     usb_alarm = alarm.pin.PinAlarm(board.CHARGE_STATUS, value=False, pull=False)
     if app_used:
