@@ -34,9 +34,9 @@ class Display:
         text = " " * 20
 
         self.measurement_group = displayio.Group()
-        self.azimuth = label.Label(font_20, text=text, color=0xffffff, x=1, y=10)
+        self.azimuth = label.Label(font_20, text=text, color=0xffffff, x=1, y=9)
         self.inclination = label.Label(font_20, text=text, color=0xffffff, x=1, y=31)
-        self.distance = label.Label(font_20, text=text, color=0xffffff, x=1, y=52)
+        self.distance = label.Label(font_20, text=text, color=0xffffff, x=1, y=53)
         self.reading_index = label.Label(terminalio.FONT, text="  ", color=0xffffff)
         self.reading_index.anchored_position = (127, 32)
         self.reading_index.anchor_point = (1.0, 0.5)
@@ -141,5 +141,5 @@ def get_laser_bitmap_group():
     # Add the Group to the Display
 
 
-font_20 = bitmap_font.load_font("/fonts/terminus_20.pcf")
+font_20 = bitmap_font.load_font("/fonts/terminus_28_ascii.pcf")
 laser_group = get_laser_bitmap_group()
