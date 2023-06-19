@@ -59,6 +59,7 @@ class Hardware:
         self.battery = seeed_xiao_nrf52840.Battery()
         self.accelerometer = seeed_xiao_nrf52840.IMU()
         self.bt = bluetooth.BluetoothServices(self.battery)
+        atexit.register(self.deinit)
 
     def __enter__(self):
         return self
@@ -109,3 +110,4 @@ class Hardware:
         time.sleep(0.1)
         self.las_en_pin.deinit()
         self.periph_enable_io.deinit()
+        atexit.unregister(self.deinit)
