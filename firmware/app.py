@@ -1,6 +1,9 @@
 import asyncio
 import traceback
+
+import distox
 import microcontroller
+from distox import DistoXService
 from watchdog import WatchDogMode
 
 import config
@@ -46,6 +49,7 @@ class App:
             self.devices.bt.disto_background_task(self.distox_callback),
             self.bt_connection_monitor(),
             self.batt_monitor(),
+            self.flip_monitor(),
         ]
         if logger.getEffectiveLevel() <= logging.INFO:
             self.background_tasks.append(self.counter())
@@ -160,14 +164,28 @@ class App:
                 await res
 
     async def batt_monitor(self):
+        logger.debug("Starting Battery monitor")
         while True:
             voltage = self.devices.batt_voltage
+            logger.debug(f"Voltage is {voltage:.2f}v")
             if voltage < 3.4:
                 self.devices.beep_sad()
                 raise LowBattery(f"Battery low ({voltage:3.1f}v)")
             self.display.set_batt_level(voltage)
-            await asyncio.sleep(0.3)
+            await asyncio.sleep(2.0)
 
+    async def flip_monitor(self):
+        logger.debug("Starting flip monitor")
+        while True:
+            await asyncio.sleep(0.3)
+            grav = self.devices.accelerometer.acceleration
+            grav = self.config.calib.grav.apply(grav)
+            if self.display.inverted and grav[0] < -0.3:
+                logger.debug("Flipping to right way up")
+                self.display.inverted = False
+            elif not self.display.inverted and grav[0] > 0.3:
+                logger.debug("Flipping to inverted")
+                self.display.inverted = True
 
     async def main(self):
         # set up exception handling

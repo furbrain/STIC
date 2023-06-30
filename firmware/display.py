@@ -59,6 +59,7 @@ class Display:
 
         self.laser_group = displayio.Group()
         self.laser_group.append(laser_group)
+        self._inverted = False
 
     def set_group_with_icons(self, group):
         for grp in self.measurement_group, self.laser_group:
@@ -125,6 +126,22 @@ class Display:
 
     def show_group(self, group: displayio.Group):
         self.oled.show(group)
+        self.refresh()
+
+    @property
+    def inverted(self):
+        """
+        Whether display is right way up or rotated
+        """
+        return self._inverted
+
+    @inverted.setter
+    def inverted(self, inverted: bool):
+        self._inverted = inverted
+        if inverted:
+            self.oled.rotation = 180
+        else:
+            self.oled.rotation = 0
         self.refresh()
 
     def deinit(self):

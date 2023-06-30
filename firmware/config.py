@@ -1,4 +1,9 @@
 import json
+try:
+    from typing import Optional
+except ImportError:
+    pass
+
 import adafruit_logging as logging
 from mag_cal import Calibration
 
@@ -32,9 +37,9 @@ class Config:
         self.anomaly_strictness = anomaly_strictness
         self._dirty = False
         if calib:
-            self.calib = Calibration.from_dict(calib)
+            self.calib: Optional[Calibration] = Calibration.from_dict(calib)
         else:
-            self.calib = None
+            self.calib: Optional[Calibration] = None
 
     def as_dict(self):
         dct = {}
