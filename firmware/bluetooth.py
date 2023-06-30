@@ -14,11 +14,9 @@ logger = logging.getLogger()
 
 
 class BluetoothServices:
-    disto = distox.DistoXService()
-    disto_protocol = distox.SurveyProtocolService()
+    disto = distox.SurveyProtocolService()
     batt_service = BatteryService()
     advertisement = ProvideServicesAdvertisement(disto,
-                                                 disto_protocol,
                                                  batt_service)
 
     def __init__(self, battery: seeed_xiao_nrf52840.Battery):
@@ -26,7 +24,8 @@ class BluetoothServices:
         logger.info("Starting bluetooth")
         logger.debug(self.ble.connections)
         self.battery = battery
-        self.ble.name = "DistoX"
+        self.ble.name = "SAP6_AB"
+        logger.debug(f"BLE name is {self.ble.name}")
         if not self.ble.connected and not self.ble.advertising:
             logger.debug("BLE advertising")
             self.ble.start_advertising(BluetoothServices.advertisement)
@@ -37,8 +36,8 @@ class BluetoothServices:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.deinit()
 
-    async def disto_background_task(self):
-        await self.disto.background_task()
+    async def disto_background_task(self, callback=None):
+        await self.disto.background_task(callback)
 
     async def battery_background_task(self):
         while True:
@@ -57,4 +56,3 @@ class BluetoothServices:
         self.ble.stop_scan()
         time.sleep(0.1)
 
-#ble = BLERadio()

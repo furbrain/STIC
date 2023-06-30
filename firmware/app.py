@@ -5,7 +5,7 @@ from watchdog import WatchDogMode
 
 import config
 from display import Display
-from measure import measure
+from measure import measure, take_reading
 from menu import menu
 from utils import simplify
 
@@ -43,7 +43,7 @@ class App:
             self.switch_mode_monitor(),
             self.watchdog(),
             self.devices.bt.battery_background_task(),
-            self.devices.bt.disto_background_task(),
+            self.devices.bt.disto_background_task(self.distox_callback),
             self.bt_connection_monitor(),
             self.batt_monitor(),
         ]
@@ -141,6 +141,23 @@ class App:
         while True:
             await asyncio.sleep(0.5)
             self.display.set_bt_connected(self.devices.bt.connected)
+
+    async def bt_quit_now(self):
+        raise Shutdown("Shutdown by Bluetooth Command")
+
+    async def distox_callback(self, value:int):
+        CALLBACKS = {
+            0x34: lambda: self.bt_quit_now(),
+            0x36: lambda: self.devices.laser.set_laser(True),
+            0x37: lambda: self.devices.laser.set_laser(False),
+            0x38: lambda: take_reading(self.config, self.devices, self.display),
+
+        }
+        logger.debug(f"disto callback received with {value}")
+        if value in CALLBACKS:
+            res = CALLBACKS[value]()
+            if hasattr(res,"__await__"):
+                await res
 
     async def batt_monitor(self):
         while True:

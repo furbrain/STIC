@@ -2,6 +2,7 @@ import atexit
 import time
 
 import laser_egismos
+import pwmio
 
 import bluetooth
 import pins
@@ -59,7 +60,8 @@ class Hardware:
         self.battery = seeed_xiao_nrf52840.Battery()
         self.accelerometer = seeed_xiao_nrf52840.IMU()
         self.bt = bluetooth.BluetoothServices(self.battery)
-        atexit.register(self.deinit)
+        self.atexit_handler = self.deinit
+        atexit.register(self.atexit_handler)
 
     def __enter__(self):
         return self
@@ -110,4 +112,4 @@ class Hardware:
         time.sleep(0.1)
         self.las_en_pin.deinit()
         self.periph_enable_io.deinit()
-        atexit.unregister(self.deinit)
+        atexit.unregister(self.atexit_handler)
