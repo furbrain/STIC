@@ -6,24 +6,26 @@ Quick non-linear for both mag and grav. DONE
 Abstract out most run-time code into separate file DONE
 Generate error when trying to do reading without calibration DONE but not tested
 Add BT and battery icons DONE
+Add BT pending pixels
 Other useful info screens
- - raw data
+ - raw data DONE
  - calibrated data
  - live heading and inclination and dip and magnetic field strength
  - current hardware adn firmware version and CP version and BT name - uname is our friend
 
 Hardware things
- - make it fit the new battery
- - bezelly goodness
+ - make it fit the new battery DONE!
+ - bezelly goodness DONE
  - work on button covers
- - and silicone gaskets for big and small ends
+ - and silicone gaskets for big and small ends DONE
  - little plastic support for display
 
 Check charging and shutdown current consumption DONE
 
-Order parts - displays (make sure rigth VCC/GND order)
-  - rm3100
-  - egismos
+Order parts
+  - displays (make sure rigth VCC/GND order)
+  - rm3100 DONE
+  - egismos DONE
 
 
 Provide PRs fro sexytopo and topodroid
