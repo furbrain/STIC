@@ -1,12 +1,9 @@
 import asyncio
 import traceback
 
-import distox
 import microcontroller
-from distox import DistoXService
 from watchdog import WatchDogMode
 
-import config
 from display import Display
 from measure import measure, take_reading
 from menu import menu
@@ -145,6 +142,7 @@ class App:
         while True:
             await asyncio.sleep(0.5)
             self.display.set_bt_connected(self.devices.bt.connected)
+            self.display.set_bt_pending_count(self.devices.bt.pending_count())
 
     async def bt_quit_now(self):
         raise Shutdown("Shutdown by Bluetooth Command")

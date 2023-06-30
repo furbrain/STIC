@@ -6,7 +6,8 @@ Quick non-linear for both mag and grav. DONE
 Abstract out most run-time code into separate file DONE
 Generate error when trying to do reading without calibration DONE but not tested
 Add BT and battery icons DONE
-Add BT pending pixels
+Add BT pending pixels DONE
+Make seeed voltage check work
 Other useful info screens
  - raw data DONE
  - calibrated data
@@ -18,12 +19,12 @@ Hardware things
  - bezelly goodness DONE
  - work on button covers
  - and silicone gaskets for big and small ends DONE
- - little plastic support for display
+ - little plastic support for display DONE but not tested
 
 Check charging and shutdown current consumption DONE
 
 Order parts
-  - displays (make sure rigth VCC/GND order)
+  - displays (make sure rigth VCC/GND order) DONE
   - rm3100 DONE
   - egismos DONE
 

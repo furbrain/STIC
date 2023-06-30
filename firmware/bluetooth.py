@@ -49,6 +49,9 @@ class BluetoothServices:
     def connected(self):
         return self.ble.connected
 
+    def pending_count(self):
+        return self.disto.pending()
+
     def deinit(self):
         if self.ble.advertising:
             logger.debug("Stopping BT advertisement")

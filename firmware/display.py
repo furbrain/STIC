@@ -4,7 +4,7 @@ import terminalio
 from adafruit_bitmap_font import bitmap_font
 from adafruit_display_text import label
 from adafruit_progressbar.verticalprogressbar import VerticalProgressBar
-from displayio import TileGrid
+from displayio import TileGrid, Bitmap
 from fruity_menu.menu import Menu
 
 from config import Config
@@ -50,11 +50,15 @@ class Display:
                                 width=1, height=1,
                                 tile_width=11, tile_height=16,
                                 x=115, y=1)
+        self.bt_pending_bitmap = Bitmap(11, 2, 2)
+        self.bt_pending_bitmap.fill(0)
+        self.bt_pending_tile = TileGrid(self.bt_pending_bitmap, pixel_shader=palette, x=115, y=19)
         batt_icon = TileGrid(bitmaps['batt_icon'], pixel_shader=palette, x=115, y=48)
         self.batt_level = VerticalProgressBar((118,53), (6,8), max_value=100, border_thickness=0)
         self.icon_group.append(self.bt_icon)
         self.icon_group.append(batt_icon)
         self.icon_group.append(self.batt_level)
+        self.icon_group.append(self.bt_pending_tile)
 
 
         self.laser_group = displayio.Group()
@@ -77,7 +81,12 @@ class Display:
         self.azimuth.text = self.config.get_azimuth_text(leg.azimuth)
         self.inclination.text = self.config.get_inclination_text(leg.inclination)
         self.distance.text = self.config.get_distance_text(leg.distance)
-        self.reading_index.text = str(reading_index)
+        index = reading_index + 1
+        if index == 0:
+            self.reading_index.hidden = True
+        else:
+            self.reading_index.hidden = False
+            self.reading_index.text = str(index)
         self.refresh()
 
     def set_bt_connected(self, connected:bool):
@@ -86,6 +95,15 @@ class Display:
         else:
             self.bt_icon[0] = 0
         self.refresh()
+
+    def set_bt_pending_count(self, count: int):
+        count = min(count, 4)
+        self.bt_pending_bitmap.fill(0)
+        for i in range(count):
+            self.bt_pending_bitmap[i*3, 0] = 1
+            self.bt_pending_bitmap[i*3+1, 0] = 1
+            self.bt_pending_bitmap[i*3, 1] = 1
+            self.bt_pending_bitmap[i*3+1, 1] = 1
 
     def set_batt_level(self, voltage):
         self.batt_level.value = convert_voltage_to_progress(voltage, 100)
