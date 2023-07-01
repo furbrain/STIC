@@ -13,7 +13,7 @@ from data import Leg
 import adafruit_logging as logging
 
 from bitmaps import bitmaps, palette
-from utils import convert_voltage_to_progress
+from utils import convert_voltage_to_progress, clean_block_text
 
 logger = logging.getLogger()
 
@@ -115,7 +115,9 @@ class Display:
     def get_menu(self):
         return Menu(self.oled, HEIGHT, WIDTH, False, "Menu")
 
-    def show_info(self, text):
+    def show_info(self, text, clean=False):
+        if clean:
+            text = clean_block_text(text)
         splash = displayio.Group()
         fontx, fonty = terminalio.FONT.get_bounding_box()
         term_palette = displayio.Palette(2)

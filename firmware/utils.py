@@ -125,5 +125,9 @@ def convert_voltage_to_progress(voltage:float, maximum:int):
     return int(maximum*(voltage-MIN_VOLTAGE)/(MAX_VOLTAGE-MIN_VOLTAGE))
 
 
+def clean_block_text(text: str) ->str:
+    return '\r\n'.join(x.strip() for x in text.splitlines() if x)
+
+
 MIN_VOLTAGE=3.5
 MAX_VOLTAGE=4.2

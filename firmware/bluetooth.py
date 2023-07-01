@@ -1,6 +1,7 @@
 import asyncio
 import time
 
+import _bleio
 import seeed_xiao_nrf52840
 from adafruit_ble import BLERadio
 from adafruit_ble.advertising.standard import ProvideServicesAdvertisement
@@ -9,6 +10,8 @@ from adafruit_ble.services.standard import BatteryService
 
 import utils
 import adafruit_logging as logging
+
+import version
 
 logger = logging.getLogger()
 
@@ -24,7 +27,7 @@ class BluetoothServices:
         logger.info("Starting bluetooth")
         logger.debug(self.ble.connections)
         self.battery = battery
-        self.ble.name = "SAP6_AB"
+        self.ble.name = version.get_short_name()
         logger.debug(f"BLE name is {self.ble.name}")
         if not self.ble.connected and not self.ble.advertising:
             logger.debug("BLE advertising")
@@ -51,6 +54,13 @@ class BluetoothServices:
 
     def pending_count(self):
         return self.disto.pending()
+
+    def disconnect(self):
+        for c in self.ble.connections:
+            c.disconnect()
+
+    def forget(self):
+        _bleio.adapter.erase_bonding()
 
     def deinit(self):
         if self.ble.advertising:

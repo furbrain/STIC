@@ -2,7 +2,6 @@ import atexit
 import time
 
 import laser_egismos
-import pwmio
 
 import bluetooth
 import pins
