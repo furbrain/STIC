@@ -1,9 +1,10 @@
 import asyncio
+from os import uname
 
 import config
 import display
 import hardware
-from version import get_long_name, get_short_name, __version__
+from version import get_long_name, get_short_name, __version__, get_sw_version, get_hw_version
 
 
 async def raw_readings(devices: hardware.Hardware, config: config.Config, display: display.Display):
@@ -57,11 +58,14 @@ async def orientation(devices: hardware.Hardware, config: config.Config, display
         """
         display.show_info(text, clean=True)
 
+
 async def device(devices: hardware.Hardware, config: config.Config, display: display.Display):
     text = f"""
         Name: {get_long_name()}
         BT Name: {get_short_name()}
-        SW Version: {__version__}
+        SW Version: {get_sw_version()}
+        HW Version: {get_hw_version()}
+        CP Version: {uname().release}
         """
     display.show_info(text, clean=True)
     await devices.button_a.wait_for_click()

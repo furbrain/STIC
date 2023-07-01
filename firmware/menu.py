@@ -54,7 +54,6 @@ async def menu(devices: hardware.Hardware, config: config.Config, display: displ
         ("Calibrate", [
             ("Sensors", AsyncAction(calibrate.calibrate)),
             ("Laser", dummy),
-            ("Axes", freeze),
             ]),
         ("Info", [
             ("Raw Data", AsyncAction(raw_readings)),
@@ -63,6 +62,16 @@ async def menu(devices: hardware.Hardware, config: config.Config, display: displ
             ("Device", AsyncAction(device)),
             ]),
         ("Settings", [
+            ("Timeout", ConfigOptions(
+                name="timeout", object=config,
+                options=[
+                    ("30 seconds", 30),
+                    ("1 minute", 60),
+                    ("2 minutes", 120),
+                    ("3 minutes", 180),
+                    ("5 minutes", 300),
+                ]
+            )),
             ("Units", ConfigOptions(
                 name="units", object=config,
                 options = [
@@ -79,8 +88,8 @@ async def menu(devices: hardware.Hardware, config: config.Config, display: displ
                 name="anomaly_strictness", object=config,
                 options=[
                     ("Off", Calibration.OFF),
-                    ("Soft", Calibration.SOFT),
-                    ("Hard", Calibration.HARD)],
+                    ("Relaxed", Calibration.SOFT),
+                    ("Strict", Calibration.HARD)],
                 )),
             ]),
         ("Bluetooth", [

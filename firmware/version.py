@@ -3,6 +3,7 @@ import binascii
 import microcontroller
 
 __version__ = "1.0.0"
+__hw_version__ = "1.0.0"
 
 ADJECTIVES = [
     "Angry",
@@ -45,3 +46,9 @@ def get_short_name() -> str:
 def get_long_name() -> str:
     a,b = get_id_indexes()
     return f"{ADJECTIVES[a]} {ANIMALS[b]}"
+
+def get_sw_version() -> str:
+    return __version__
+
+def get_hw_version() -> str:
+    return __hw_version__
