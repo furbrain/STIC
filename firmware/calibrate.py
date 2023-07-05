@@ -71,13 +71,13 @@ async def calibrate_distance(devices: hardware.Hardware, cfg: config.Config, dis
     if dist > 200:
         disp.show_info(f"Offset is {dist}mm\r\nThis seems very long\r\nAre you sure?\r\nA: Yes B: No")
         btn, _ = await devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
-        if btn == "B":
+        if btn == "b":
             return
     elif dist < -50:
         text = f"Offset is {dist}mm\r\nThis seems very short\r\nAre you sure?\r\nA: Yes B: No"
         disp.show_info(text)
         btn, _ = await devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
-        if btn == "B":
+        if btn == "b":
             return
     cfg.laser_cal = 0
     cfg.save()
