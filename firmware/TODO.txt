@@ -7,12 +7,11 @@ Abstract out most run-time code into separate file DONE
 Generate error when trying to do reading without calibration DONE but not tested
 Add BT and battery icons DONE
 Add BT pending pixels DONE
-Make seeed voltage check work
 Other useful info screens
  - raw data DONE
- - calibrated data
- - live heading and inclination and dip and magnetic field strength
- - current hardware adn firmware version and CP version and BT name - uname is our friend
+ - calibrated data DONE
+ - live heading and inclination and dip and magnetic field strength DONE
+ - current hardware adn firmware version and CP version and BT name - uname is our friend DONE
 
 Hardware things
  - make it fit the new battery DONE!
@@ -29,4 +28,9 @@ Order parts
   - egismos DONE
 
 
-Provide PRs fro sexytopo and topodroid
+Provide PRs fro sexytopo DONE
+Write manual
+Write installation script
+
+
+Make seeed voltage check work better

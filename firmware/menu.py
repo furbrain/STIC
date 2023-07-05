@@ -33,19 +33,21 @@ def start_menu_item(func):
     global action_item
     action_item = func
 
+
 class AsyncAction(Action):
     def __init__(self, func: AsyncActionItem):
         super().__init__(start_menu_item, func)
 
+
 class ConfigOptions(Options):
-    def __init__(self, name: str, object: config.Config, options, *, option_labels=None):
-        super().__init__(value=getattr(object,name),
+    def __init__(self, name: str, obj: config.Config, options, *, option_labels=None):
+        super().__init__(value=getattr(obj, name),
                          options=options,
                          option_labels=option_labels,
-                         on_value_set=lambda x: object.set_var(name, x))
+                         on_value_set=lambda x: obj.set_var(name, x))
 
 
-async def menu(devices: hardware.Hardware, config: config.Config, display: display.Display):
+async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
     global action_item
     logger.debug("Menu task started")
     gc.collect()
@@ -63,7 +65,7 @@ async def menu(devices: hardware.Hardware, config: config.Config, display: displ
             ]),
         ("Settings", [
             ("Timeout", ConfigOptions(
-                name="timeout", object=config,
+                name="timeout", obj=cfg,
                 options=[
                     ("30 seconds", 30),
                     ("1 minute", 60),
@@ -73,19 +75,19 @@ async def menu(devices: hardware.Hardware, config: config.Config, display: displ
                 ]
             )),
             ("Units", ConfigOptions(
-                name="units", object=config,
-                options = [
+                name="units", obj=cfg,
+                options=[
                     ("Metric", Config.METRIC),
                     ("Imperial", Config.IMPERIAL)],
                 )),
             ("Angles", ConfigOptions(
-                name="angles", object=config,
+                name="angles", obj=cfg,
                 options=[
                     ("Degrees", Config.DEGREES),
                     ("Grads", Config.GRADS)],
                 )),
             ("Anomaly Detection", ConfigOptions(
-                name="anomaly_strictness", object=config,
+                name="anomaly_strictness", obj=cfg,
                 options=[
                     ("Off", Calibration.OFF),
                     ("Relaxed", Calibration.SOFT),
@@ -106,30 +108,30 @@ async def menu(devices: hardware.Hardware, config: config.Config, display: displ
     ]
     if logger.getEffectiveLevel() <= logging.INFO:
         items.extend(debug_items)
-    menu = display.get_menu()
-    build_menu(menu, items)
-    menu.show_menu()
-    display.refresh()
+    menu_root = disp.get_menu()
+    build_menu(menu_root, items)
+    menu_root.show_menu()
+    disp.refresh()
     while True:
         button, _ = await devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
         if button == "a":
             devices.beep_bip()
             logger.debug("Menu: Click")
             gc.collect()
-            menu.click()
+            menu_root.click()
             if action_item is not None:
                 logger.debug(f"Running {action_item}")
-                await action_item(devices, config, display)
+                await action_item(devices, cfg, disp)
                 action_item = None
-            menu.show_menu()
-            display.refresh()
+            menu_root.show_menu()
+            disp.refresh()
         elif button == "b":
             logger.debug("Menu: Scroll")
             gc.collect()
             devices.beep_bop()
-            menu.scroll(1)
-            menu.show_menu()
-            display.refresh()
+            menu_root.scroll(1)
+            menu_root.show_menu()
+            disp.refresh()
 
 
 def freeze():

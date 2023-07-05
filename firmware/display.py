@@ -118,6 +118,7 @@ class Display:
     def show_info(self, text, clean=False):
         if clean:
             text = clean_block_text(text)
+        logger.debug(f"show_info: text: {repr(text)}")
         splash = displayio.Group()
         fontx, fonty = terminalio.FONT.get_bounding_box()
         term_palette = displayio.Palette(2)

@@ -126,7 +126,7 @@ def convert_voltage_to_progress(voltage:float, maximum:int):
 
 
 def clean_block_text(text: str) ->str:
-    return '\r\n'.join(x.strip() for x in text.splitlines() if x)
+    return '\r\n'.join(x.strip() for x in text.splitlines() if x.strip())
 
 
 MIN_VOLTAGE=3.5

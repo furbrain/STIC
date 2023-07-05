@@ -29,13 +29,15 @@ async def calibrated_readings(devices: hardware.Hardware, config: config.Config,
             return
         except asyncio.TimeoutError:
             pass
-        acc = devices.accelerometer.acceleration
-        acc = config.calib.grav.apply(acc)
+        grav = devices.accelerometer.acceleration
         mag = devices.magnetometer.magnetic
+        grav_strength, mag_strength = config.calib.get_field_strengths(mag, grav)
+        grav = config.calib.grav.apply(grav)
         mag = config.calib.mag.apply(mag)
-        text = "    Accel Mag\r\n"
-        for axis, a, m in zip("XYZ", acc, mag):
-            text += f"{axis}   {a:05.3f} {m:05.2f}\r\n"
+        text = "    Grav  Mag\r\n"
+        for axis, g, m in zip("XYZ", grav, mag):
+            text += f"{axis}   {g: 05.3f} {m: 05.3f}\r\n"
+        text += f"|V| {grav_strength: 05.3f} {mag_strength: 05.3f}"
         display.show_info(text)
 
 
