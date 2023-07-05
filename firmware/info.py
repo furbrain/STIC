@@ -4,7 +4,7 @@ from os import uname
 import config
 import display
 import hardware
-from version import get_long_name, get_short_name, __version__, get_sw_version, get_hw_version
+from version import get_long_name, get_short_name, get_sw_version, get_hw_version
 
 
 async def raw_readings(devices: hardware.Hardware, config: config.Config, display: display.Display):

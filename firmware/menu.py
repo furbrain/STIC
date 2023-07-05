@@ -54,8 +54,8 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
     await asyncio.sleep(0.1)
     items = [
         ("Calibrate", [
-            ("Sensors", AsyncAction(calibrate.calibrate)),
-            ("Laser", dummy),
+            ("Sensors", AsyncAction(calibrate.calibrate_sensors)),
+            ("Laser", AsyncAction(calibrate.calibrate_distance)),
             ]),
         ("Info", [
             ("Raw Data", AsyncAction(raw_readings)),
