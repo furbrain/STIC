@@ -15,5 +15,6 @@ def get_bitmaps():
 
 bitmaps = get_bitmaps()
 palette = displayio.Palette(2)
-palette[0] = 0xFFFFFF
-palette[1] = 0x000000
+palette[0] = 0x000000
+palette[1] = 0xFFFFFF
+

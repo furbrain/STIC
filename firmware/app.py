@@ -52,6 +52,9 @@ class App:
             self.background_tasks.append(self.counter())
         self.current_task: asyncio.Task = None
         self.exception_context = {}
+        self.exception_received = asyncio.Event()
+        gc.collect()
+        logger.debug(f"Finished creating app: {gc.mem_free()}")
 
     def __enter__(self):
         return self
@@ -91,9 +94,12 @@ class App:
         Raises a shutdown exception if double click on button A
         """
         logger.debug("Quitter task started")
-        await self.devices.button_a.wait(Button.DOUBLE)
-        logger.info("Double click detected, quitting")
-        raise Shutdown("quit!")
+        lockout = time.monotonic()+2
+        while True:
+            await self.devices.button_a.wait(Button.DOUBLE)
+            if time.monotonic() > lockout:
+                logger.info("Double click detected, quitting")
+                raise Shutdown("quit!")
 
     async def timeout(self):
         """
@@ -194,9 +200,7 @@ class App:
         self.devices.beep_happy()
         await self.switch_task(self.mode)
         try:
-            await asyncio.gather(*all_background_tasks)
-        except asyncio.CancelledError:
-            pass
+            await self.exception_received.wait()
         except Exception as exc:
             # this exception has come out through gather, rather than exception handler
             self.exception_context["exception"] = exc
@@ -239,16 +243,17 @@ class App:
 
     def setup_exception_handler(self):
         logger.debug("Asyncio exception handler created")
-        this_task = asyncio.current_task()
 
         def exception_handler(loop, context):
             self.exception_context.update(context)
-            this_task.cancel()
+            self.exception_received.set()
 
-        # self.devices.beep_happy()
         asyncio.get_event_loop().set_exception_handler(exception_handler)
 
-
+    def clear_exception_handler(self):
+        logger.debug("Clearing exception handler")
+        loop = asyncio.get_event_loop()
+        loop.set_exception_handler(None)
 class Shutdown(Exception):
     """
     This represents a planned shutdown

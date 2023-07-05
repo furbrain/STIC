@@ -44,7 +44,7 @@ class BluetoothServices:
 
     async def battery_background_task(self):
         while True:
-            print("Connections: ",self.ble.connections)
+            print("Connections: ", self.ble.connections)
             self.batt_service.level = utils.convert_voltage_to_progress(self.battery.voltage, 100)
             await asyncio.sleep(1)
 
