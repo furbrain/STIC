@@ -1,4 +1,8 @@
 import asyncio
+try:
+    from typing import Dict
+except ImportError:
+    pass
 
 from async_button import Button
 from laser_egismos import LaserError
@@ -12,6 +16,12 @@ import adafruit_logging as logging
 
 logger = logging.getLogger()
 
+ERROR_MESSAGES: Dict[type, str] = {
+    MagneticAnomalyError: "Magnetic\nAnomaly:\nIron nearby?",
+    DipAnomalyError: "Magnetic\nAnomaly:\nIron nearby?",
+    NotCalibrated: "Calibration\nneeded\nHold B 3s",
+    GravityAnomalyError: "Device\nMovement\nDetected",
+}
 
 async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
     """
@@ -30,20 +40,25 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
         await devices.laser.set_laser(True)
         btn, click = await devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
         if btn == "a":
-            await take_reading(devices, cfg, disp)
+            success = await take_reading(devices, cfg, disp)
         elif btn == "b":
             logger.debug("B pressed")
             readings.get_prev_reading()
-        if readings.current_reading is not None:
+            success = True
+        if readings.current_reading is not None and success:
             disp.update_measurement(readings.current, readings.current_reading)
 
-async def take_reading(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+
+async def take_reading(devices: hardware.Hardware,
+                       cfg: config.Config,
+                       disp: display.Display) -> bool:
     # take a reading
     logger.info("Taking a reading")
     mag = devices.magnetometer.magnetic
     logger.debug(f"Mag: {mag}")
     grav = devices.accelerometer.acceleration
     logger.debug(f"Grav: {grav}")
+    exc = None
     try:
         azimuth, inclination, _ = cfg.calib.get_angles(mag, grav)
         distance = await asyncio.wait_for(devices.laser.measure(), 3.0) / 1000
@@ -51,26 +66,19 @@ async def take_reading(devices: hardware.Hardware, cfg: config.Config, disp: dis
         logger.debug(f"Distance: {distance}m")
         cfg.calib.raise_if_anomaly(mag, grav, cfg.anomaly_strictness)
     except LaserError as exc:
-        logger.info("Laser read failed")
-        logger.info(exc)
         disp.show_big_info(f"Laser Fail:\n{exc.__class__.__name__}\n{exc}")
-        devices.beep_sad()
-    except (MagneticAnomalyError, DipAnomalyError) as exc:
-        logger.info("Magnetic Anomaly")
         logger.info(exc)
-        disp.show_big_info("Magnetic\nAnomaly:\nIron nearby?")
         devices.beep_sad()
-    except GravityAnomalyError as exc:
-        logger.info("Gravity Anomaly")
+        return False
+    except tuple(ERROR_MESSAGES.keys()) as exc:
+        disp.show_big_info(ERROR_MESSAGES[exc.__class__])
         logger.info(exc)
-        disp.show_big_info("Device\nMovement\nDetected")
         devices.beep_sad()
-    except NotCalibrated as exc:
-        logger.info("Device not calibrated")
-        logger.info(exc)
-        disp.show_big_info("Calibration\nneeded\nHold B 3s")
-        devices.beep_sad()
+        return False
     else:
         readings.store_reading(Leg(azimuth, inclination, distance))
         devices.bt.disto.send_data(azimuth, inclination, distance)
         devices.beep_bip()
+        return True
+
+
