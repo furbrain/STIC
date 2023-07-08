@@ -1,4 +1,7 @@
 import asyncio
+
+from utils import check_mem
+
 try:
     from typing import Dict
 except ImportError:
@@ -31,7 +34,9 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
     from data import readings
     #need to switch display to measurement here...
     logger.debug("Showing start screen")
+    check_mem("start screen")
     disp.show_start_screen()
+    check_mem("startup shown")
     logger.debug("turning on laser")
     devices.laser_enable(True)
     await asyncio.sleep(0.1)
@@ -39,6 +44,7 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
     while True:
         await devices.laser.set_laser(True)
         btn, click = await devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
+        check_mem("button pressed")
         if btn == "a":
             success = await take_reading(devices, cfg, disp)
         elif btn == "b":

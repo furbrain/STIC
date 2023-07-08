@@ -1,8 +1,14 @@
+import gc
+
 import microcontroller
 import memorymap
 import alarm
 import sys
 import time
+import adafruit_logging as logging
+
+logger = logging.getLogger()
+
 
 
 def get_int_at(addr: int, num_bytes: int) -> int:
@@ -128,6 +134,9 @@ def convert_voltage_to_progress(voltage:float, maximum:int):
 def clean_block_text(text: str) ->str:
     return '\r\n'.join(x.strip() for x in text.splitlines() if x.strip())
 
+def check_mem(text: str):
+    gc.collect()
+    logger.debug(f"{text} mem: {gc.mem_free()}")
 
 MIN_VOLTAGE=3.5
 MAX_VOLTAGE=4.2

@@ -58,7 +58,7 @@ class Hardware:
         self.buzzer = async_buzzer.Buzzer(self.pwm)
         self.battery = seeed_xiao_nrf52840.Battery()
         self.accelerometer = seeed_xiao_nrf52840.IMU()
-        self.bt = bluetooth.BluetoothServices(self.battery)
+        self.bt = bluetooth.BluetoothServices()
         self.atexit_handler = self.deinit
         atexit.register(self.atexit_handler)
 

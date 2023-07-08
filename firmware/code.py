@@ -17,7 +17,7 @@ logger.setLevel(logging.DEBUG)
 logger.debug("Starting log")
 
 
-from utils import usb_power_connected
+from utils import usb_power_connected, check_mem
 import digitalio
 import time
 import asyncio
@@ -58,18 +58,15 @@ def double_click_start() -> bool:
 #main
 
 async def main(mode):
+    check_mem("starting_app")
     with app.App(mode) as main_app:
-        try:
-            logger.info("Starting main app")
-            return await main_app.main()
-        except Exception as err:
-            #don't try and report this as system likely in an iffy state - just exit
-            logger.error("Exception received in main outer layer:")
-            traceback.print_exception(err)
-            return False
-
+        logger.info("Starting main app")
+        shutdown_status = await main_app.main()
+        check_mem("App closed")
+        return shutdown_status
 
 app_used = False
+check_mem("First run")
 while True:
     clean_shutdown = False
     if usb_power_connected() != storage.getmount("/").readonly:
@@ -77,9 +74,8 @@ while True:
         microcontroller.reset()
     try:
         if double_click_start():
-            gc.collect()
             logger.info("Double click")
-            logger.debug(f"Memory left: {gc.mem_free()}")
+            check_mem("double_click")
             with digitalio.DigitalInOut(pins.BUTTON_B) as button_b:
                 app_used = True
                 button_b.switch_to_input(digitalio.Pull.UP)
@@ -103,7 +99,7 @@ while True:
     except Exception as exc:
         # do not go in to REPL on exception
         clean_shutdown = False
-        logger.debug(traceback.format_exception(exc))
+        logger.error(traceback.format_exception(exc))
     if not clean_shutdown:
         logger.debug("Unclean shutdown - resetting")
         time.sleep(0.1)
@@ -118,6 +114,7 @@ while True:
     usb_alarm = alarm.pin.PinAlarm(board.CHARGE_STATUS, value=False, pull=False)
     if app_used:
         logger.debug("App has been used, so starting a timed sleep")
+        check_mem("sleeping")
         time_alarm = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + LIGHT_SLEEP_TIMEOUT)
         wakeup = alarm.light_sleep_until_alarms(time_alarm, pin_alarm, usb_alarm)
         if wakeup == time_alarm:

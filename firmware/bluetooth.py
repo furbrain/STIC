@@ -2,7 +2,6 @@ import asyncio
 import time
 
 import _bleio
-import seeed_xiao_nrf52840
 from adafruit_ble import BLERadio
 from adafruit_ble.advertising.standard import ProvideServicesAdvertisement
 import distox
@@ -22,11 +21,10 @@ class BluetoothServices:
     advertisement = ProvideServicesAdvertisement(disto,
                                                  batt_service)
 
-    def __init__(self, battery: seeed_xiao_nrf52840.Battery):
+    def __init__(self):
         self.ble = BLERadio()
         logger.info("Starting bluetooth")
         logger.debug(self.ble.connections)
-        self.battery = battery
         self.ble.name = version.get_short_name()
         logger.debug(f"BLE name is {self.ble.name}")
         if not self.ble.connected and not self.ble.advertising:
@@ -42,11 +40,8 @@ class BluetoothServices:
     async def disto_background_task(self, callback=None):
         await self.disto.background_task(callback)
 
-    async def battery_background_task(self):
-        while True:
-            print("Connections: ", self.ble.connections)
-            self.batt_service.level = utils.convert_voltage_to_progress(self.battery.voltage, 100)
-            await asyncio.sleep(1)
+    def set_battery_level(self, voltage):
+        self.batt_service.level = utils.convert_voltage_to_progress(voltage, 100)
 
     @property
     def connected(self):

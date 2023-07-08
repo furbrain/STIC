@@ -1,4 +1,5 @@
 import asyncio
+import time
 import traceback
 
 import microcontroller
@@ -7,7 +8,7 @@ from watchdog import WatchDogMode
 from display import Display
 from measure import measure, take_reading
 from menu import menu
-from utils import simplify
+from utils import simplify, check_mem
 
 try:
     from typing import List, Coroutine
@@ -32,6 +33,7 @@ class App:
     MENU_ITEM = 2
 
     def __init__(self, mode=MEASURE):
+        check_mem("creating app")
         self.devices = hardware.Hardware()
         self.config = Config.load()
         self.display = Display(self.devices, self.config)
@@ -42,7 +44,6 @@ class App:
             self.timeout(),
             self.switch_mode_monitor(),
             self.watchdog(),
-            self.devices.bt.battery_background_task(),
             self.devices.bt.disto_background_task(self.distox_callback),
             self.bt_connection_monitor(),
             self.batt_monitor(),
@@ -52,9 +53,8 @@ class App:
             self.background_tasks.append(self.counter())
         self.current_task: asyncio.Task = None
         self.exception_context = {}
-        self.exception_received = asyncio.Event()
-        gc.collect()
-        logger.debug(f"Finished creating app: {gc.mem_free()}")
+        self.shutdown_event = asyncio.Event()
+        check_mem("Finished creating app")
 
     def __enter__(self):
         return self
@@ -91,19 +91,20 @@ class App:
 
     async def quitter_task(self):
         """
-        Raises a shutdown exception if double click on button A
+        Shuts down  if double click on button A
         """
         logger.debug("Quitter task started")
-        lockout = time.monotonic()+2
+        lockout = time.monotonic()+0.5
         while True:
             await self.devices.button_a.wait(Button.DOUBLE)
+            check_mem("double click")
             if time.monotonic() > lockout:
                 logger.info("Double click detected, quitting")
-                raise Shutdown("quit!")
+                self.shutdown_event.set()
 
     async def timeout(self):
         """
-        Raises a shutdown exception if more than config.timeout seconds between button presses
+        Shuts down if more than config.timeout seconds between button presses
         """
         logger.debug("Timeout task started")
         while True:
@@ -113,7 +114,7 @@ class App:
                                        self.config.timeout)
             except asyncio.TimeoutError:
                 logger.info("Timed out, quitting")
-                raise Shutdown(f"Timeout after {self.config.timeout} seconds inactivity")
+                self.shutdown_event.set()
 
     async def counter(self):
         logger.debug("Counter task started")
@@ -151,9 +152,10 @@ class App:
             self.display.set_bt_pending_count(self.devices.bt.pending_count())
 
     async def bt_quit_now(self):
-        raise Shutdown("Shutdown by Bluetooth Command")
+        logger.debug("Shut down due to BT command")
+        self.shutdown_event.set()
 
-    async def distox_callback(self, value:int):
+    async def distox_callback(self, value: int):
         CALLBACKS = {
             0x34: lambda: self.bt_quit_now(),
             0x36: lambda: self.devices.laser.set_laser(True),
@@ -176,6 +178,7 @@ class App:
                 self.devices.beep_sad()
                 raise LowBattery(f"Battery low ({voltage:3.1f}v)")
             self.display.set_batt_level(voltage)
+            self.devices.bt.set_battery_level(voltage)
             await asyncio.sleep(2.0)
 
     async def flip_monitor(self):
@@ -199,54 +202,55 @@ class App:
         all_background_tasks = [asyncio.create_task(t) for t in self.background_tasks]
         self.devices.beep_happy()
         await self.switch_task(self.mode)
-        try:
-            await self.exception_received.wait()
-        except Exception as exc:
-            # this exception has come out through gather, rather than exception handler
-            self.exception_context["exception"] = exc
+        await self.shutdown_event.wait()
+        check_mem("Starting shutdown")
+        self.clear_exception_handler()
         for t in all_background_tasks:
             t.cancel()
         self.current_task.cancel()
         self.config.save_if_changed()
         await asyncio.sleep(0) # allow everything to stop
+        check_mem("tasks cancelled")
         if self.exception_context:
-            if isinstance(self.exception_context["exception"], Shutdown):
-                # this is a planned shut down, no display or file write needed
-                logger.info(f"Planned shutdown: {self.exception_context['exception'].args[0]}")
-            else:
-                clean_shutdown = False
-                output = traceback.format_exception(self.exception_context["exception"])
-                # FIXME implement nicer exception handling
-                try:
-                    with open("/error.log", "w") as f:
-                        f.write(output[0])
-                        f.flush()
-                except OSError:
-                    #unable to save to disk, probably connected via USB, so print
-                    logger.error(output[0])
-                try:
-                    brief_output = simplify(output[0])
-                    self.display.show_info(brief_output)
-                    for i in range(10):
-                        await asyncio.sleep(1)
-                        if microcontroller.watchdog.mode != None:
-                            microcontroller.watchdog.feed()
-                except Exception as exc:
-                    # error displaying: give up
-                    logger.error("Error displaying error")
-                    logger.error(traceback.format_exception(exc)[0])
-                    pass
+            clean_shutdown = False
+            output = traceback.format_exception(self.exception_context["exception"])
+            # FIXME implement nicer exception handling
+            try:
+                with open("/error.log", "w") as f:
+                    f.write(output[0])
+                    f.flush()
+            except OSError:
+                #unable to save to disk, probably connected via USB, so print
+                logger.error(output[0])
+            try:
+                brief_output = simplify(output[0])
+                self.display.show_info(brief_output)
+                for i in range(10):
+                    await asyncio.sleep(1)
+                    if microcontroller.watchdog.mode != None:
+                        microcontroller.watchdog.feed()
+            except Exception as exc:
+                # error displaying: give up
+                logger.error("Error displaying error")
+                logger.error(traceback.format_exception(exc)[0])
+                pass
         self.devices.beep_shutdown()
         await self.devices.beep_wait()
+        logger.debug("Stopping watchdog")
         microcontroller.watchdog.deinit()
+        logger.debug(f"Exiting App: {clean_shutdown}")
+        await asyncio.sleep(0.1)
+        check_mem("leaving app")
         return clean_shutdown
 
     def setup_exception_handler(self):
         logger.debug("Asyncio exception handler created")
 
         def exception_handler(loop, context):
+            logger.info("Exception received")
             self.exception_context.update(context)
-            self.exception_received.set()
+            logger.debug("Triggering shutdown")
+            self.shutdown_event.set()
 
         asyncio.get_event_loop().set_exception_handler(exception_handler)
 
@@ -254,10 +258,6 @@ class App:
         logger.debug("Clearing exception handler")
         loop = asyncio.get_event_loop()
         loop.set_exception_handler(None)
-class Shutdown(Exception):
-    """
-    This represents a planned shutdown
-    """
 
 class LowBattery(Exception):
     """
