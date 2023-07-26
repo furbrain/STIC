@@ -4,7 +4,7 @@ import time
 import _bleio
 from adafruit_ble import BLERadio
 from adafruit_ble.advertising.standard import ProvideServicesAdvertisement
-import distox
+import caveble
 from adafruit_ble.services.standard import BatteryService
 
 import utils
@@ -16,7 +16,7 @@ logger = logging.getLogger()
 
 
 class BluetoothServices:
-    disto = distox.SurveyProtocolService()
+    disto = caveble.SurveyProtocolService()
     batt_service = BatteryService()
     advertisement = ProvideServicesAdvertisement(disto,
                                                  batt_service)
