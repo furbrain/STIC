@@ -2,7 +2,9 @@ import asyncio
 import time
 import traceback
 
+import mag_cal
 import microcontroller
+from mag_cal import NotCalibrated
 from watchdog import WatchDogMode
 
 from display import Display
@@ -186,7 +188,12 @@ class App:
         while True:
             await asyncio.sleep(0.3)
             grav = self.devices.accelerometer.acceleration
-            grav = self.config.calib.grav.apply(grav)
+            if self.config.calib is not None:
+                grav = self.config.calib.grav.apply(grav)
+            else:
+                axes = mag_cal.Axes(self.config.mag_axes)
+                grav = axes.fix_axes(grav)
+                grav /= 9.81
             if self.display.inverted and grav[0] < -0.3:
                 logger.debug("Flipping to right way up")
                 self.display.inverted = False

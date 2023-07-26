@@ -66,6 +66,8 @@ async def take_reading(devices: hardware.Hardware,
     logger.debug(f"Grav: {grav}")
     exc = None
     try:
+        if cfg.calib is None:
+            raise NotCalibrated()
         azimuth, inclination, _ = cfg.calib.get_angles(mag, grav)
         distance = await asyncio.wait_for(devices.laser.measure(), 3.0) / 1000
         distance += cfg.laser_cal

@@ -59,7 +59,7 @@ class Config:
 
     def save(self):
         with open(_CONFIG_FILE, "w") as f:
-            json.dump(self.as_dict(),f)
+            json.dump(self.as_dict(), f)
         self._dirty = False
 
     @classmethod
@@ -67,7 +67,7 @@ class Config:
         try:
             with open(_CONFIG_FILE, "r") as f:
                 dct = json.load(f)
-        except OSError:
+        except (OSError, ValueError):
             dct = {}
         return cls(**dct)
 

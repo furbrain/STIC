@@ -1,10 +1,10 @@
 Get double click startup working DONE
 Get lazy loading of libraries working NOT NEEDED NOW - but DONE anyway - REVERTED
-Get calibration routine running DONE - and axis and laser calibration
+Get calibration routine running DONE - laser calibration DONE
 Maybe work out how screen should work DONE
 Quick non-linear for both mag and grav. DONE
 Abstract out most run-time code into separate file DONE
-Generate error when trying to do reading without calibration DONE but not tested
+Generate error when trying to do reading without calibration DONE
 Add BT and battery icons DONE
 Add BT pending pixels DONE
 Other useful info screens
@@ -16,7 +16,7 @@ Other useful info screens
 Hardware things
  - make it fit the new battery DONE!
  - bezelly goodness DONE
- - work on button covers
+ - work on button covers DONE
  - and silicone gaskets for big and small ends DONE
  - little plastic support for display DONE but not tested
 
