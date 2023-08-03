@@ -4,9 +4,9 @@ import traceback
 
 import mag_cal
 import microcontroller
-from mag_cal import NotCalibrated
 from watchdog import WatchDogMode
 
+import calibrate
 from display import Display
 from measure import measure, take_reading
 from menu import menu
@@ -208,6 +208,9 @@ class App:
         self.setup_exception_handler()
         all_background_tasks = [asyncio.create_task(t) for t in self.background_tasks]
         self.devices.beep_happy()
+        check_mem("show calibration results if needed")
+        await calibrate.show_cal_results(self.devices, self.config, self.display)
+        check_mem("starting main task")
         await self.switch_task(self.mode)
         await self.shutdown_event.wait()
         check_mem("Starting shutdown")

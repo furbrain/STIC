@@ -130,8 +130,21 @@ def convert_voltage_to_progress(voltage:float, maximum:int):
         return maximum
     return int(maximum*(voltage-MIN_VOLTAGE)/(MAX_VOLTAGE-MIN_VOLTAGE))
 
+def set_nvm(text: bytes):
+    microcontroller.nvm[0:len(text)] = text
 
-def clean_block_text(text: str) ->str:
+def check_nvm(text: bytes):
+    return microcontroller.nvm[0:len(text)] == text
+
+def clear_nvm():
+    microcontroller.nvm[0:32] = b'\xff' * 32
+
+def clean_block_text(text: str) -> str:
+    """
+    Takes some triple quoted text and removes empty lines and left and right spaces.
+    :param str text: text to clean
+    :return: cleaned text
+    """
     return '\r\n'.join(x.strip() for x in text.splitlines() if x.strip())
 
 def check_mem(text: str):

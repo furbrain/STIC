@@ -1,6 +1,11 @@
 import asyncio
 import mag_cal
 from async_button import Button
+
+import utils
+from utils import check_mem
+
+CAL_DATA_FILE = "calibration_data.json"
 try:
     import numpy as np
 except ImportError:
@@ -9,6 +14,13 @@ import display
 import hardware
 import config
 import json
+import microcontroller
+
+CAL_DUE = b"CALIBRATE_ME"
+CAL_DONE = b"CALIB DONE"
+
+cal = None
+accuracy = None
 
 async def calibrate_sensors(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
     devices.laser_enable(True)
@@ -30,14 +42,51 @@ async def calibrate_sensors(devices: hardware.Hardware, cfg: config.Config, disp
             devices.beep_bop()
             break
         count += 1
-    cal = mag_cal.Calibration(mag_axes=cfg.mag_axes, grav_axes=cfg.grav_axes)
     try:
         #save data if we can
-        with open("calibration_data.json","w") as f:
+        with open(CAL_DATA_FILE, "w") as f:
             json.dump({"mag": mags, "grav": gravs}, f)
     except OSError:
         pass
-    accuracy = cal.calibrate(np.array(mags), np.array(gravs))
+    await reset_to_calibrate(devices, cfg, disp)
+
+
+async def reset_to_calibrate(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+    disp.show_info("""
+        Resetting to run
+        calibration. The
+        screen will blank
+        for a few seconds
+    """, clean=True)
+    await asyncio.sleep(3)
+    utils.set_nvm(CAL_DUE)
+    microcontroller.reset()
+
+
+def calibration_due():
+    return utils.check_nvm(CAL_DUE)
+
+
+def calibrate_if_due():
+    global cal, accuracy
+    if not calibration_due():
+        return
+    utils.clear_nvm()
+    try:
+        cfg = config.Config.load()
+        with open(CAL_DATA_FILE) as f:
+            data = json.load(f)
+        cal = mag_cal.Calibration(mag_axes=cfg.mag_axes, grav_axes=cfg.grav_axes)
+        accuracy = cal.calibrate(np.array(data['mag']), np.array(data['grav']))
+    except Exception as e:
+        cal = e
+        return
+
+async def show_cal_results(devices: hardware.Hardware, cfg: config.Config,
+                           disp: display.Display):
+    global cal, accuracy
+    if cal is None:
+        return
     if accuracy < 0.25:
         quality = "excellent"
     elif accuracy < 0.5:
@@ -54,6 +103,8 @@ async def calibrate_sensors(devices: hardware.Hardware, cfg: config.Config, disp
         cfg.save()
     elif button == "b":
         pass
+    cal = None
+
 
 
 async def calibrate_distance(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):

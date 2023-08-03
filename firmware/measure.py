@@ -43,7 +43,8 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
     logger.debug("turning on laser light")
     while True:
         await devices.laser.set_laser(True)
-        btn, click = await devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
+        btn, click = await devices.both_buttons.wait(a=[Button.SINGLE, Button.LONG],
+                                                     b=Button.SINGLE)
         check_mem("button pressed")
         if btn == "a":
             success = await take_reading(devices, cfg, disp)

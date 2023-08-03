@@ -1,5 +1,6 @@
 import seeed_xiao_nrf52840
 
+import calibrate
 import pins
 import usb_mode
 
@@ -73,7 +74,8 @@ while True:
         logger.info("Restarting microcontroller so can correctly mount flash")
         microcontroller.reset()
     try:
-        if double_click_start():
+        if double_click_start() or calibrate.calibration_due():
+            calibrate.calibrate_if_due()
             logger.info("Double click")
             check_mem("double_click")
             with digitalio.DigitalInOut(pins.BUTTON_B) as button_b:
@@ -92,7 +94,8 @@ while True:
             if usb_power_connected() and logger.getEffectiveLevel() != logging.DEBUG:
                 usb_mode.usb_charge_monitor()
             clean_shutdown = True
-    except MemoryError:
+    except MemoryError as e:
+        logger.info(e)
         # limited debugging as can't do anything as no memory
         clean_shutdown = False
         logger.debug("Outer memory error")
