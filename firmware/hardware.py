@@ -2,6 +2,7 @@ import atexit
 import time
 
 import laser_egismos
+import pwmio
 
 import bluetooth
 import pins
@@ -54,7 +55,10 @@ class Hardware:
         self.uart = busio.UART(pins.TX, pins.RX, baudrate=9600)
         self.uart.reset_input_buffer()
         self.laser = laser_egismos.AsyncLaser(self.uart)
-        self.pwm = invertingpwmio.InvertingPWMOut(pins.BUZZER_A, pins.BUZZER_B)
+        if pins.BUZZER_B is None:
+            self.pwm = pwmio.PWMOut(pins.BUZZER_A, variable_frequency=True)
+        else:
+            self.pwm = invertingpwmio.InvertingPWMOut(pins.BUZZER_A, pins.BUZZER_B)
         self.buzzer = async_buzzer.Buzzer(self.pwm)
         self.battery = seeed_xiao_nrf52840.Battery()
         self.accelerometer = seeed_xiao_nrf52840.IMU()
