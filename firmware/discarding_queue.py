@@ -4,11 +4,13 @@ try:
 except ImportError:
     pass
 
+
 class DiscardingQueue:
     """
     This implements a queue that will only go up to max_len items long, and then
     will discard the oldest elements. Used because circuitpython's Deque is very limited
     """
+
     def __init__(self, it: Optional[Sequence] = None, max_len: int = 10):
         self.max_len = max_len
         """Maximum number of items within the queue"""

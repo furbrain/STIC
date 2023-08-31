@@ -15,6 +15,7 @@ PSEL = 0x560
 SEQ_PTR = 0x520
 TASK_SEQSTART = 0x008
 
+
 class InvertingPWMOut:
 
     @staticmethod
@@ -39,7 +40,6 @@ class InvertingPWMOut:
     def _clear_pwm_channel(self, module: int, channel: int):
         self._set_pwm_channel(module, channel, 0xffffffff)
 
-
     def __init__(self, pin_a: Pin, pin_b: Pin):
         if sys.platform != 'nRF52840':
             raise NotImplementedError("This code only works on nrf52840")
@@ -60,12 +60,12 @@ class InvertingPWMOut:
 
     def _update_inverted_duty_cycle(self):
         addr = PWM_BASE_ADDRS[self.module]
-        seq_addr = get_uint32_at(addr+SEQ_PTR)
+        seq_addr = get_uint32_at(addr + SEQ_PTR)
         duty_cycle = get_uint16_at(seq_addr)
         if duty_cycle not in (0, 0x8000):
-            duty_cycle ^= 0x8000 # invert polarity
-        set_uint16_at(seq_addr+2, duty_cycle)
-        set_uint32_at(addr+TASK_SEQSTART, 1)
+            duty_cycle ^= 0x8000  # invert polarity
+        set_uint16_at(seq_addr + 2, duty_cycle)
+        set_uint32_at(addr + TASK_SEQSTART, 1)
 
     @property
     def frequency(self):
@@ -84,7 +84,6 @@ class InvertingPWMOut:
     def duty_cycle(self, value):
         self.pwm.duty_cycle = value
         self._update_inverted_duty_cycle()
-
 
     def deinit(self):
         self._clear_pwm_channel(self.module, 1)

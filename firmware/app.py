@@ -114,7 +114,7 @@ class App:
                 logger.info("Timed out, quitting")
                 self.shutdown_event.set()
 
-    async def counter(self):
+    @staticmethod async def counter():
         logger.debug("Counter task started")
         i = 0
         while True:
@@ -122,7 +122,7 @@ class App:
             i += 1
             logger.info(f"Count: {i}")
 
-    async def watchdog(self):
+    @staticmethod async def watchdog():
         logger.debug("Watchdog task started")
         microcontroller.watchdog.timeout = 5  # 5 second watchdog timeout
         microcontroller.watchdog.mode = WatchDogMode.RAISE
@@ -154,6 +154,7 @@ class App:
         self.shutdown_event.set()
 
     async def distox_callback(self, value: int):
+        # noinspection PyPep8Naming
         CALLBACKS = {
             0x34: lambda: self.bt_quit_now(),
             0x36: lambda: self.devices.laser.set_laser(True),
@@ -233,7 +234,7 @@ class App:
                 self.display.show_info(brief_output)
                 for i in range(10):
                     await asyncio.sleep(1)
-                    if microcontroller.watchdog.mode != None:
+                    if microcontroller.watchdog.mode is not None:
                         microcontroller.watchdog.feed()
             except Exception as exc:
                 # error displaying: give up
@@ -252,6 +253,7 @@ class App:
     def setup_exception_handler(self):
         logger.debug("Asyncio exception handler created")
 
+        # noinspection PyUnusedLocal
         def exception_handler(loop, context):
             logger.info("Exception received")
             self.exception_context.update(context)
@@ -260,7 +262,8 @@ class App:
 
         asyncio.get_event_loop().set_exception_handler(exception_handler)
 
-    def clear_exception_handler(self):
+    @staticmethod
+    def clear_exception_handler():
         logger.debug("Clearing exception handler")
         loop = asyncio.get_event_loop()
         loop.set_exception_handler(None)

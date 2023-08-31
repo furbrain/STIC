@@ -1,10 +1,10 @@
 import json
+
 try:
     from typing import Optional
 except ImportError:
     pass
 
-from debug import logger
 from mag_cal import Calibration
 
 _GRADS_PER_DEGREE = 400 / 360.0
@@ -12,6 +12,8 @@ _CONFIG_FILE = "/config.json"
 _DEFAULT_AXES_MAG = "+X+Y-Z"
 _DEFAULT_AXES_GRAV = "-Y-X+Z"
 _FEET_PER_METRE = 3.28084
+
+
 class Config:
     DEGREES = 0
     GRADS = 1
@@ -84,7 +86,7 @@ class Config:
         if self.angles == self.DEGREES:
             return f"{inclination:+05.1f}°"
         elif self.angles == self.GRADS:
-            inclination *= _GRADS_PER_DEGREE # convert to grads
+            inclination *= _GRADS_PER_DEGREE  # convert to grads
             return f"{inclination:+05.1f}g"
 
     def get_distance_text(self, distance: float) -> str:
@@ -93,5 +95,3 @@ class Config:
         elif self.units == self.IMPERIAL:
             distance *= _FEET_PER_METRE
             return f"{distance:.3f}'"
-
-

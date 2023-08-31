@@ -25,13 +25,14 @@ ERROR_MESSAGES: Dict[type, str] = {
     GravityAnomalyError: "Device\nMovement\nDetected",
 }
 
+
 async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
     """
     This is the main measurement task
     :return:
     """
     from data import readings
-    #need to switch display to measurement here...
+    # need to switch display to measurement here...
     logger.debug("Showing start screen")
     check_mem("start screen")
     disp.show_start_screen()
@@ -51,6 +52,7 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
             logger.debug("B pressed")
             readings.get_prev_reading()
             success = True
+        # noinspection PyUnboundLocalVariable
         if readings.current_reading is not None and success:
             disp.update_measurement(readings.current, readings.current_reading)
 
@@ -64,7 +66,6 @@ async def take_reading(devices: hardware.Hardware,
     logger.debug(f"Mag: {mag}")
     grav = devices.accelerometer.acceleration
     logger.debug(f"Grav: {grav}")
-    exc = None
     try:
         if cfg.calib is None:
             raise NotCalibrated()
@@ -88,5 +89,3 @@ async def take_reading(devices: hardware.Hardware,
         devices.bt.disto.send_data(azimuth, inclination, distance)
         devices.beep_bip()
         return True
-
-

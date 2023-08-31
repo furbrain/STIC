@@ -2,7 +2,7 @@ import board
 
 hardware = "phil"
 
-if hardware=="phil":
+if hardware == "phil":
     # Phil's pinout
     LASER_EN = board.D0
     RX = board.D1
@@ -15,7 +15,7 @@ if hardware=="phil":
     SDA = board.D7
     SCL = board.D8
     DRDY = board.D9
-elif hardware=="brendan":
+elif hardware == "brendan":
     # Brendan's pinout
     LASER_EN = board.D0
     RX = board.RX

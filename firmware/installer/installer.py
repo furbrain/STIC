@@ -7,7 +7,6 @@ import json
 import time
 import serial
 
-
 TTY_SYS_DIR = "/sys/class/tty/"
 
 FIRMWARE_FILE = "firmware.uf2"
@@ -16,12 +15,14 @@ BOOTLOADER_NAME = "XIAO-SENSE"
 
 SAP6_NAMES = ['CIRCUITPY', 'SAP6']
 
+
 def find_usb_devices():
     results = subprocess.check_output(("lsblk", "-J", "-o", "PATH,MOUNTPOINT,LABEL"))
     data = json.loads(results)['blockdevices']
     data = [x for x in data if x['label'] and x['mountpoint']]
     data = {x['label']: x for x in data}
     return data
+
 
 def get_circuitpython_dir():
     devs = find_usb_devices()
@@ -35,29 +36,30 @@ def get_circuitpython_dir():
     return None
 
 
-def clear_folder(path):
+def clear_folder(path_to_clear):
     print("Before clear folder:")
-    print(os.listdir(path))
-    for f in os.listdir(path):
-        f = os.path.join(path,f)
+    print(os.listdir(path_to_clear))
+    for dir_entry in os.listdir(path_to_clear):
+        dir_entry = os.path.join(path_to_clear, dir_entry)
         try:
-            if os.path.isdir(f):
-                shutil.rmtree(f)
+            if os.path.isdir(dir_entry):
+                shutil.rmtree(dir_entry)
             else:
-                os.remove(f)
+                os.remove(dir_entry)
         except OSError:
             pass
     print("After clear folder:")
-    print(os.listdir(path))
+    print(os.listdir(path_to_clear))
+
 
 def find_serial_port():
-    for f in os.listdir(TTY_SYS_DIR):
-        dev_data = os.path.join(TTY_SYS_DIR, f, "device/interface")
+    for tty_file in os.listdir(TTY_SYS_DIR):
+        dev_data = os.path.join(TTY_SYS_DIR, tty_file, "device/interface")
         try:
             with open(dev_data) as iface:
                 if "CircuitPython" in iface.readline():
-                    return os.path.join("/dev/",f)
-        except OSError as e:
+                    return os.path.join("/dev/", tty_file)
+        except OSError:
             pass
     return None
 
@@ -78,7 +80,7 @@ def upgrade_firmware():
     shutil.copyfile(FIRMWARE_FILE, os.path.join(dev['mountpoint'], FIRMWARE_FILE))
 
 
-#upgrade_firmware()
+# upgrade_firmware()
 
 print("Waiting for CircuitPython disc")
 while True:

@@ -32,18 +32,18 @@ def usb_charge_monitor():
         battery_tile = displayio.TileGrid(battery_bmp, pixel_shader=palette, x=32, y=14)
         group.append(battery_tile)
         progress_bar = HorizontalProgressBar(
-            (41,23), (BAR_WIDTH, BAR_HEIGHT), direction=HorizontalFillDirection.LEFT_TO_RIGHT,
+            (41, 23), (BAR_WIDTH, BAR_HEIGHT), direction=HorizontalFillDirection.LEFT_TO_RIGHT,
             min_value=0, max_value=BAR_WIDTH, bar_color=0xffffff, margin_size=0, border_thickness=0
         )
         group.append(progress_bar)
-        status_label = label.Label(terminalio.FONT, text=" "*13)
+        status_label = label.Label(terminalio.FONT, text=" " * 13)
         status_label.anchored_position = (64, 52)
         status_label.anchor_point = (0.5, 0.0)
-        percentage_label = label.Label(terminalio.FONT, text=" "*4)
-        percentage_label.anchored_position = (127,0)
+        percentage_label = label.Label(terminalio.FONT, text=" " * 4)
+        percentage_label.anchored_position = (127, 0)
         percentage_label.anchor_point = (1.0, 0.0)
-        voltage_label = label.Label(terminalio.FONT, text=" "*5)
-        voltage_label.anchored_position = (0,0)
+        voltage_label = label.Label(terminalio.FONT, text=" " * 5)
+        voltage_label.anchored_position = (0, 0)
         voltage_label.anchor_point = (0.0, 0.0)
         group.append(percentage_label)
         group.append(voltage_label)
@@ -64,13 +64,13 @@ def usb_charge_monitor():
                 progress = convert_voltage_to_progress(voltage, BAR_WIDTH)
                 status_label.text = f"Charging"
             while progress <= BAR_WIDTH + 2:
-                progress_bar.value = min(progress, BAR_WIDTH-1)
+                progress_bar.value = min(progress, BAR_WIDTH - 1)
                 disp.refresh()
                 progress += 1
                 time.sleep(0.1)
                 if utils.usb_power_connected():
                     disconnnected_count = 0
                 else:
-                    disconnnected_count +=1
+                    disconnnected_count += 1
                 if disconnnected_count > 5:
                     return

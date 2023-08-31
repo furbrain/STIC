@@ -15,7 +15,6 @@ from debug import logger
 from bitmaps import bitmaps, palette
 from utils import convert_voltage_to_progress, clean_block_text
 
-
 WIDTH = 128
 HEIGHT = 64
 
@@ -54,12 +53,11 @@ class Display:
         self.bt_pending_bitmap.fill(0)
         self.bt_pending_tile = TileGrid(self.bt_pending_bitmap, pixel_shader=palette, x=115, y=19)
         batt_icon = TileGrid(bitmaps['batt_icon'], pixel_shader=palette, x=115, y=48)
-        self.batt_level = VerticalProgressBar((118,53), (6,8), max_value=100, border_thickness=0)
+        self.batt_level = VerticalProgressBar((118, 53), (6, 8), max_value=100, border_thickness=0)
         self.icon_group.append(self.bt_icon)
         self.icon_group.append(batt_icon)
         self.icon_group.append(self.batt_level)
         self.icon_group.append(self.bt_pending_tile)
-
 
         self.laser_group = displayio.Group()
         self.laser_group.append(laser_group)
@@ -89,7 +87,7 @@ class Display:
             self.reading_index.text = str(index)
         self.refresh()
 
-    def set_bt_connected(self, connected:bool):
+    def set_bt_connected(self, connected: bool):
         if connected:
             self.bt_icon[0] = 1
         else:
@@ -100,10 +98,10 @@ class Display:
         count = min(count, 4)
         self.bt_pending_bitmap.fill(0)
         for i in range(count):
-            self.bt_pending_bitmap[i*3, 0] = 1
-            self.bt_pending_bitmap[i*3+1, 0] = 1
-            self.bt_pending_bitmap[i*3, 1] = 1
-            self.bt_pending_bitmap[i*3+1, 1] = 1
+            self.bt_pending_bitmap[i * 3, 0] = 1
+            self.bt_pending_bitmap[i * 3 + 1, 0] = 1
+            self.bt_pending_bitmap[i * 3, 1] = 1
+            self.bt_pending_bitmap[i * 3 + 1, 1] = 1
 
     def set_batt_level(self, voltage):
         self.batt_level.value = convert_voltage_to_progress(voltage, 100)
@@ -168,10 +166,11 @@ class Display:
     def deinit(self):
         self.laser_group.remove(laser_group)
 
+
 def get_laser_bitmap_group():
     laser_bitmap = bitmaps['laser']
-    x = (WIDTH-laser_bitmap.width)//2
-    y = (HEIGHT-laser_bitmap.height)//2
+    x = (WIDTH - laser_bitmap.width) // 2
+    y = (HEIGHT - laser_bitmap.height) // 2
     tile_grid = displayio.TileGrid(laser_bitmap, pixel_shader=palette, x=x, y=y)
     group = displayio.Group()
     group.append(tile_grid)

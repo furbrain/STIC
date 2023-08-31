@@ -21,9 +21,9 @@ try:
 except ImportError:
     pass
 
-from debug import logger
+from debug import logger, INFO
 
-
+# noinspection PyUnboundLocalVariable
 action_item: AsyncActionItem = None
 
 
@@ -54,13 +54,13 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
         ("Calibrate", [
             ("Sensors", AsyncAction(calibrate.calibrate_sensors)),
             ("Laser", AsyncAction(calibrate.calibrate_distance)),
-            ]),
+        ]),
         ("Info", [
             ("Raw Data", AsyncAction(raw_readings)),
             ("Tidy Data", AsyncAction(calibrated_readings)),
             ("Orientation", AsyncAction(orientation)),
             ("Device", AsyncAction(device)),
-            ]),
+        ]),
         ("Settings", [
             ("Timeout", ConfigOptions(
                 name="timeout", obj=cfg,
@@ -77,26 +77,26 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
                 options=[
                     ("Metric", Config.METRIC),
                     ("Imperial", Config.IMPERIAL)],
-                )),
+            )),
             ("Angles", ConfigOptions(
                 name="angles", obj=cfg,
                 options=[
                     ("Degrees", Config.DEGREES),
                     ("Grads", Config.GRADS)],
-                )),
+            )),
             ("Anomaly Detection", ConfigOptions(
                 name="anomaly_strictness", obj=cfg,
                 options=[
                     ("Off", Calibration.OFF),
                     ("Relaxed", Calibration.SOFT),
                     ("Strict", Calibration.HARD)],
-                )),
-            ]),
+            )),
+        ]),
         ("Bluetooth", [
             ("Disconnect", devices.bt.disconnect),
             ("Forget pairings", devices.bt.forget),
         ])
-        ]
+    ]
     debug_items = [
         ("Debug", [
             ("Cal From Saved", AsyncAction(calibrate.reset_to_calibrate)),
@@ -105,7 +105,7 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
             ("ValueError", breaker),
         ])
     ]
-    if logger.getEffectiveLevel() <= logging.INFO:
+    if logger.getEffectiveLevel() <= INFO:
         items.extend(debug_items)
     menu_root = disp.get_menu()
     # noinspection PyTypeChecker
@@ -135,7 +135,7 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
 
 
 def freeze():
-    #stop everything for 10 seconds - should trigger watchdog
+    # stop everything for 10 seconds - should trigger watchdog
     time.sleep(10)
     time.sleep(10)
 
@@ -145,13 +145,13 @@ def dummy():
 
 
 def breaker():
+    # noinspection PyUnresolvedReferences,PyUnusedLocal
     a = b
 
 
-async def menu_item_test(devices, config, display):
+# noinspection PyUnusedLocal
+async def menu_item_test(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
     for i in range(5):
         await asyncio.sleep(1)
-        display.show_info(f"MENU TEST: {i}\r\nPhil was here\r\nHere is a very long line " +
-                            f"indeed")
-
-
+        disp.show_info(f"MENU TEST: {i}\r\nPhil was here\r\nHere is a very long line " +
+                       f"indeed")

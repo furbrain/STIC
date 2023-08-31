@@ -81,6 +81,7 @@ class Hardware:
         self.buzzer.play(HAPPY)
 
     def beep_shutdown(self):
+        # noinspection PyTypeChecker
         self.buzzer.play(reversed(HAPPY))
 
     def beep_bip(self):

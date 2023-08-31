@@ -14,7 +14,6 @@ import seeed_xiao_nrf52840
 import pwmio
 import atexit
 
-
 print("Checking voltage")
 bat = seeed_xiao_nrf52840.Battery()
 print(f"{bat.voltage}v")
@@ -30,9 +29,9 @@ imu.deinit()
 print("Press Button A")
 button_a = digitalio.DigitalInOut(pins.BUTTON_A)
 button_a.switch_to_input(digitalio.Pull.UP)
-if button_a.value==0:
+if button_a.value == 0:
     raise RuntimeError("Button A already pressed?")
-while button_a.value==1:
+while button_a.value == 1:
     pass
 button_a.deinit()
 
@@ -44,6 +43,7 @@ pwm = pwmio.PWMOut(pins.BUZZER_A, frequency=512, duty_cycle=0x7FFF)
 time.sleep(0.5)
 pwm.deinit()
 if pins.BUZZER_B is not None:
+    # noinspection PyUnboundLocalVariable
     buzzer_b.deinit()
     print("Testing buzzer B")
 
@@ -56,7 +56,6 @@ if pins.BUZZER_B is not None:
     print("\n")
 else:
     print("No Buzzer B pin")
-
 
 print("Turning on peripherals")
 periph_enable_io = digitalio.DigitalInOut(pins.PERIPH_EN)
@@ -85,25 +84,23 @@ magnetometer = rm3100.RM3100_I2C(i2c, drdy_pin=drdy_io)
 print(magnetometer.magnetic)
 print("\n")
 
-
-
 print("Testing display")
 bus = displayio.I2CDisplay(i2c, device_address=0x3c)
 # noinspection PyTypeChecker
-oled = adafruit_displayio_sh1106.SH1106(bus, width=128, height=64,auto_refresh=False,
-                                             rotation=0, colstart=2)
+oled = adafruit_displayio_sh1106.SH1106(bus, width=128, height=64, auto_refresh=False,
+                                        rotation=0, colstart=2)
 atexit.register(displayio.release_displays)
 group = displayio.Group()
-text = label.Label(terminalio.FONT, text="Press B", color=0xffffff,x=30, y=31)
+text = label.Label(terminalio.FONT, text="Press B", color=0xffffff, x=30, y=31)
 group.append(text)
 oled.show(group)
 oled.refresh()
 
 button_b = digitalio.DigitalInOut(pins.BUTTON_B)
 button_b.switch_to_input(digitalio.Pull.UP)
-if button_b.value==0:
+if button_b.value == 0:
     raise RuntimeError("Button B already pressed?")
-while button_b.value==1:
+while button_b.value == 1:
     pass
 button_b.deinit()
 las_en_pin.deinit()

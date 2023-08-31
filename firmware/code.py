@@ -1,7 +1,6 @@
 import seeed_xiao_nrf52840
 
 import calibrate
-import pins
 import usb_mode
 
 try:
@@ -9,9 +8,8 @@ try:
 except ImportError:
     pass
 
-from debug import logger
+from debug import logger, DEBUG
 import storage
-
 
 from utils import usb_power_connected, check_mem
 import digitalio
@@ -20,16 +18,16 @@ import asyncio
 import traceback
 import pins
 import alarm
-import gc
 import app
 import microcontroller
 import board
 import _bleio
 
-LIGHT_SLEEP_TIMEOUT = 6*60*60 # light sleep for 6 hours
+LIGHT_SLEEP_TIMEOUT = 6 * 60 * 60  # light sleep for 6 hours
+
 
 def double_click_start() -> bool:
-    #first check voltage and return false if too low...
+    # first check voltage and return false if too low...
     with seeed_xiao_nrf52840.Battery() as batt:
         voltage = batt.voltage
         if voltage < 3.2:
@@ -51,15 +49,16 @@ def double_click_start() -> bool:
         return False
 
 
-#main
+# main
 
-async def main(mode):
+async def main(app_mode):
     check_mem("starting_app")
-    with app.App(mode) as main_app:
+    with app.App(app_mode) as main_app:
         logger.info("Starting main app")
         shutdown_status = await main_app.main()
         check_mem("App closed")
         return shutdown_status
+
 
 app_used = False
 check_mem("First run")
@@ -76,7 +75,7 @@ while True:
             with digitalio.DigitalInOut(pins.BUTTON_B) as button_b:
                 app_used = True
                 button_b.switch_to_input(digitalio.Pull.UP)
-                if button_b.value == False:
+                if button_b.value is False:
                     # button b is pressed
                     mode = app.App.MENU
                 else:
@@ -86,7 +85,7 @@ while True:
         else:
             logger.info("no double click")
             time.sleep(0.1)
-            if usb_power_connected() and logger.getEffectiveLevel() != logging.DEBUG:
+            if usb_power_connected() and logger.getEffectiveLevel() != DEBUG:
                 usb_mode.usb_charge_monitor()
             clean_shutdown = True
     except MemoryError as e:
@@ -103,7 +102,7 @@ while True:
         time.sleep(0.1)
         microcontroller.reset()
     # shutdown watchdog before sleep
-    if microcontroller.watchdog.mode != None:
+    if microcontroller.watchdog.mode is not None:
         logger.debug("Disabling watchdog prior to sleep")
         microcontroller.watchdog.deinit()
     _bleio.adapter.stop_advertising()

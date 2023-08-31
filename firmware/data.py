@@ -1,5 +1,6 @@
 import struct
 from collections import namedtuple
+
 try:
     from typing import Optional, Union
 except ImportError:
@@ -9,22 +10,26 @@ from discarding_queue import DiscardingQueue
 
 Leg = namedtuple("Leg", ("azimuth", "inclination", "distance"))
 
+
 class FailedLeg:
     """
     This class simply represents a failed reading
     """
+
 
 class Readings:
     """
     This class represents the set of most recent readings, whether a reading has been
     taken recently, and what is the current viewed reading
     """
+
     def __init__(self, from_bytes: Optional[bytes] = None, max_len=10):
         if from_bytes is not None:
             num_readings = from_bytes[0]
             length_required = min(num_readings, max_len) * struct.calcsize("3f")
             temp_bytes = bytes(from_bytes[0: 1 + length_required])
-            temp_readings = [Leg(struct.unpack_from("3f",temp_bytes,1+x*3)*) for x in range(
+            # noinspection PyArgumentList,PyPep8
+            temp_readings = [Leg(struct.unpack_from("3f", temp_bytes, 1 + x * 3)*) for x in range(
                 num_readings)]
         else:
             temp_readings = []
@@ -43,7 +48,7 @@ class Readings:
         length_required = 1 + len(self._queue) * struct.calcsize("3f")
         b = bytearray(length_required)
         for i, leg in enumerate(self._queue):
-            struct.pack_into("3f", b, 1+i*3, *leg)
+            struct.pack_into("3f", b, 1 + i * 3, *leg)
         store[:length_required] = b
 
     def store_reading(self, leg=Leg):

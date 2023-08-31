@@ -5,9 +5,7 @@ import mag_cal
 from async_button import Button
 
 import utils
-from utils import check_mem
 
-CAL_DATA_FILE = "calibration_data.json"
 try:
     import numpy as np
 except ImportError:
@@ -18,11 +16,13 @@ import config
 import json
 import microcontroller
 
+CAL_DATA_FILE = "calibration_data.json"
 CAL_DUE = b"CALIBRATE_ME"
 CAL_DONE = b"CALIB DONE"
 
 cal = None
 accuracy: Optional[float] = None
+
 
 async def calibrate_sensors(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
     devices.laser_enable(True)
@@ -45,7 +45,7 @@ async def calibrate_sensors(devices: hardware.Hardware, cfg: config.Config, disp
             break
         count += 1
     try:
-        #save data if we can
+        # save data if we can
         with open(CAL_DATA_FILE, "w") as f:
             json.dump({"mag": mags, "grav": gravs}, f)
     except OSError:
@@ -53,6 +53,7 @@ async def calibrate_sensors(devices: hardware.Hardware, cfg: config.Config, disp
     await reset_to_calibrate(devices, cfg, disp)
 
 
+# noinspection PyUnusedLocal
 async def reset_to_calibrate(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
     disp.show_info("""
         Resetting to run
@@ -84,6 +85,7 @@ def calibrate_if_due():
         cal = e
         return
 
+
 async def show_cal_results(devices: hardware.Hardware, cfg: config.Config,
                            disp: display.Display):
     global cal, accuracy
@@ -106,7 +108,6 @@ async def show_cal_results(devices: hardware.Hardware, cfg: config.Config,
     elif button == "b":
         pass
     cal = None
-
 
 
 async def calibrate_distance(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):

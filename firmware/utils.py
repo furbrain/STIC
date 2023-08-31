@@ -2,11 +2,8 @@ import gc
 
 import microcontroller
 import memorymap
-import alarm
 import sys
-import time
 from debug import logger
-
 
 
 def get_int_at(addr: int, num_bytes: int) -> int:
@@ -53,57 +50,47 @@ def usb_power_connected() -> bool:
     data = get_uint32_at(addr)
     return bool(data & 0x01)
 
+
 _NOT_FOUND = object()
 
-class cached_property:
-    """
-    Copy of functools cached_property
-    """
-    def __init__(self, func):
-        self.func = func
-        self.cached_name = f"_{func.__name__}"
-        if hasattr(func, "__doc__"):
-            self.__doc__ = func.__doc__
 
-    def __get__(self, instance, owner=None):
-        if hasattr(instance, self.cached_name):
-            return getattr(instance, self.cached_name)
-        else:
-            result = self.func(instance)
-            setattr(instance, self.cached_name, result)
-            return result
-
-def simplify(formatted_exception:str):
+def simplify(formatted_exception: str):
     lines = formatted_exception.splitlines()
     import re
     pattern = r'File "(.*)", line (\d+), in (.*)$'
     matches = re.search(pattern, lines[-2])
     if matches:
-        return ':'.join(matches.groups())+'\r\n'+lines[-1]
+        return ':'.join(matches.groups()) + '\r\n' + lines[-1]
     else:
         return '\r\n'.join(lines[-2:])
+
 
 def partial(func, *args, **kwargs):
     def f():
         return func(*args, **kwargs)
+
     return f
 
 
-def convert_voltage_to_progress(voltage:float, maximum:int):
+def convert_voltage_to_progress(voltage: float, maximum: int):
     if voltage < MIN_VOLTAGE:
         return 0
     if voltage > MAX_VOLTAGE:
         return maximum
-    return int(maximum*(voltage-MIN_VOLTAGE)/(MAX_VOLTAGE-MIN_VOLTAGE))
+    return int(maximum * (voltage - MIN_VOLTAGE) / (MAX_VOLTAGE - MIN_VOLTAGE))
+
 
 def set_nvm(text: bytes):
     microcontroller.nvm[0:len(text)] = text
 
+
 def check_nvm(text: bytes):
     return microcontroller.nvm[0:len(text)] == text
 
+
 def clear_nvm():
     microcontroller.nvm[0:32] = b'\xff' * 32
+
 
 def clean_block_text(text: str) -> str:
     """
@@ -113,9 +100,11 @@ def clean_block_text(text: str) -> str:
     """
     return '\r\n'.join(x.strip() for x in text.splitlines() if x.strip())
 
+
 def check_mem(text: str):
     gc.collect()
     logger.debug(f"{text} mem: {gc.mem_free()}")
 
-MIN_VOLTAGE=3.5
-MAX_VOLTAGE=4.2
+
+MIN_VOLTAGE = 3.5
+MAX_VOLTAGE = 4.2
