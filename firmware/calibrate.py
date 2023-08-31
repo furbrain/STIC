@@ -1,4 +1,6 @@
 import asyncio
+from typing import Optional
+
 import mag_cal
 from async_button import Button
 
@@ -20,7 +22,7 @@ CAL_DUE = b"CALIBRATE_ME"
 CAL_DONE = b"CALIB DONE"
 
 cal = None
-accuracy = None
+accuracy: Optional[float] = None
 
 async def calibrate_sensors(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
     devices.laser_enable(True)
@@ -85,7 +87,7 @@ def calibrate_if_due():
 async def show_cal_results(devices: hardware.Hardware, cfg: config.Config,
                            disp: display.Display):
     global cal, accuracy
-    if cal is None:
+    if cal is None or accuracy is None:
         return
     if accuracy < 0.25:
         quality = "excellent"

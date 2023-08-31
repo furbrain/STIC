@@ -8,13 +8,10 @@ import config
 import hardware
 import display
 import displayio
-import adafruit_logging as logging
+from debug import logger
 
 from bitmaps import bitmaps, palette
 from utils import convert_voltage_to_progress
-
-logger = logging.getLogger()
-
 
 import utils
 

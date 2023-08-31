@@ -10,12 +10,11 @@ from fruity_menu.menu import Menu
 from config import Config
 from hardware import Hardware
 from data import Leg
-import adafruit_logging as logging
+from debug import logger
 
 from bitmaps import bitmaps, palette
 from utils import convert_voltage_to_progress, clean_block_text
 
-logger = logging.getLogger()
 
 WIDTH = 128
 HEIGHT = 64
@@ -29,6 +28,7 @@ class Display:
         self.devices = devices
         self.config = config
         bus = displayio.I2CDisplay(self.devices.i2c, device_address=0x3c)
+        # noinspection PyTypeChecker
         self.oled = adafruit_displayio_sh1106.SH1106(bus, width=WIDTH, height=HEIGHT,
                                                      rotation=0, auto_refresh=False, colstart=2)
         text = " " * 20

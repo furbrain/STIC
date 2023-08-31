@@ -4,13 +4,10 @@ try:
 except ImportError:
     pass
 
-import adafruit_logging as logging
+from debug import logger
 from mag_cal import Calibration
 
 _GRADS_PER_DEGREE = 400 / 360.0
-
-logger = logging.getLogger()
-
 _CONFIG_FILE = "/config.json"
 _DEFAULT_AXES_MAG = "+X+Y-Z"
 _DEFAULT_AXES_GRAV = "-Y-X+Z"

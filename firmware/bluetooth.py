@@ -8,11 +8,9 @@ import caveble
 from adafruit_ble.services.standard import BatteryService
 
 import utils
-import adafruit_logging as logging
+from debug import logger
 
 import version
-
-logger = logging.getLogger()
 
 
 class BluetoothServices:
@@ -54,7 +52,8 @@ class BluetoothServices:
         for c in self.ble.connections:
             c.disconnect()
 
-    def forget(self):
+    @staticmethod
+    def forget():
         _bleio.adapter.erase_bonding()
 
     def deinit(self):

@@ -17,7 +17,8 @@ TASK_SEQSTART = 0x008
 
 class InvertingPWMOut:
 
-    def _find_pwm_module_and_channel(self, pin: Pin):
+    @staticmethod
+    def _find_pwm_module_and_channel(pin: Pin):
         pin_no = get_pin_no(pin)
         for i, addr in enumerate(PWM_BASE_ADDRS):
             for j in range(4):
@@ -26,7 +27,8 @@ class InvertingPWMOut:
                     return i, j
         return None, None
 
-    def _set_pwm_channel(self, module: int, channel: int, value: int):
+    @staticmethod
+    def _set_pwm_channel(module: int, channel: int, value: int):
         addr = PWM_BASE_ADDRS[module] + PSEL + channel * 4
         set_uint32_at(addr, value)
 

@@ -20,14 +20,12 @@ except ImportError:
 
 import busio
 import digitalio
-import adafruit_logging as logging
-
-logger = logging.getLogger()
+from debug import logger
 
 
 # Pin definitions
 
-HAPPY = (("C6", 50), ("E6", 50), ("G6", 50), ("C7", 50))
+HAPPY = (("C6", 50.0), ("E6", 50.0), ("G6", 50.0), ("C7", 50.0))
 BIP = (("A7", 50),)
 BOP = (("C7", 50),)
 SAD = (("G6", 100), ("C6", 200))

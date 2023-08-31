@@ -89,6 +89,7 @@ print("\n")
 
 print("Testing display")
 bus = displayio.I2CDisplay(i2c, device_address=0x3c)
+# noinspection PyTypeChecker
 oled = adafruit_displayio_sh1106.SH1106(bus, width=128, height=64,auto_refresh=False,
                                              rotation=0, colstart=2)
 atexit.register(displayio.release_displays)

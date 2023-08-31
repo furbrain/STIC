@@ -24,7 +24,7 @@ class Readings:
             num_readings = from_bytes[0]
             length_required = min(num_readings, max_len) * struct.calcsize("3f")
             temp_bytes = bytes(from_bytes[0: 1 + length_required])
-            temp_readings = [Leg(struct.unpack_from("3f",temp_bytes,1+x*3)) for x in range(
+            temp_readings = [Leg(struct.unpack_from("3f",temp_bytes,1+x*3)*) for x in range(
                 num_readings)]
         else:
             temp_readings = []

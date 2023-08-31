@@ -41,6 +41,7 @@ async def calibrated_readings(devices: hardware.Hardware, config: config.Config,
         display.show_info(text)
 
 
+# noinspection PyTypeChecker
 async def orientation(devices: hardware.Hardware, config: config.Config, display: display.Display):
     while True:
         try:

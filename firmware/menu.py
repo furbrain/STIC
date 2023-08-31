@@ -21,9 +21,7 @@ try:
 except ImportError:
     pass
 
-import adafruit_logging as logging
-
-logger = logging.getLogger()
+from debug import logger
 
 
 action_item: AsyncActionItem = None
@@ -110,6 +108,7 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
     if logger.getEffectiveLevel() <= logging.INFO:
         items.extend(debug_items)
     menu_root = disp.get_menu()
+    # noinspection PyTypeChecker
     build_menu(menu_root, items)
     menu_root.show_menu()
     disp.refresh()

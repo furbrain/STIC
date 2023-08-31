@@ -9,15 +9,14 @@ except ImportError:
 
 from async_button import Button
 from laser_egismos import LaserError
+# noinspection PyProtectedMember
 from mag_cal import MagneticAnomalyError, DipAnomalyError, GravityAnomalyError, NotCalibrated
 
 import config
 import display
 import hardware
 from data import readings, Leg
-import adafruit_logging as logging
-
-logger = logging.getLogger()
+from debug import logger
 
 ERROR_MESSAGES: Dict[type, str] = {
     MagneticAnomalyError: "Magnetic\nAnomaly:\nIron nearby?",

@@ -13,7 +13,7 @@ from menu import menu
 from utils import simplify, check_mem
 
 try:
-    from typing import List, Coroutine
+    from typing import List, Coroutine, Optional
 except ImportError:
     pass
 
@@ -21,9 +21,7 @@ from async_button import Button
 
 import hardware
 from config import Config
-import adafruit_logging as logging
-
-logger = logging.getLogger()
+from debug import logger, INFO
 
 
 class App:
@@ -51,9 +49,9 @@ class App:
             self.batt_monitor(),
             self.flip_monitor(),
         ]
-        if logger.getEffectiveLevel() <= logging.INFO:
+        if logger.getEffectiveLevel() <= INFO:
             self.background_tasks.append(self.counter())
-        self.current_task: asyncio.Task = None
+        self.current_task: Optional[asyncio.Task] = None
         self.exception_context = {}
         self.shutdown_event = asyncio.Event()
         check_mem("Finished creating app")
@@ -64,11 +62,9 @@ class App:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.deinit()
 
-
     def deinit(self):
         self.display.deinit()
         self.devices.deinit()
-
 
     async def switch_task(self, mode: int):
         # stop current task, async so can be scheduled by task due to finish...
@@ -96,7 +92,7 @@ class App:
         Shuts down  if double click on button A
         """
         logger.debug("Quitter task started")
-        lockout = time.monotonic()+0.5
+        lockout = time.monotonic() + 0.5
         while True:
             await self.devices.button_a.wait(Button.DOUBLE)
             check_mem("double click")
@@ -128,7 +124,7 @@ class App:
 
     async def watchdog(self):
         logger.debug("Watchdog task started")
-        microcontroller.watchdog.timeout = 5 # 5 second watchdog timeout
+        microcontroller.watchdog.timeout = 5  # 5 second watchdog timeout
         microcontroller.watchdog.mode = WatchDogMode.RAISE
         exception_count = 0
         try:
@@ -168,7 +164,7 @@ class App:
         logger.debug(f"disto callback received with {value}")
         if value in CALLBACKS:
             res = CALLBACKS[value]()
-            if hasattr(res,"__await__"):
+            if hasattr(res, "__await__"):
                 await res
 
     async def batt_monitor(self):
@@ -219,7 +215,7 @@ class App:
             t.cancel()
         self.current_task.cancel()
         self.config.save_if_changed()
-        await asyncio.sleep(0) # allow everything to stop
+        await asyncio.sleep(0)  # allow everything to stop
         check_mem("tasks cancelled")
         if self.exception_context:
             clean_shutdown = False
@@ -230,7 +226,7 @@ class App:
                     f.write(output[0])
                     f.flush()
             except OSError:
-                #unable to save to disk, probably connected via USB, so print
+                # unable to save to disk, probably connected via USB, so print
                 logger.error(output[0])
             try:
                 brief_output = simplify(output[0])
@@ -268,6 +264,7 @@ class App:
         logger.debug("Clearing exception handler")
         loop = asyncio.get_event_loop()
         loop.set_exception_handler(None)
+
 
 class LowBattery(Exception):
     """

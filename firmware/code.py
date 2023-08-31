@@ -9,13 +9,8 @@ try:
 except ImportError:
     pass
 
-import adafruit_logging as logging
+from debug import logger
 import storage
-logger = logging.getLogger()
-#if not storage.getmount("/").readonly:
-#    logger.addHandler(logging.FileHandler("log.txt"))
-logger.setLevel(logging.DEBUG)
-logger.debug("Starting log")
 
 
 from utils import usb_power_connected, check_mem

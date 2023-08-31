@@ -5,9 +5,7 @@ import memorymap
 import alarm
 import sys
 import time
-import adafruit_logging as logging
-
-logger = logging.getLogger()
+from debug import logger
 
 
 
@@ -54,38 +52,6 @@ def usb_power_connected() -> bool:
     addr = 0x40000438
     data = get_uint32_at(addr)
     return bool(data & 0x01)
-
-
-def true_deep_sleep(*pins: "alarm.pin.PinAlarm", pull: bool = True):
-    # set up pins
-    global deep_sleep_wrapped
-    for pin in pins:
-        pin_no = get_pin_no(pin.pin)
-        if pin_no >= 32:
-            gpio_base_addr = 0x50000300
-            pin_no %= 32
-        else:
-            gpio_base_addr = 0x50000000
-        pin_cnf_addr = gpio_base_addr + 0x700 + pin_no * 4
-        data = 0
-        if pin.value == False:
-            # active low
-            data |= 0x00030000
-            if pull:
-                data |= 0x0000000C
-        else:
-            data |= 0x00020000
-            if pull:
-                data |= 0x00000008
-        set_uint32_at(pin_cnf_addr, data)
-    set_uint32_at(0x40000500, 1)
-
-
-def clear_deep_sleep():
-    data = get_uint32_at(0x40000400)
-    print(f"reset field {data:x}")
-    #set_uint32_at(0x40000400, data & 0xffff0000)
-
 
 _NOT_FOUND = object()
 
