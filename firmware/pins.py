@@ -1,7 +1,8 @@
+# noinspection PyPackageRequirements
 import board
 
 hardware = "phil"
-
+# noinspection PyUnresolvedReferences
 if hardware == "phil":
     # Phil's pinout
     LASER_EN = board.D0

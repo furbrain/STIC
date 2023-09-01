@@ -1,5 +1,7 @@
 try:
+    # noinspection PyUnresolvedReferences
     from typing import Optional, Sequence, Iterator, Union
+    # noinspection PyUnresolvedReferences
     from typing_extensions import SupportsIndex
 except ImportError:
     pass
@@ -8,7 +10,7 @@ except ImportError:
 class DiscardingQueue:
     """
     This implements a queue that will only go up to max_len items long, and then
-    will discard the oldest elements. Used because circuitpython's Deque is very limited
+    will discard the oldest elements. Used because circuitpython Deque is very limited
     """
 
     def __init__(self, it: Optional[Sequence] = None, max_len: int = 10):
@@ -19,7 +21,7 @@ class DiscardingQueue:
 
     def append(self, obj) -> None:
         """
-        Add an item to the queue. Silently discard oldest item if this would make the queue too long
+        Add an item to the queue. Silently discard the oldest item if this would make the queue too long
 
         :param obj: Object to add to the queue
         :return:

@@ -51,7 +51,7 @@ def usb_charge_monitor():
         group.append(status_label)
 
         disp.show_group(group)
-        disconnnected_count = 0
+        disconnected_count = 0
         while True:
             voltage = devices.batt_voltage
             voltage_label.text = f"{voltage:4.2f}V"
@@ -69,8 +69,8 @@ def usb_charge_monitor():
                 progress += 1
                 time.sleep(0.1)
                 if utils.usb_power_connected():
-                    disconnnected_count = 0
+                    disconnected_count = 0
                 else:
-                    disconnnected_count += 1
-                if disconnnected_count > 5:
+                    disconnected_count += 1
+                if disconnected_count > 5:
                     return

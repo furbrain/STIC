@@ -1,3 +1,4 @@
+# noinspection PyPackageRequirements
 import alarm
 import pins
 import _bleio

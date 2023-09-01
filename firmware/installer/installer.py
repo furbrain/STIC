@@ -16,6 +16,7 @@ BOOTLOADER_NAME = "XIAO-SENSE"
 SAP6_NAMES = ['CIRCUITPY', 'SAP6']
 
 
+# noinspection SpellCheckingInspection
 def find_usb_devices():
     results = subprocess.check_output(("lsblk", "-J", "-o", "PATH,MOUNTPOINT,LABEL"))
     data = json.loads(results)['blockdevices']
@@ -24,6 +25,7 @@ def find_usb_devices():
     return data
 
 
+# noinspection SpellCheckingInspection
 def get_circuitpython_dir():
     devs = find_usb_devices()
     if "CIRCUITPY" in devs:
@@ -64,6 +66,7 @@ def find_serial_port():
     return None
 
 
+# noinspection SpellCheckingInspection
 def upgrade_firmware():
     print("Finding SAP6 in bootloader mode")
     devs = find_usb_devices()

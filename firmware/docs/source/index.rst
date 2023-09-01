@@ -1,8 +1,3 @@
-.. SAP6 documentation master file, created by
-   sphinx-quickstart on Wed Jul 26 18:53:57 2023.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 SAP6 Cave Surveying Device
 ==========================
 
@@ -66,7 +61,7 @@ Laser
 +++++
 
 You shouldn't need to calibrate the laser, unless you want to start measuring from the front of the device
-or if you have replaced the end cap with
+or if you have replaced the end cap with something else.
 
 
 Anomaly Detection
@@ -85,7 +80,7 @@ Software
 
 This device uses `CircuitPython <https://circuitpython.org/>`_. All the code to run it is available on the device
 itself - just plug it in to a laptop and you'll see a USB drive appear. You can go in and change the code as you see
-fit. The version of CircuitPython that comes with the SAP6 has several additionaly libraries built in to it:
+fit. The version of CircuitPython that comes with the SAP6 has several additional libraries built in to it:
 
 * `mag_cal <https://github.com/furbrain/CircuitPython_mag_cal>`_: This contains all the maths needed for calibration
 * `rm3100 <https://github.com/furbrain/CircuitPython_RM3100>`_: This is a device driver for the RM3100 magnetometer

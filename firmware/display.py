@@ -150,7 +150,7 @@ class Display:
     @property
     def inverted(self):
         """
-        Whether display is right way up or rotated
+        Whether display is the right way up or rotated
         """
         return self._inverted
 

@@ -1,12 +1,15 @@
 import adafruit_logging
 import os
+# noinspection PyPackageRequirements
 import storage
 
 logger = adafruit_logging.getLogger()
-try:
-    os.stat("DEBUG")
+files = os.listdir()
+if "DEBUG" in files:
     logger.setLevel(adafruit_logging.DEBUG)
-except IOError:
+elif "INFO" in files:
+    logger.setLevel(adafruit_logging.INFO)
+else:
     logger.setLevel(adafruit_logging.WARNING)
 if not storage.getmount("/").readonly:
     logger.addHandler(adafruit_logging.FileHandler("log.txt"))

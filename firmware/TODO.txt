@@ -15,7 +15,7 @@ Other useful info screens
 
 Hardware things
  - make it fit the new battery DONE!
- - bezelly goodness DONE
+ - bezelled goodness DONE
  - work on button covers DONE
  - and silicone gaskets for big and small ends DONE
  - little plastic support for display DONE but not tested
@@ -23,7 +23,7 @@ Hardware things
 Check charging and shutdown current consumption DONE
 
 Order parts
-  - displays (make sure rigth VCC/GND order) DONE
+  - displays (make sure right VCC/GND order) DONE
   - rm3100 DONE
   - egismos DONE
 

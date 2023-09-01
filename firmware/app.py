@@ -4,6 +4,7 @@ import traceback
 
 import mag_cal
 import microcontroller
+# noinspection PyPackageRequirements
 from watchdog import WatchDogMode
 
 import calibrate
@@ -13,6 +14,7 @@ from menu import menu
 from utils import simplify, check_mem
 
 try:
+    # noinspection PyUnresolvedReferences
     from typing import List, Coroutine, Optional
 except ImportError:
     pass
@@ -89,7 +91,7 @@ class App:
 
     async def quitter_task(self):
         """
-        Shuts down  if double click on button A
+        Shuts down  if double-click on button A
         """
         logger.debug("Quitter task started")
         lockout = time.monotonic() + 0.5
@@ -102,7 +104,7 @@ class App:
 
     async def timeout(self):
         """
-        Shuts down if more than config.timeout seconds between button presses
+        Shuts down if more than `config.timeout` seconds between button presses
         """
         logger.debug("Timeout task started")
         while True:
@@ -114,7 +116,8 @@ class App:
                 logger.info("Timed out, quitting")
                 self.shutdown_event.set()
 
-    @staticmethod async def counter():
+    @staticmethod
+    async def counter():
         logger.debug("Counter task started")
         i = 0
         while True:
@@ -122,7 +125,8 @@ class App:
             i += 1
             logger.info(f"Count: {i}")
 
-    @staticmethod async def watchdog():
+    @staticmethod
+    async def watchdog():
         logger.debug("Watchdog task started")
         microcontroller.watchdog.timeout = 5  # 5 second watchdog timeout
         microcontroller.watchdog.mode = WatchDogMode.RAISE
@@ -134,7 +138,7 @@ class App:
                     microcontroller.watchdog.feed()
                 except ValueError:
                     # for some reason we get an extra run through after the watchdog fires
-                    # can't feed it any more, but ignore this exception so we get the correct
+                    # can't feed it anymore, but we can ignore this exception. This means we get the correct
                     # exception reported from the code at fault, but for safety only ignore this once
                     if exception_count == 0:
                         exception_count += 1

@@ -15,6 +15,7 @@ import hardware
 from config import Config
 
 try:
+    # noinspection PyUnresolvedReferences
     from typing import Callable, Optional, Coroutine, Any
 
     AsyncActionItem = Optional[Callable[[hardware.Hardware, config.Config, display.Display], Coroutine]]

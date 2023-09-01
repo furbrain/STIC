@@ -3,6 +3,7 @@ import asyncio
 from utils import check_mem
 
 try:
+    # noinspection PyUnresolvedReferences
     from typing import Dict
 except ImportError:
     pass

@@ -38,7 +38,7 @@ button_a.deinit()
 print("Testing buzzer A")
 if pins.BUZZER_B is not None:
     buzzer_b = digitalio.DigitalInOut(pins.BUZZER_B)
-    buzzer_b.switch_to_output(0)
+    buzzer_b.switch_to_output(False)
 pwm = pwmio.PWMOut(pins.BUZZER_A, frequency=512, duty_cycle=0x7FFF)
 time.sleep(0.5)
 pwm.deinit()
@@ -48,7 +48,7 @@ if pins.BUZZER_B is not None:
     print("Testing buzzer B")
 
     buzzer_a = digitalio.DigitalInOut(pins.BUZZER_A)
-    buzzer_a.switch_to_output(0)
+    buzzer_a.switch_to_output(False)
     pwm = pwmio.PWMOut(pins.BUZZER_B, frequency=1024, duty_cycle=0x7FFF)
     time.sleep(0.5)
     pwm.deinit()
@@ -58,9 +58,9 @@ else:
     print("No Buzzer B pin")
 
 print("Turning on peripherals")
-periph_enable_io = digitalio.DigitalInOut(pins.PERIPH_EN)
-periph_enable_io.switch_to_output(True)
-atexit.register(periph_enable_io.deinit)
+peripheral_enable_io = digitalio.DigitalInOut(pins.PERIPH_EN)
+peripheral_enable_io.switch_to_output(True)
+atexit.register(peripheral_enable_io.deinit)
 
 print("Testing Laser")
 las_en_pin = digitalio.DigitalInOut(pins.LASER_EN)

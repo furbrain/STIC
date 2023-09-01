@@ -1,5 +1,9 @@
 import asyncio
-from typing import Optional
+try:
+    # noinspection PyUnresolvedReferences
+    from typing import Optional
+except ImportError:
+    pass
 
 import mag_cal
 from async_button import Button
@@ -9,6 +13,7 @@ import utils
 try:
     import numpy as np
 except ImportError:
+    # noinspection PyUnresolvedReferences
     from ulab import numpy as np
 import display
 import hardware

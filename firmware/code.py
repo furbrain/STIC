@@ -9,6 +9,7 @@ except ImportError:
     pass
 
 from debug import logger, DEBUG
+# noinspection PyPackageRequirements
 import storage
 
 from utils import usb_power_connected, check_mem
@@ -17,9 +18,11 @@ import time
 import asyncio
 import traceback
 import pins
+# noinspection PyPackageRequirements
 import alarm
 import app
 import microcontroller
+# noinspection PyPackageRequirements
 import board
 import _bleio
 

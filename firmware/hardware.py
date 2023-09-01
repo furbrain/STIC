@@ -39,8 +39,8 @@ class Hardware:
         displayio.release_displays()
         self.las_en_pin = digitalio.DigitalInOut(pins.LASER_EN)
         self.las_en_pin.switch_to_output(False)
-        self.periph_enable_io = digitalio.DigitalInOut(pins.PERIPH_EN)
-        self.periph_enable_io.switch_to_output(True)
+        self.peripheral_enable_io = digitalio.DigitalInOut(pins.PERIPH_EN)
+        self.peripheral_enable_io.switch_to_output(True)
         time.sleep(0.1)
         self.button_a = async_button.Button(pins.BUTTON_A, value_when_pressed=False)
         self.button_b = async_button.Button(pins.BUTTON_B, value_when_pressed=False,
@@ -110,8 +110,8 @@ class Hardware:
         self.drdy_io.deinit()
         self.button_b.deinit()
         self.button_a.deinit()
-        self.periph_enable_io.value = False
+        self.peripheral_enable_io.value = False
         time.sleep(0.1)
         self.las_en_pin.deinit()
-        self.periph_enable_io.deinit()
+        self.peripheral_enable_io.deinit()
         atexit.unregister(self.atexit_handler)
