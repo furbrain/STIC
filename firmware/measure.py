@@ -30,7 +30,6 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
     This is the main measurement task
     :return:
     """
-    from data import readings
     # need to switch display to measurement here...
     logger.debug("Showing start screen")
     check_mem("start screen")

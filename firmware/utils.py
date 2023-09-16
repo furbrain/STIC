@@ -59,6 +59,8 @@ def simplify(formatted_exception: str):
     lines = formatted_exception.splitlines()
     import re
     pattern = r'File "(.*)", line (\d+), in (.*)$'
+    if len(lines) < 2:
+        return lines[0]
     matches = re.search(pattern, lines[-2])
     if matches:
         return ':'.join(matches.groups()) + '\r\n' + lines[-1]
