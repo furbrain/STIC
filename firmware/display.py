@@ -7,13 +7,12 @@ from adafruit_progressbar.verticalprogressbar import VerticalProgressBar
 from displayio import TileGrid, Bitmap
 from fruity_menu.menu import Menu
 
-from config import Config
-from hardware import Hardware
-from data import Leg
-from debug import logger
-
-from bitmaps import bitmaps, palette
-from utils import convert_voltage_to_progress, clean_block_text
+from .config import Config
+from .hardware import Hardware
+from .data import Leg
+from .debug import logger
+from .bitmaps import bitmaps, palette
+from .utils import convert_voltage_to_progress, clean_block_text
 
 WIDTH = 128
 HEIGHT = 64

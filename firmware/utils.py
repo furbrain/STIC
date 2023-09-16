@@ -3,7 +3,8 @@ import gc
 import microcontroller
 import memorymap
 import sys
-from debug import logger
+
+from .debug import logger
 
 
 def get_int_at(addr: int, num_bytes: int) -> int:

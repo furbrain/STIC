@@ -1,19 +1,16 @@
 import time
 
 import terminalio
-from adafruit_progressbar.horizontalprogressbar import HorizontalProgressBar, \
-    HorizontalFillDirection
+from adafruit_progressbar.horizontalprogressbar import HorizontalProgressBar, HorizontalFillDirection
 from adafruit_display_text import label
-import config
-import hardware
-import display
 import displayio
-from debug import logger
 
-from bitmaps import bitmaps, palette
-from utils import convert_voltage_to_progress
-
-import utils
+from . import config
+from . import hardware
+from . import display
+from .debug import logger
+from .bitmaps import bitmaps, palette
+from .utils import convert_voltage_to_progress, usb_power_connected
 
 BAR_HEIGHT = 18
 
@@ -68,7 +65,7 @@ def usb_charge_monitor():
                 disp.refresh()
                 progress += 1
                 time.sleep(0.1)
-                if utils.usb_power_connected():
+                if usb_power_connected():
                     disconnected_count = 0
                 else:
                     disconnected_count += 1

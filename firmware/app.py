@@ -1,17 +1,18 @@
 import asyncio
 import time
 import traceback
+from watchdog import WatchDogMode
 
 import mag_cal
 import microcontroller
 # noinspection PyPackageRequirements
-from watchdog import WatchDogMode
+from async_button import Button
 
-import calibrate
-from display import Display
-from measure import measure, take_reading
-from menu import menu
-from utils import simplify, check_mem
+from .import calibrate
+from .display import Display
+from .measure import measure, take_reading
+from .menu import menu
+from .utils import simplify, check_mem
 
 try:
     # noinspection PyUnresolvedReferences
@@ -19,11 +20,10 @@ try:
 except ImportError:
     pass
 
-from async_button import Button
 
-import hardware
-from config import Config
-from debug import logger, INFO
+from .import hardware
+from .config import Config
+from .debug import logger, INFO
 
 
 class App:

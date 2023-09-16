@@ -6,10 +6,10 @@ from adafruit_ble.advertising.standard import ProvideServicesAdvertisement
 import caveble
 from adafruit_ble.services.standard import BatteryService
 
-import utils
-from debug import logger
+from . import utils
+from .debug import logger
 
-import version
+from . import version
 
 
 class BluetoothServices:

@@ -2,7 +2,7 @@ import pwmio
 import sys
 from microcontroller import Pin
 
-from utils import get_uint32_at, set_uint32_at, get_uint16_at, set_uint16_at, get_pin_no
+from .utils import get_uint32_at, set_uint32_at, get_uint16_at, set_uint16_at, get_pin_no
 
 PWM_BASE_ADDRS = [
     0x4001C000,

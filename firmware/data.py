@@ -7,7 +7,7 @@ try:
 except ImportError:
     pass
 
-from discarding_queue import DiscardingQueue
+from .discarding_queue import DiscardingQueue
 
 Leg = namedtuple("Leg", ("azimuth", "inclination", "distance"))
 

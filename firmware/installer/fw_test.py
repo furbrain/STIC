@@ -4,8 +4,6 @@ import adafruit_displayio_sh1106
 import displayio
 import terminalio
 from adafruit_display_text import label
-
-import pins
 import digitalio
 import rm3100
 import busio
@@ -13,6 +11,8 @@ import laser_egismos
 import seeed_xiao_nrf52840
 import pwmio
 import atexit
+
+import firmware.pins as pins
 
 print("Checking voltage")
 bat = seeed_xiao_nrf52840.Battery()

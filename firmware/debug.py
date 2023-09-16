@@ -11,8 +11,8 @@ elif "INFO" in files:
     logger.setLevel(adafruit_logging.INFO)
 else:
     logger.setLevel(adafruit_logging.WARNING)
-if not storage.getmount("/").readonly:
-    logger.addHandler(adafruit_logging.FileHandler("log.txt"))
+#if not storage.getmount("/").readonly:
+#    logger.addHandler(adafruit_logging.FileHandler("log.txt"))
 logger.debug("Starting log")
 
 INFO = adafruit_logging.INFO

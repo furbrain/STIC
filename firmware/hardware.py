@@ -1,26 +1,24 @@
 import atexit
 import time
-
 import laser_egismos
 import pwmio
-
-import bluetooth
-import pins
 import async_button
 import async_buzzer
 import displayio
 import rm3100
-import invertingpwmio
 import seeed_xiao_nrf52840
+import busio
+import digitalio
 
 try:
     from typing import Optional
 except ImportError:
     pass
 
-import busio
-import digitalio
-from debug import logger
+from . import invertingpwmio
+from . import bluetooth
+from . import pins
+from .debug import logger
 
 
 # Pin definitions

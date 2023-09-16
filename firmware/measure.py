@@ -1,6 +1,8 @@
 import asyncio
-
-from utils import check_mem
+from async_button import Button
+from laser_egismos import LaserError
+# noinspection PyProtectedMember
+from mag_cal import MagneticAnomalyError, DipAnomalyError, GravityAnomalyError, NotCalibrated
 
 try:
     # noinspection PyUnresolvedReferences
@@ -8,16 +10,12 @@ try:
 except ImportError:
     pass
 
-from async_button import Button
-from laser_egismos import LaserError
-# noinspection PyProtectedMember
-from mag_cal import MagneticAnomalyError, DipAnomalyError, GravityAnomalyError, NotCalibrated
-
-import config
-import display
-import hardware
-from data import readings, Leg
-from debug import logger
+from . import config
+from . import display
+from . import hardware
+from .data import readings, Leg
+from .debug import logger
+from .utils import check_mem
 
 ERROR_MESSAGES: Dict[type, str] = {
     MagneticAnomalyError: "Magnetic\nAnomaly:\nIron nearby?",

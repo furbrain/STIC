@@ -2,17 +2,17 @@ import asyncio
 import gc
 import time
 
-from info import raw_readings, calibrated_readings, orientation, device
-
 from async_button import Button
 from fruity_menu.builder import build_menu, Action, Options
 from mag_cal import Calibration
 
-import calibrate
-import config
-import display
-import hardware
-from config import Config
+from . import calibrate
+from . import config
+from . import display
+from . import hardware
+from .config import Config
+from .info import raw_readings, calibrated_readings, orientation, device
+from .debug import logger, INFO
 
 try:
     # noinspection PyUnresolvedReferences
@@ -22,7 +22,6 @@ try:
 except ImportError:
     pass
 
-from debug import logger, INFO
 
 # noinspection PyUnboundLocalVariable
 action_item: AsyncActionItem = None

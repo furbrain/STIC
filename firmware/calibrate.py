@@ -7,19 +7,18 @@ except ImportError:
 
 import mag_cal
 from async_button import Button
-
-import utils
-
+import json
+import microcontroller
 try:
     import numpy as np
 except ImportError:
     # noinspection PyUnresolvedReferences
     from ulab import numpy as np
-import display
-import hardware
-import config
-import json
-import microcontroller
+
+from . import utils
+from . import display
+from . import hardware
+from . import config
 
 CAL_DATA_FILE = "calibration_data.json"
 CAL_DUE = b"CALIBRATE_ME"

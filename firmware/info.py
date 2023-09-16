@@ -1,10 +1,10 @@
 import asyncio
 from os import uname
 
-import config
-import display
-import hardware
-from version import get_long_name, get_short_name, get_sw_version, get_hw_version
+from . import config
+from . import display
+from . import hardware
+from .version import get_long_name, get_short_name, get_sw_version, get_hw_version
 
 
 # noinspection PyUnusedLocal
