@@ -76,14 +76,20 @@ def calibration_due():
 
 def calibrate_if_due():
     global cal, accuracy
+    from . import debug
     if not calibration_due():
+        debug.logger.debug("No calibration due")
+        debug.logger.debug(microcontroller.nvm[0:10])
         return
     utils.clear_nvm()
     try:
+        debug.logger.debug("Loading calibration data")
         cfg = config.Config.load()
         with open(CAL_DATA_FILE) as f:
             data = json.load(f)
+        debug.logger.debug("Running calibration")
         cal = mag_cal.Calibration(mag_axes=cfg.mag_axes, grav_axes=cfg.grav_axes)
+        debug.logger.debug("Checking accuracy")
         accuracy = cal.calibrate(np.array(data['mag']), np.array(data['grav']))
     except Exception as e:
         cal = e
@@ -95,6 +101,9 @@ async def show_cal_results(devices: hardware.Hardware, cfg: config.Config,
     global cal, accuracy
     if cal is None or accuracy is None:
         return
+    if isinstance(cal, Exception):
+        from . import debug
+        debug.logger.error(cal)
     if accuracy < 0.25:
         quality = "excellent"
     elif accuracy < 0.5:
