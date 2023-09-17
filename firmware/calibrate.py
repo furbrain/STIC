@@ -146,6 +146,6 @@ async def calibrate_distance(devices: hardware.Hardware, cfg: config.Config, dis
         btn, _ = await devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
         if btn == "b":
             return
-    cfg.laser_cal = 0
+    cfg.laser_cal = dist/1000
     cfg.save()
     disp.show_info("Calibration complete")

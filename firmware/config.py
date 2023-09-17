@@ -28,7 +28,7 @@ class Config:
                  mag_axes: str = _DEFAULT_AXES_MAG,
                  grav_axes: str = _DEFAULT_AXES_GRAV,
                  anomaly_strictness: int = Calibration.SOFT,
-                 laser_cal: int = 0,
+                 laser_cal: int = 0.157,
                  calib: dict = None):
         self.timeout = timeout
         self.angles = angles

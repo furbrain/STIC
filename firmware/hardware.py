@@ -40,9 +40,8 @@ class Hardware:
         self.peripheral_enable_io = digitalio.DigitalInOut(pins.PERIPH_EN)
         self.peripheral_enable_io.switch_to_output(True)
         time.sleep(0.1)
-        self.button_a = async_button.Button(pins.BUTTON_A, value_when_pressed=False)
-        self.button_b = async_button.Button(pins.BUTTON_B, value_when_pressed=False,
-                                            long_click_enable=True)
+        self.button_a = async_button.Button(pins.BUTTON_A, value_when_pressed=False, long_click_enable=True)
+        self.button_b = async_button.Button(pins.BUTTON_B, value_when_pressed=False, long_click_enable=True)
         self.both_buttons = async_button.MultiButton(a=self.button_a, b=self.button_b)
         self.i2c = busio.I2C(scl=pins.SCL, sda=pins.SDA, frequency=4000000)
         self.drdy_io = digitalio.DigitalInOut(pins.DRDY)
@@ -51,6 +50,7 @@ class Hardware:
         self.uart = busio.UART(pins.TX, pins.RX, baudrate=9600)
         self.uart.reset_input_buffer()
         self.laser = laser_egismos.AsyncLaser(self.uart)
+        self.laser.set_buzzer(False)
         if pins.BUZZER_B is None:
             self.pwm = pwmio.PWMOut(pins.BUZZER_A, variable_frequency=True)
         else:
