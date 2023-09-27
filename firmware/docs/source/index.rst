@@ -16,7 +16,7 @@ Basic Usage
 * To move to the next menu item: Press **B**
 
 Measure Mode
-++++++++++++
+------------
 
 Press **A** to take a reading. You will get an error if the device is not already :ref:`calibrated <Sensors>`. You can
 choose either a short press (the reading will be taken just after the button is released), or a long press (the reading
@@ -32,42 +32,103 @@ hand side of the display.
 
 
 There is also a battery level indicator on the bottom right of the screen. The top right is a bluetooth indicator:
-|bt_on| if connected, |bt_off| if not.
+|bt_on| if connected, |bt_off| if not. If you lose bluetooth connection, the device will store up to 20 readings and
+will send them automatically when bluetooth connection is restored.
 
-Menu Mode
-+++++++++
+Menu
+----
 
+To navigate through the menu, press **A** to select an item and **B** to move on to the next item
 Description of the various options here
 
-Bluetooth Connection
---------------------
-
-Doing bluetooth stuff
-
-
 Calibration
------------
-
-How to calibrate it
++++++++++++
 
 Sensors
-+++++++
+*******
 
+You will need to calibrate the device the first time you use it, and any time that you move to an area where the
+magnetic field has a substantially different strength or dip.
 
-Calibration routine
-
+Once you enter the calibration routine you will ideally need to take 24 readings. Press **A** to take each reading,
+and press **B** to finish. If you wish to cancel calibration, double-click **A**. I normally suggest 8 in random
+directions, then a series of 8 readings between two points, rotating the device 45° along its axis between each shot.
+You then need a further 8 readings between another 2 points, ideally about 90° from the first set. Don't
+worry if you don't get these numbers exactly right, the algorithm will identify which readings are in the same direction
+and adapt accordingly.
 
 Laser
-+++++
+*****
 
 You shouldn't need to calibrate the laser, unless you want to start measuring from the front of the device
 or if you have replaced the end cap with something else.
 
+To calibrate the laser, place on object exactly one meter from the point on the device you want to measure from. Start
+the laser calibration routine and it will update the distance readings.
+
+Info
+++++
+
+Raw Data
+********
+
+This shows the live raw output of the sensors, converted to ms\ :sup:`-2` and µT
+
+Tidy Data
+*********
+
+This shows the live calibrated output of the sensors, again converted to ms\ :sup:`-2` and µT
+
+Orientation
+***********
+
+This shows the live compass and clino readings along with the roll of the device and the current
+magnetic dip
+
+Device
+******
+
+This shows the name of the device as visible to bluetooth, and various version numbers
+
+Settings
+++++++++
+
+Timeout
+*******
+
+This is how long the device will wait from the last button click before turning off
+
+Units
+*****
+
+Choose between metric and imperial (decimal feet) units
+
+Angles
+******
+
+Choose between degrees and grads for the angular measurements
 
 Anomaly Detection
------------------
+*****************
 
-A bit here
+The device makes a note of the magnetic dip and field strength during calibration. If these are significantly
+different when taking a reading, this would suggest that there are stray magnetic fields present. This option
+lets you choose between **strict** detection which will pick up most bad readings, at the risk of getting a warning
+when there is nothing wrong. There is also a **relaxed** mode, and it can also be turned **off**.
+
+Bluetooth
++++++++++
+
+Disconnect
+**********
+
+Disconnect from the current bluetooth device
+
+Forget Pairings
+***************
+
+If you are having difficulties connecting, it may be worth selecting this option which will clear all the recorded
+connections within the device.
 
 Hacking
 -------
@@ -89,8 +150,73 @@ fit. The version of CircuitPython that comes with the SAP6 has several additiona
 * `caveble <https://github.com/furbrain/CircuitPython_CaveBLE>`_: This module is a cave survey specific module to talk
   to cave surveying apps such as SexyTopo.
 
+File layout
+***********
+
+In the top level director of the USB Drive, you may see:
+
+``firmware``
+  This directory holds all the application code
+
+``fonts``
+  This directory holds the fonts used by the device
+
+``images``
+  This directory holds the images used
+
+``boot.py``
+  This code is run on startup, before all the other python code runs
+
+``code.py``
+  This code simply calls ``run`` in ``firmware/main.py``
+
+``config.json``
+  This holds all the calibration and settings data for the device
+
+``manual.pdf``
+  This documentation
+
+``calibration_data.json``
+  This is a record of all the shots you took last time you attempted to calibrate
+
+``error.log``
+  If the device crashes or encounters an error, you will get some debugging info in here
+
+``DEBUG``
+  If this file is present, then the device will be in debug mode. You won't see the normal battery charging
+  screen, but you can double click and start the main device running. You also get a serial connection on
+  ``/dev/ttyACM0`` or ``/dev/ttyUSB0`` on  linux or ``COM1`` on windows
 
 Hardware
 ++++++++
 
-and here
+You can build your own SAP6! This part is a work in progress
+
+PCB
+***
+
+Get the gerbers from **FIXME**, and either make or get someone to make the PCB for you. The traces are pretty
+chunky so you can mill or etch the board yourself
+
+Components
+**********
+
+See the BOM for the list of components and where to get them
+
+Solder them on to the board - they are all fairly chunky so you don't need to be a whizz at soldering
+
+Plastic parts
+*************
+
+You will need to 3d print the following STLs **FIXME**
+
+Acrylic parts
+*************
+
+Ideally you should laser cut the following DXFs from 3mm clear acrylic. However the designs are fairly
+simple so you may well be able to cut these by hand
+
+Gaskets
+*******
+
+You can use 1mm silicone sheet or EVA foam for these pieces. Note that EVA foam works well but
