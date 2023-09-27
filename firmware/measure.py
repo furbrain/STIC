@@ -71,7 +71,8 @@ async def take_reading(devices: hardware.Hardware,
         distance = await asyncio.wait_for(devices.laser.measure(), 3.0) / 1000
         distance += cfg.laser_cal
         logger.debug(f"Distance: {distance}m")
-        cfg.calib.raise_if_anomaly(mag, grav, cfg.anomaly_strictness)
+        if cfg.anomaly_strictness is not None:
+            cfg.calib.raise_if_anomaly(mag, grav, cfg.anomaly_strictness)
     except LaserError as exc:
         disp.show_big_info(f"Laser Fail:\n{exc.__class__.__name__}\n{exc}")
         logger.info(exc)

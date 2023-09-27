@@ -6,6 +6,7 @@ from async_button import Button
 from fruity_menu.builder import build_menu, Action, Options
 from mag_cal import Calibration
 
+from . import measure
 from . import calibrate
 from . import config
 from . import display
@@ -87,9 +88,9 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
             ("Anomaly Detection", ConfigOptions(
                 name="anomaly_strictness", obj=cfg,
                 options=[
-                    ("Off", Calibration.OFF),
-                    ("Relaxed", Calibration.SOFT),
-                    ("Strict", Calibration.HARD)],
+                    ("Off", None),
+                    ("Relaxed", config.SOFT_STRICTNESS),
+                    ("Strict", config.HARD_STRICTNESS)],
             )),
         ]),
         ("Bluetooth", [

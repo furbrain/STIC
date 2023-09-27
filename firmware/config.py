@@ -1,12 +1,11 @@
 import json
-
 try:
     # noinspection PyUnresolvedReferences
     from typing import Optional
 except ImportError:
     pass
 
-from mag_cal import Calibration
+from mag_cal import Calibration, Strictness
 
 _GRADS_PER_DEGREE = 400 / 360.0
 _CONFIG_FILE = "/config.json"
@@ -14,6 +13,9 @@ _DEFAULT_AXES_MAG = "+X+Y-Z"
 _DEFAULT_AXES_GRAV = "-Y-X+Z"
 _FEET_PER_METRE = 3.28084
 
+HARD_STRICTNESS = Strictness(mag=1.5, grav=2.0, dip=3.0)
+
+SOFT_STRICTNESS = Strictness(mag=2.5, grav=3.0, dip=5.0)
 
 class Config:
     DEGREES = 0
@@ -27,7 +29,7 @@ class Config:
                  units: int = METRIC,
                  mag_axes: str = _DEFAULT_AXES_MAG,
                  grav_axes: str = _DEFAULT_AXES_GRAV,
-                 anomaly_strictness: int = Calibration.SOFT,
+                 anomaly_strictness: Strictness = SOFT_STRICTNESS,
                  laser_cal: int = 0.157,
                  calib: dict = None):
         self.timeout = timeout
@@ -35,7 +37,10 @@ class Config:
         self.units = units
         self.mag_axes = mag_axes
         self.grav_axes = grav_axes
-        self.anomaly_strictness = anomaly_strictness
+        if anomaly_strictness is None:
+            self.anomaly_strictness = anomaly_strictness
+        else:
+            self.anomaly_strictness = Strictness(*anomaly_strictness)
         self.laser_cal = laser_cal
         self._dirty = False
         if calib:
@@ -46,7 +51,11 @@ class Config:
     def as_dict(self):
         dct = {}
         for k, v in self.__dict__.items():
-            if not k.startswith("_"):
+            if isinstance(v, Strictness):
+                dct[k] = list(v)
+            elif k.startswith("_"):
+                continue
+            else:
                 if hasattr(v, "as_dict"):
                     dct[k] = v.as_dict()
                 else:
@@ -63,9 +72,9 @@ class Config:
         self._dirty = False
 
     @classmethod
-    def load(cls) -> "Config":
+    def load(cls, fname=_CONFIG_FILE) -> "Config":
         try:
-            with open(_CONFIG_FILE, "r") as f:
+            with open(fname, "r") as f:
                 dct = json.load(f)
         except (OSError, ValueError):
             dct = {}
