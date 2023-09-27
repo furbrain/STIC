@@ -91,6 +91,8 @@ def run():
                 time.sleep(0.1)
                 if usb_power_connected() and logger.getEffectiveLevel() != DEBUG:
                     usb_mode.usb_charge_monitor()
+                    time.sleep(1)
+                    microcontroller.reset()
                 clean_shutdown = True
         except MemoryError as e:
             logger.info(e)
