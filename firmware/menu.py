@@ -100,6 +100,7 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
     ]
     debug_items = [
         ("Debug", [
+            ("Save shots", AsyncAction(measure.save_multiple_shots)),
             ("Cal From Saved", AsyncAction(calibrate.reset_to_calibrate)),
             ("Test item", AsyncAction(menu_item_test)),
             ("Freeze", freeze),

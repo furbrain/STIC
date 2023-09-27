@@ -1,4 +1,6 @@
 import asyncio
+
+
 try:
     # noinspection PyUnresolvedReferences
     from typing import Optional
@@ -19,6 +21,7 @@ from . import utils
 from . import display
 from . import hardware
 from . import config
+from . import measure
 
 CAL_DATA_FILE = "calibration_data.json"
 CAL_DUE = b"CALIBRATE_ME"
@@ -29,31 +32,10 @@ accuracy: Optional[float] = None
 
 
 async def calibrate_sensors(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
-    devices.laser_enable(True)
-    disp.show_info("Take a series of\r\nreadings, press\r\nA for a leg,\r\nB to finish")
-    await devices.button_a.wait(Button.SINGLE)
-    await devices.laser.set_laser(True)
-    mags = []
-    gravs = []
-    count = 0
-    while True:
-        disp.show_info(f"Legs: {count}\r\nIdeally at least 24\r\nWith two groups\r\nin same " +
-                       f"direction")
-        button, click = await devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)
-        if button == "a":
-            mags.append(devices.magnetometer.magnetic)
-            gravs.append(devices.accelerometer.acceleration)
-            devices.beep_bip()
-        elif button == "b":
-            devices.beep_bop()
-            break
-        count += 1
-    try:
-        # save data if we can
-        with open(CAL_DATA_FILE, "w") as f:
-            json.dump({"mag": mags, "grav": gravs}, f)
-    except OSError:
-        pass
+    prelude = "Take a series of\r\nreadings, press\r\nA for a leg,\r\nB to finish"
+    reminder = "Ideally at least 24\r\nWith two groups\r\nin same direction"
+    fname = CAL_DATA_FILE
+    await measure.take_multiple_readings(devices, disp, fname, prelude, reminder)
     await reset_to_calibrate(devices, cfg, disp)
 
 
