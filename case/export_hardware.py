@@ -24,4 +24,4 @@ os.makedirs("build/tpu/",exist_ok=True)
 print(f"Exporting Boot") 
 parts = doc.findObjects(Label="^Boot$")
 Mesh.export(parts,f"build/tpu/Boot.stl")
-
+exit(0)

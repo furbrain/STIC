@@ -1,0 +1,39 @@
+name: Bundle Release files
+on: release
+jobs:                
+    bundle:
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4
+            
+            - name: Setup
+              run: |
+                sudo apt update
+                sudo apt install -y wget libgl1
+            
+            - name: Get freecad from cache
+              id: cache-freecad
+              uses: actions/cache@v3
+              with: 
+                path: ~/bin/freecad
+                key: freecad-0.21.1
+                
+            - if: ${{ steps.cache-freecad.outputs.cache-hit != 'true' }}
+              name: Get freecad from github
+              run: |
+                mkdir ~/bin/
+                wget -O ~/bin/freecad https://github.com/FreeCAD/FreeCAD/releases/download/0.21.1/FreeCAD_0.21.1-Linux-x86_64.AppImage
+                chmod 755 ~/bin/freecad
+            
+            - uses: actions/cache/save@v3
+              if: always()
+              with:
+                path: ~/bin/freecad
+                key: freecad-0.21.1
+            
+            - name: export hardware files  
+              run: |
+                ls
+                cd case
+                ~/bin/freecad --appimage-extract-and-run -c export_hardware.py
