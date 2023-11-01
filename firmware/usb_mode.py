@@ -56,9 +56,9 @@ def usb_charge_monitor():
                 voltage_label.text = "4.2V"
                 percentage_label.text = "100%"
             else:
+                voltage = devices.batt_voltage
                 progress = convert_voltage_to_progress(voltage, BAR_WIDTH)
                 status_label.text = f"Charging"
-                voltage = devices.batt_voltage
                 voltage_label.text = f"{voltage:4.2f}V"
                 percent_progress = convert_voltage_to_progress(voltage, 100)
                 percentage_label.text = f"{percent_progress}%"
