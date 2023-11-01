@@ -106,8 +106,14 @@ class Hardware:
         self.uart.deinit()
         self.i2c.deinit()
         self.drdy_io.deinit()
-        self.button_b.deinit()
-        self.button_a.deinit()
+        try:
+            self.button_b.deinit()
+        except KeyError:
+            pass
+        try:
+            self.button_a.deinit()
+        except KeyError:
+            pass
         self.peripheral_enable_io.value = False
         time.sleep(0.1)
         self.las_en_pin.deinit()

@@ -20,6 +20,7 @@ from .debug import logger
 from .utils import check_mem
 
 ERROR_MESSAGES: Dict[type, str] = {
+    LaserError: "Laser\nRead\nFailed",
     MagneticAnomalyError: "Magnetic\nAnomaly:\nIron nearby?",
     DipAnomalyError: "Magnetic\nAnomaly:\nIron nearby?",
     NotCalibrated: "Calibration\nneeded\nHold B 3s",
@@ -61,29 +62,31 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
 
 async def get_raw_measurement(devices: hardware.Hardware, disp: display.Display, with_laser: bool = True):
     logger.info("Taking a reading")
-    disp.oled.sleep()
-    if with_laser:
-        distance = await asyncio.wait_for(devices.laser.measure(), 3.0) / 1000
-    else:
-        distance = None
-    logger.debug(f"Raw Distance: {distance}m")
-    devices.laser.set_laser(False)
-    await asyncio.sleep(0.1)
-    mag = devices.magnetometer.magnetic
-    logger.debug(f"Mag: {mag}")
-    grav = devices.accelerometer.acceleration
-    logger.debug(f"Grav: {grav}")
-    await asyncio.sleep(0.1)
-    devices.laser.set_laser(True)
-    disp.oled.wake()
+    try:
+        disp.oled.sleep()
+        if with_laser:
+            distance = await asyncio.wait_for(devices.laser.measure(), 3.0) / 1000
+        else:
+            distance = None
+        logger.debug(f"Raw Distance: {distance}m")
+        devices.laser.set_laser(False)
+        await asyncio.sleep(0.1)
+        mag = devices.magnetometer.magnetic
+        logger.debug(f"Mag: {mag}")
+        grav = devices.accelerometer.acceleration
+        logger.debug(f"Grav: {grav}")
+        await asyncio.sleep(0.1)
+        devices.laser.set_laser(True)
+    finally:
+        disp.oled.wake()
     return mag, grav, distance
 
 async def take_reading(devices: hardware.Hardware,
                        cfg: config.Config,
                        disp: display.Display) -> bool:
     # take a reading
-    mag, grav, distance = await get_raw_measurement(devices, disp, True)
     try:
+        mag, grav, distance = await get_raw_measurement(devices, disp, True)
         if cfg.calib is None:
             raise NotCalibrated()
         azimuth, inclination, _ = cfg.calib.get_angles(mag, grav)
@@ -91,13 +94,10 @@ async def take_reading(devices: hardware.Hardware,
         logger.debug(f"Distance: {distance}m")
         if cfg.anomaly_strictness is not None:
             cfg.calib.raise_if_anomaly(mag, grav, cfg.anomaly_strictness)
-    except LaserError as exc:
-        disp.show_big_info(f"Laser Fail:\n{exc.__class__.__name__}\n{exc}")
-        logger.info(exc)
-        devices.beep_sad()
-        return False
     except tuple(ERROR_MESSAGES.keys()) as exc:
-        disp.show_big_info(ERROR_MESSAGES[exc.__class__])
+        for key in ERROR_MESSAGES.keys():
+            if isinstance(exc, key):
+                disp.show_big_info(ERROR_MESSAGES[key])
         logger.info(exc)
         devices.beep_sad()
         return False

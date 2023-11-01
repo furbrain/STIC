@@ -24,6 +24,10 @@ async def raw_readings(devices: hardware.Hardware, cfg: config.Config, disp: dis
 
 
 async def calibrated_readings(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+    if cfg.calib is None:
+        disp.show_info("Device not\r\ncalibrated")
+        await devices.button_a.wait_for_click()
+        return
     while True:
         try:
             await asyncio.wait_for(devices.button_a.wait_for_click(), 0.5)
@@ -32,18 +36,22 @@ async def calibrated_readings(devices: hardware.Hardware, cfg: config.Config, di
             pass
         grav = devices.accelerometer.acceleration
         mag = devices.magnetometer.magnetic
-        grav_strength, mag_strength = cfg.calib.get_field_strengths(mag, grav)
+        mag_strength, grav_strength = cfg.calib.get_field_strengths(mag, grav)
         grav = cfg.calib.grav.apply(grav)
         mag = cfg.calib.mag.apply(mag)
         text = "    Grav  Mag\r\n"
         for axis, g, m in zip("XYZ", grav, mag):
             text += f"{axis}   {g: 05.3f} {m: 05.3f}\r\n"
-        text += f"|V| {grav_strength: 05.3f} {mag_strength: 05.3f}"
+        text += f"|V| {grav_strength: 05.3f} {mag_strength: 05.3f}\rn"
         disp.show_info(text)
 
 
 # noinspection PyTypeChecker
 async def orientation(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+    if cfg.calib is None:
+        disp.show_info("Device not\r\ncalibrated")
+        await devices.button_a.wait_for_click()
+        return
     while True:
         try:
             await asyncio.wait_for(devices.button_a.wait_for_click(), 0.5)
