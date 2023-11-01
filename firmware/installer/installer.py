@@ -9,6 +9,7 @@ import json
 import sys
 import time
 import serial
+import argparse
 
 TTY_SYS_DIR = "/sys/class/tty/"
 
@@ -20,6 +21,19 @@ SAP6_NAMES = ['CIRCUITPY', 'SAP6']
 
 RESET_DEVICE = False
 
+
+parser = argparse.ArgumentParser(
+    prog="installer.py",
+    description="Installer for the SAP6"
+)
+parser.add_argument("-f", "--skip-firmware",
+                    help="Do not try to update the CircuitPython Firmware",
+                    action="store_true")
+parser.add_argument("-t", "--skip-tests",
+                    help="Skip the testing section - just install the code",
+                    action="store_true")
+
+options = parser.parse_args()
 # noinspection SpellCheckingInspection
 def find_usb_devices():
     results = subprocess.check_output(("lsblk", "-J", "-o", "PATH,MOUNTPOINT,LABEL"))
@@ -97,8 +111,28 @@ def upgrade_firmware():
     print("Updating CircuitPython firmware")
     shutil.copyfile(FIRMWARE_FILE, os.path.join(dev['mountpoint'], FIRMWARE_FILE))
 
+def run_tests():
+    clear_folder(path)
+    os.mkdir(fw_path)
+    print("Testing hardware")
+    ser_port = find_serial_port()
+    if ser_port is None:
+        print("SERIAL PORT NOT FOUND - EXITING")
+        exit()
+    with serial.Serial(ser_port) as ser:
+        shutil.copy("../pins.py", fw_path)
+        shutil.copyfile("fw_test.py", os.path.join(path, "code.py"))
+        # copy full firmware over
+        while True:
+            line: bytes = ser.readline()
+            if line is not None:
+                print(line.decode('UTF-8').strip())
+            if b"HW TEST COMPLETE" in line:
+                break
+    print("Hardware test successful")
 
-if "--no-firmware" not in sys.argv:
+
+if not options.skip_firmware:
     upgrade_firmware()
 
 print("Waiting for CircuitPython disc")
@@ -109,27 +143,12 @@ while True:
         break
 
 print("Wiping CircuitPython dir")
-clear_folder(path)
 fw_path = os.path.join(path, "firmware")
-os.mkdir(fw_path)
 
-print("Testing hardware")
-ser_port = find_serial_port()
-if ser_port is None:
-    print("SERIAL PORT NOT FOUND - EXITING")
-    exit()
-with serial.Serial(ser_port) as ser:
-    shutil.copy("../pins.py", fw_path)
-    shutil.copyfile("fw_test.py", os.path.join(path, "code.py"))
-    # copy full firmware over
-    while True:
-        line: bytes = ser.readline()
-        if line is not None:
-            print(line.decode('UTF-8').strip())
-        if b"HW TEST COMPLETE" in line:
-            break
 
-print("Hardware test successful")
+if not options.skip_tests:
+    run_tests()
+
 clear_folder(path)
 os.mkdir(fw_path)
 print("Copying fonts")
