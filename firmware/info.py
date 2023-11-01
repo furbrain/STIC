@@ -20,6 +20,7 @@ async def raw_readings(devices: hardware.Hardware, cfg: config.Config, disp: dis
         text = "Raw Accel Mag\r\n"
         for axis, a, m in zip("XYZ", acc, mag):
             text += f"{axis}   {a:05.3f} {m:05.2f}\r\n"
+        text += f"Voltage: {devices.batt_voltage:4.2f}V"
         disp.show_info(text)
 
 
