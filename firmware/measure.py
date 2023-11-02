@@ -42,6 +42,7 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
     devices.laser_enable(True)
     await asyncio.sleep(0.1)
     logger.debug("turning on laser light")
+    await devices.laser.set_buzzer(False)
     while True:
         await devices.laser.set_laser(True)
         btn, click = await devices.both_buttons.wait(a=[Button.SINGLE, Button.LONG],
@@ -69,14 +70,14 @@ async def get_raw_measurement(devices: hardware.Hardware, disp: display.Display,
         else:
             distance = None
         logger.debug(f"Raw Distance: {distance}m")
-        devices.laser.set_laser(False)
+        await devices.laser.set_laser(False)
         await asyncio.sleep(0.1)
         mag = devices.magnetometer.magnetic
         logger.debug(f"Mag: {mag}")
         grav = devices.accelerometer.acceleration
         logger.debug(f"Grav: {grav}")
         await asyncio.sleep(0.1)
-        devices.laser.set_laser(True)
+        await devices.laser.set_laser(True)
     finally:
         disp.oled.wake()
     return mag, grav, distance

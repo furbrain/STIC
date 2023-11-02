@@ -50,7 +50,6 @@ class Hardware:
         self.uart = busio.UART(pins.TX, pins.RX, baudrate=9600)
         self.uart.reset_input_buffer()
         self.laser = laser_egismos.AsyncLaser(self.uart)
-        self.laser.set_buzzer(False)
         if pins.BUZZER_B is None:
             self.pwm = pwmio.PWMOut(pins.BUZZER_A, variable_frequency=True)
         else:
