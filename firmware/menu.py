@@ -1,19 +1,19 @@
 import asyncio
 import gc
-import time
 
 from async_button import Button
 from fruity_menu.builder import build_menu, Action, Options
-from mag_cal import Calibration
 
 from . import measure
 from . import calibrate
 from . import config
 from . import display
 from . import hardware
+from . import info
+from . import debug
+from .debug import logger
 from .config import Config
-from .info import raw_readings, calibrated_readings, orientation, device
-from .debug import logger, INFO
+
 
 try:
     # noinspection PyUnresolvedReferences
@@ -57,10 +57,10 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
             ("Laser", AsyncAction(calibrate.calibrate_distance)),
         ]),
         ("Info", [
-            ("Raw Data", AsyncAction(raw_readings)),
-            ("Tidy Data", AsyncAction(calibrated_readings)),
-            ("Orientation", AsyncAction(orientation)),
-            ("Device", AsyncAction(device)),
+            ("Raw Data", AsyncAction(info.raw_readings)),
+            ("Tidy Data", AsyncAction(info.calibrated_readings)),
+            ("Orientation", AsyncAction(info.orientation)),
+            ("Device", AsyncAction(info.device)),
         ]),
         ("Settings", [
             ("Timeout", ConfigOptions(
@@ -102,12 +102,13 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
         ("Debug", [
             ("Save shots", AsyncAction(measure.save_multiple_shots)),
             ("Cal From Saved", AsyncAction(calibrate.reset_to_calibrate)),
-            ("Test item", AsyncAction(menu_item_test)),
-            ("Freeze", freeze),
-            ("ValueError", breaker),
+            ("Battery test", AsyncAction(debug.battery_test)),
+            ("Test item", AsyncAction(debug.menu_item_test)),
+            ("Freeze", debug.freeze),
+            ("ValueError", debug.breaker),
         ])
     ]
-    if logger.getEffectiveLevel() <= INFO:
+    if logger.getEffectiveLevel() <= debug.INFO:
         items.extend(debug_items)
     menu_root = disp.get_menu()
     # noinspection PyTypeChecker
@@ -135,25 +136,4 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
             menu_root.show_menu()
             disp.refresh()
 
-
-def freeze():
-    # stop everything for 10 seconds - should trigger watchdog
-    time.sleep(10)
-    time.sleep(10)
-
-
-def dummy():
-    pass
-
-
-def breaker():
-    # noinspection PyUnresolvedReferences,PyUnusedLocal
-    a = b
-
-
 # noinspection PyUnusedLocal
-async def menu_item_test(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
-    for i in range(5):
-        await asyncio.sleep(1)
-        disp.show_info(f"MENU TEST: {i}\r\nPhil was here\r\nHere is a very long line " +
-                       f"indeed")
