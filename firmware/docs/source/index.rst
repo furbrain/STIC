@@ -41,6 +41,21 @@ Menu
 To navigate through the menu, press **A** to select an item and **B** to move on to the next item
 Description of the various options here
 
+Battery Life
+------------
+
+Testing in ideal circumstances (room temperature, about 4m range to a white wall, 10 seconds between successive
+readings, display on):
+  * ~4500 readings taken
+  * 14 hours run time
+
+Factors affecting battery consumption:
+  * Temperature - poorer capacity with colder temperatures
+  * Range  - increased battery usage with longer legs
+  * Cave colouration:  increased battery usage with darker targets
+
+Charging time - about 2-3 hours with a 500mA charger
+
 Calibration
 +++++++++++
 
@@ -187,6 +202,11 @@ In the top level director of the USB Drive, you may see:
   screen, but you can double click and start the main device running. You also get a serial connection on
   ``/dev/ttyACM0`` or ``/dev/ttyUSB0`` on  linux or ``COM1`` on windows
 
+Updating Circuitpython
+**********************
+
+FIXME show
+
 Hardware
 ++++++++
 
@@ -208,7 +228,21 @@ Solder them on to the board - they are all fairly chunky so you don't need to be
 Plastic parts
 *************
 
-You will need to 3d print the following STLs **FIXME**
+You will need to 3d print the following STLs:
+  * ``shell.stl``:  print with largest opening downwards
+  * ``cap.stl``: you may need to print this with the pointy end down, in which case use the ``cap_with_vanes.stl`` file.
+  * ``shim.stl``: this inserts under the button pcb and holds it in place
+  * ``bezel.stl``: glue this in place over the acrylic window -silicone sealant or adhesive is suitable here
+  * ``mount.stl``: this holds the laser module and main pcb
+
+``mount.stl`` and ``shell.stl`` will need 1 and 4 brass screwthreads respectively - these can be inserted by pressing on
+them with a soldering iron. You can find suitable inserts on `RS <https://uk.rs-online.com/web/p/threaded-inserts/0278534>`_
+
+Rubber parts
+************
+
+``boot.stl`` needs to be printed with as soft a TPU as you can get away with. Coat upper and lower surfaces with grease
+before assembly.
 
 Acrylic parts
 *************
@@ -219,4 +253,6 @@ simple so you may well be able to cut these by hand
 Gaskets
 *******
 
-You can use 1mm silicone sheet or EVA foam for these pieces. Note that EVA foam works well but
+You can use 1mm silicone sheet or EVA foam for these pieces. Note that EVA foam works well but will need to be replaced
+after each use as it permanently deforms once compressed. Ideally coat gaskets with silicone grease. You can probably
+get away with no gaskets if you use plenty of grease
