@@ -43,7 +43,7 @@ async def calibrated_readings(devices: hardware.Hardware, cfg: config.Config, di
         text = "    Grav  Mag\r\n"
         for axis, g, m in zip("XYZ", grav, mag):
             text += f"{axis}   {g: 05.3f} {m: 05.3f}\r\n"
-        text += f"|V| {grav_strength: 05.3f} {mag_strength: 05.3f}\rn"
+        text += f"|V| {grav_strength: 05.3f} {mag_strength: 05.3f}\r\n"
         disp.show_info(text)
 
 
@@ -64,7 +64,7 @@ async def orientation(devices: hardware.Hardware, cfg: config.Config, disp: disp
         heading, inclination, roll = cfg.calib.get_angles(mag, grav)
         dip = cfg.calib.get_dips(mag, grav)
         text = f"""
-            Heading: {cfg.get_azimuth_text(heading)}
+            Compass: {cfg.get_azimuth_text(heading)}
             Inclination: {cfg.get_inclination_text(inclination)}
             Roll: {cfg.get_inclination_text(roll)}
             Dip: {cfg.get_inclination_text(dip)}

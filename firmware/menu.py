@@ -73,13 +73,13 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
                     ("5 minutes", 300),
                 ]
             )),
-            ("Units", ConfigOptions(
+            ("Distance Units", ConfigOptions(
                 name="units", obj=cfg,
                 options=[
                     ("Metric", Config.METRIC),
                     ("Imperial", Config.IMPERIAL)],
             )),
-            ("Angles", ConfigOptions(
+            ("Angle Units", ConfigOptions(
                 name="angles", obj=cfg,
                 options=[
                     ("Degrees", Config.DEGREES),
