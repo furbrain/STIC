@@ -86,24 +86,70 @@ class Config:
         setattr(self, varname, value)
         self._dirty = True
 
-    def get_azimuth_text(self, azimuth: float) -> str:
+    def get_azimuth_text(self, azimuth: float, decimals: Optional[int] = None, with_unit=True) -> str:
+        if decimals is None:
+            decimals = 1
+        if decimals > 0:
+            chars = decimals + 4
+        else:
+            chars = 3
         azimuth = azimuth % 360  # move to proper range
-        if self.angles == self.DEGREES:
-            return f"{azimuth:05.1f}°"
-        elif self.angles == self.GRADS:
-            azimuth *= _GRADS_PER_DEGREE  # convert to grads
-            return f"{azimuth:05.1f}g"
+        if with_unit:
+            unit = self.get_angle_unit()
+        else:
+            unit = ""
+        azimuth = self.convert_angle(azimuth)
+        return f"{azimuth:0{chars}.{decimals}f}{unit}"
 
-    def get_inclination_text(self, inclination: float) -> str:
-        if self.angles == self.DEGREES:
-            return f"{inclination:+05.1f}°"
-        elif self.angles == self.GRADS:
-            inclination *= _GRADS_PER_DEGREE  # convert to grads
-            return f"{inclination:+05.1f}g"
+    def get_inclination_text(self, inclination: float, decimals: Optional[int] = None, with_unit=True) -> str:
+        if decimals is None:
+            decimals = 1
+        if decimals > 0:
+            chars = decimals + 4
+        else:
+            chars = 3
+        if with_unit:
+            unit = self.get_angle_unit()
+        else:
+            unit = ""
+        inclination = self.convert_angle(inclination)
+        return f"{inclination:+0{chars}.{decimals}f}{unit}"
 
-    def get_distance_text(self, distance: float) -> str:
+
+    def get_distance_text(self, distance: float, decimals: Optional[int] = None, with_unit=True) -> str:
+        if decimals is None:
+            decimals = 3
+        if with_unit:
+            unit = self.get_distance_unit()
+        else:
+            unit = ""
+        distance = self.convert_distance(distance)
+        return f"{distance:.{decimals}f}{unit}"
+
+    def get_angle_unit(self):
+        if self.angles == self.DEGREES:
+            return "°"
+        elif self.angles == self.GRADS:
+            return "g"
+        else:
+            raise ValueError("Unknown angle setting")
+
+    def get_distance_unit(self):
         if self.units == self.METRIC:
-            return f"{distance:.3f}m"
+            return "m"
         elif self.units == self.IMPERIAL:
-            distance *= _FEET_PER_METRE
-            return f"{distance:.3f}'"
+            return "'"
+        else:
+            raise ValueError("Unknown distance setting")
+
+    def convert_angle(self, angle):
+        if self.angles == self.GRADS:
+            return angle * _GRADS_PER_DEGREE
+        else:
+            return angle
+
+    def convert_distance(self, distance):
+        if self.units == self.IMPERIAL:
+            return distance * _FEET_PER_METRE
+        else:
+            return distance
