@@ -13,9 +13,9 @@ _DEFAULT_AXES_MAG = "+X+Y-Z"
 _DEFAULT_AXES_GRAV = "-Y-X+Z"
 _FEET_PER_METRE = 3.28084
 
-HARD_STRICTNESS = Strictness(mag=1.5, grav=2.0, dip=3.0)
+HARD_STRICTNESS = Strictness(mag=2.0, grav=1.5, dip=3.0)
 
-SOFT_STRICTNESS = Strictness(mag=2.5, grav=3.0, dip=5.0)
+SOFT_STRICTNESS = Strictness(mag=5.0, grav=3.0, dip=5.0)
 
 class Config:
     DEGREES = 0
