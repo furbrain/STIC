@@ -92,6 +92,13 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
                     ("Relaxed", config.SOFT_STRICTNESS),
                     ("Strict", config.HARD_STRICTNESS)],
             )),
+            ("Save Readings", ConfigOptions(
+                name="save_readings", obj=cfg,
+                options=[
+                    ("Off", False),
+                    ("On", True),
+                ]
+            ))
         ]),
         ("Bluetooth", [
             ("Disconnect", devices.bt.disconnect),

@@ -31,6 +31,7 @@ class Config:
                  grav_axes: str = _DEFAULT_AXES_GRAV,
                  anomaly_strictness: Strictness = SOFT_STRICTNESS,
                  laser_cal: int = 0.157,
+                 save_readings: bool = False,
                  calib: dict = None):
         self.timeout = timeout
         self.angles = angles
@@ -42,6 +43,7 @@ class Config:
         else:
             self.anomaly_strictness = Strictness(*anomaly_strictness)
         self.laser_cal = laser_cal
+        self.save_readings = save_readings
         self._dirty = False
         if calib:
             self.calib: Optional[Calibration] = Calibration.from_dict(calib)
