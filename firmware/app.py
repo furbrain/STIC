@@ -11,6 +11,7 @@ from async_button import Button
 from .import calibrate
 from .display import Display
 from .measure import measure, take_reading
+from .data import readings
 from .menu import menu
 from .utils import simplify, check_mem
 
@@ -65,6 +66,7 @@ class App:
         self.deinit()
 
     def deinit(self):
+        readings.flush()
         self.display.deinit()
         self.devices.deinit()
 
@@ -245,6 +247,7 @@ class App:
                 logger.error("Error displaying error")
                 logger.error(traceback.format_exception(exc)[0])
                 pass
+        readings.flush()
         self.devices.beep_shutdown()
         await self.devices.beep_wait()
         logger.debug("Stopping watchdog")

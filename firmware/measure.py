@@ -103,7 +103,8 @@ async def take_reading(devices: hardware.Hardware,
         devices.beep_sad()
         return False
     else:
-        readings.store_reading(Leg(azimuth, inclination, distance))
+        leg = Leg(azimuth, inclination, distance)
+        readings.store_reading(leg, cfg)
         devices.bt.disto.send_data(azimuth, inclination, distance)
         devices.beep_bip()
         return True
