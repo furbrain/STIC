@@ -34,7 +34,7 @@ jobs:
                 key: freecad-0.21.1
             - name: install freecad modules
               run: |
-                mkdir ~/.FreeCAD/Mod
+                mkdir -p ~/.FreeCAD/Mod
                 cd ~/.FreeCAD/Mod
                 git clone https://github.com/mwganson/ThreadProfile
                 git clone https://github.com/shaise/FreeCAD_FastenersWB
