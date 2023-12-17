@@ -2,24 +2,23 @@ import os
 import re
 import struct
 from collections import namedtuple
-
 import atexit
-
-from .config import Config
-
-import mag_cal
-from mag_cal.utils import np
 try:
     # noinspection PyUnresolvedReferences
     from typing import Optional, Union, TextIO
 except ImportError:
     pass
 
+
+from .config import Config
+import mag_cal
+from mag_cal.utils import np
 from .discarding_queue import DiscardingQueue
 
 Leg = namedtuple("Leg", ("azimuth", "inclination", "distance"))
 
 READINGS_DIR = "/readings/"
+
 
 class FailedLeg:
     """
@@ -85,7 +84,7 @@ class Readings:
                 self.current_reading = -1
 
     @property
-    def current(self) -> Union[Leg, FailedLeg]:
+    def current(self) -> Leg:
         return self._queue[self.current_reading]
 
     @property
@@ -111,7 +110,7 @@ class Readings:
             return None
 
     def flush(self):
-        #not using the property because we don't want to create a file if not already existing here...
+        # not using the property because we don't want to create a file if not already existing here...
         if self._trip_file:
             self._trip_file.flush()
 
@@ -119,14 +118,14 @@ class Readings:
     def _same_shots(a: Leg, b: Leg) -> bool:
         """
         Determines if two shots were to the same point.
-        :param a Leg: First leg to compare
-        :param b Leg: Second leg to compare
+        :param Leg a: First leg to compare
+        :param Leg b: Second leg to compare
         :return: True if <5cm distance change and less than 3% error in measurement
         """
         if abs(a.distance-b.distance) > 0.05:
             return False
-        vec_a = mag_cal.Calibration.angles_to_matrix(a.azimuth, a.inclination,0)[:, 1]
-        vec_b = mag_cal.Calibration.angles_to_matrix(b.azimuth, b.inclination,0)[:, 1]
+        vec_a = mag_cal.Calibration.angles_to_matrix(a.azimuth, a.inclination, 0)[:, 1]
+        vec_b = mag_cal.Calibration.angles_to_matrix(b.azimuth, b.inclination, 0)[:, 1]
         angular_variation = np.linalg.norm(vec_a-vec_b)
         return angular_variation < 0.03
 
@@ -138,5 +137,6 @@ class Readings:
         if len(self._queue) < 3:
             return False
         return self._same_shots(self._queue[-1], self._queue[-2]) and self._same_shots(self._queue[-2], self._queue[-3])
+
 
 readings = Readings()
