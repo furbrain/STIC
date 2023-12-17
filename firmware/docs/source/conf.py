@@ -5,12 +5,16 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+import version as v
 project = 'SAP6'
 # noinspection PyShadowingBuiltins
 copyright = '2023, Phil Underwood'
 author = 'Phil Underwood'
-release = '0.9'
+release = v.get_sw_version()
+version = v.get_sw_version()
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
