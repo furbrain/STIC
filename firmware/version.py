@@ -1,6 +1,5 @@
 import binascii
 
-import microcontroller
 
 __version__ = "1.0.2"
 __hw_version__ = "1.0.0"
@@ -33,6 +32,7 @@ BASENAME = "SAP6"
 
 
 def get_id_indexes():
+    import microcontroller # hidden so can use version.py in documentation
     crc = binascii.crc32(microcontroller.cpu.uid)
     a = crc % 100
     return a // 10, a % 10
