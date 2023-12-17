@@ -67,9 +67,9 @@ class Readings:
         self.current_reading = -1
         if cfg.save_readings and self.trip_file:
             texts = (
-                cfg.get_distance_text(leg.distance, decimals=1)[:-1],
-                cfg.get_azimuth_text(leg.azimuth, decimals=1)[:-1],
-                cfg.get_inclination_text(leg.inclination, decimals=3)[:-1],
+                cfg.get_distance_text(leg.distance, decimals=3, with_unit=False),
+                cfg.get_azimuth_text(leg.azimuth, decimals=1, with_unit=False),
+                cfg.get_inclination_text(leg.inclination, decimals=1, with_unit=False),
             )
             self.trip_file.write(f"{', '.join(texts)}\n")
 
