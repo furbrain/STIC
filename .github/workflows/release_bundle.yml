@@ -1,5 +1,5 @@
 name: Bundle Release files
-on: release
+on: push
 jobs:                
     bundle:
         runs-on: ubuntu-22.04
