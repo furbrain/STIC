@@ -1,4 +1,5 @@
 import gc
+import os
 
 import microcontroller
 import memorymap
@@ -111,3 +112,13 @@ def check_mem(text: str):
 
 MIN_VOLTAGE = 3.5
 MAX_VOLTAGE = 4.2
+
+
+def diskfree():
+    """
+    :return: Disk space available in kB
+    """
+    data = os.statvfs('/')
+    block_size = data[0]
+    free_blocks = data[3]
+    return (block_size * free_blocks) / 1024
