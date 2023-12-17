@@ -100,13 +100,26 @@ async def take_reading(devices: hardware.Hardware,
             if isinstance(exc, key):
                 disp.show_big_info(ERROR_MESSAGES[key])
         logger.info(exc)
+        for i in range(5):
+            await devices.laser.set_laser(False)
+            await asyncio.sleep(0.1)
+            await devices.laser.set_laser(True)
+            await asyncio.sleep(0.1)
         devices.beep_sad()
         return False
     else:
         leg = Leg(azimuth, inclination, distance)
         readings.store_reading(leg, cfg)
         devices.bt.disto.send_data(azimuth, inclination, distance)
-        devices.beep_bip()
+        if readings.triple_shot():
+            for _ in range(2):
+                await devices.laser.set_laser(False)
+                await asyncio.sleep(0.2)
+                await devices.laser.set_laser(True)
+                await asyncio.sleep(0.2)
+            devices.beep_happy()
+        else:
+            devices.beep_bip()
         return True
 
 
