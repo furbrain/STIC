@@ -32,6 +32,7 @@ class Config:
                  anomaly_strictness: Strictness = SOFT_STRICTNESS,
                  laser_cal: int = 0.157,
                  save_readings: bool = False,
+                 low_precision: bool = False,
                  calib: dict = None):
         self.timeout = timeout
         self.angles = angles
@@ -44,6 +45,7 @@ class Config:
             self.anomaly_strictness = Strictness(*anomaly_strictness)
         self.laser_cal = laser_cal
         self.save_readings = save_readings
+        self.low_precision = low_precision
         self._dirty = False
         if calib:
             self.calib: Optional[Calibration] = Calibration.from_dict(calib)
@@ -86,9 +88,21 @@ class Config:
         setattr(self, varname, value)
         self._dirty = True
 
+    def get_angle_precision(self):
+        if self.low_precision:
+            return 0
+        else:
+            return 1
+
+    def get_distance_precision(self):
+        if self.low_precision:
+            return 2
+        else:
+            return 3
+
     def get_azimuth_text(self, azimuth: float, decimals: Optional[int] = None, with_unit=True) -> str:
         if decimals is None:
-            decimals = 1
+            decimals = self.get_angle_precision()
         if decimals > 0:
             chars = decimals + 4
         else:
@@ -103,7 +117,7 @@ class Config:
 
     def get_inclination_text(self, inclination: float, decimals: Optional[int] = None, with_unit=True) -> str:
         if decimals is None:
-            decimals = 1
+            decimals = self.get_angle_precision()
         if decimals > 0:
             chars = decimals + 4
         else:
@@ -118,7 +132,7 @@ class Config:
 
     def get_distance_text(self, distance: float, decimals: Optional[int] = None, with_unit=True) -> str:
         if decimals is None:
-            decimals = 3
+            decimals = self.get_distance_precision()
         if with_unit:
             unit = self.get_distance_unit()
         else:

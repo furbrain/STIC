@@ -58,7 +58,7 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
         ]),
         ("Info", [
             ("Raw Data", AsyncAction(info.raw_readings)),
-            ("Tidy Data", AsyncAction(info.calibrated_readings)),
+            ("Calibrated Data", AsyncAction(info.calibrated_readings)),
             ("Orientation", AsyncAction(info.orientation)),
             ("Device", AsyncAction(info.device)),
         ]),
@@ -84,6 +84,13 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
                 options=[
                     ("Degrees", Config.DEGREES),
                     ("Grads", Config.GRADS)],
+            )),
+            ("Precision", ConfigOptions(
+                name="low_precision", obj=cfg,
+                options=[
+                    ("Low", True),
+                    ("Full", False),
+                ]
             )),
             ("Anomaly Detection", ConfigOptions(
                 name="anomaly_strictness", obj=cfg,
