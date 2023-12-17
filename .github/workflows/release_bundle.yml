@@ -43,6 +43,11 @@ jobs:
               run: |
                 cd firmware
                 zip ../firmware.zip *.py
+            - name: generate manual
+              run: |
+                cd firmware/docs
+                make latexpdf
+                cp build/latex/sap6.pdf ../../manual.pdf
             - name: 'Upload Artifacts'
                 uses: actions/upload-artifact@v3
                 with:
@@ -50,11 +55,14 @@ jobs:
                   path: |
                     hardware.zip
                     firmware.zip
-                  retention-days: 5
+                    manual.pdf
             - name: Release
                 uses: softprops/action-gh-release@v1
                 if: startsWith(github.ref, 'refs/tags/')
                 with:
+                  draft: true
+                  generate_release_notes: true
                   files: |
-                    Release.txt
-                    LICENSE
+                    hardware.zip
+                    firmware.zip
+                    manual.pdf
