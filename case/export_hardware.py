@@ -3,7 +3,7 @@ import TechDraw
 import Mesh
 FreeCAD.openDocument("bigboy.FCStd")
 doc = App.getDocument("bigboy")
-stl_parts = ("shim", "cap", "mount", "shell")
+stl_parts = ("shim", "cap", "cap with vanes", "mount", "shell", "bezel")
 os.makedirs("build/abs/",exist_ok=True)
 for part_name in stl_parts:
     print(f"Exporting {part_name}") 
