@@ -46,13 +46,15 @@ Battery Life
 
 Testing in ideal circumstances (room temperature, about 4m range to a white wall, 10 seconds between successive
 readings, display on):
-  * ~4500 readings taken
-  * 14 hours run time
+
+* ~4500 readings taken
+* 14 hours run time
 
 Factors affecting battery consumption:
-  * Temperature - poorer capacity with colder temperatures
-  * Range  - increased battery usage with longer legs
-  * Cave colouration:  increased battery usage with darker targets
+
+* Temperature - poorer capacity with colder temperatures
+* Range  - increased battery usage with longer legs
+* Cave colouration:  increased battery usage with darker targets
 
 Charging time - about 2-3 hours with a 500mA charger
 
