@@ -49,20 +49,20 @@ jobs:
                 make latexpdf
                 cp build/latex/sap6.pdf ../../manual.pdf
             - name: 'Upload Artifacts'
-                uses: actions/upload-artifact@v3
-                with:
-                  name: artifacts
-                  path: |
-                    hardware.zip
-                    firmware.zip
-                    manual.pdf
+              uses: actions/upload-artifact@v3
+              with:
+                name: artifacts
+                path: |
+                  hardware.zip
+                  firmware.zip
+                  manual.pdf
             - name: Release
-                uses: softprops/action-gh-release@v1
-                if: startsWith(github.ref, 'refs/tags/')
-                with:
-                  draft: true
-                  generate_release_notes: true
-                  files: |
-                    hardware.zip
-                    firmware.zip
-                    manual.pdf
+              uses: softprops/action-gh-release@v1
+              if: startsWith(github.ref, 'refs/tags/')
+              with:
+                draft: true
+                generate_release_notes: true
+                files: |
+                  hardware.zip
+                  firmware.zip
+                  manual.pdf
