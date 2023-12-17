@@ -37,3 +37,24 @@ jobs:
                 ls
                 cd case
                 ~/bin/freecad --appimage-extract-and-run -c export_hardware.py
+                cd build
+                zip -r ../../hardware.zip *
+            - name: export firmware files
+              run: |
+                cd firmware
+                zip ../firmware.zip *.py
+            - name: 'Upload Artifacts'
+                uses: actions/upload-artifact@v3
+                with:
+                  name: artifacts
+                  path: |
+                    hardware.zip
+                    firmware.zip
+                  retention-days: 5
+            - name: Release
+                uses: softprops/action-gh-release@v1
+                if: startsWith(github.ref, 'refs/tags/')
+                with:
+                  files: |
+                    Release.txt
+                    LICENSE
