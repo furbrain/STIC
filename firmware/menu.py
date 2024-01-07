@@ -114,7 +114,15 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
                     ("Off", False),
                     ("On", True),
                 ]
-            ))
+            )),
+            ("Flip Monitor", ConfigOptions(
+                #TODO consider allowing "left, right, flip"
+                name="flip_monitor", obj=cfg,
+                options=[
+                    ("Off", False),
+                    ("On", True),
+                ]
+            )),
         ]),
         ("Bluetooth", [
             ("Disconnect", devices.bt.disconnect),

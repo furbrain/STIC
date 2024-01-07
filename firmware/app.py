@@ -188,7 +188,7 @@ class App:
 
     async def flip_monitor(self):
         logger.debug("Starting flip monitor")
-        while True:
+        while self.config.flip_monitor:
             await asyncio.sleep(0.3)
             grav = self.devices.accelerometer.acceleration
             if self.config.calib is not None:

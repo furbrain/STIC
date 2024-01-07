@@ -34,6 +34,7 @@ class Config:
                  save_readings: bool = False,
                  low_precision: bool = False,
                  calib: dict = None,
+                 flip_monitor: bool = True,
                  timer: int = 5):
         self.timeout = timeout
         self.angles = angles
@@ -52,6 +53,7 @@ class Config:
             self.calib: Optional[Calibration] = Calibration.from_dict(calib)
         else:
             self.calib: Optional[Calibration] = None
+        self.flip_monitor = flip_monitor
         self.timer = timer
 
     def as_dict(self):
