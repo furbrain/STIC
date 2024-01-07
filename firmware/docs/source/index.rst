@@ -64,8 +64,8 @@ comparisons between the three readings, the angular difference is less than 1.7 
 less than 5cm.
 
 There is a bluetooth indicator on the top right of the screen:
-|bt_on| if connected, |bt_off| if not. If you lose the bluetooth connection, the device will store up to 10 readings in
-the RAM memory MAY INCREASE FIXME. Readings are sent automatically when the bluetooth connection is restored.
+|bt_on| if connected, |bt_off| if not. If you lose the bluetooth connection, the device will store up to 20 readings in
+the RAM memory. Readings are sent automatically when the bluetooth connection is restored.
 
 Readings can be saved to the flash drive to provide a backup. A reading taken > 8 hours since the previous reading will
 be stored in a separate trip file.
