@@ -73,6 +73,15 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
                     ("5 minutes", 300),
                 ]
             )),
+            ("Timer", ConfigOptions(
+                name="timer", obj=cfg,
+                options=[
+                    ("0 seconds", 0),
+                    ("3 seconds", 3),
+                    ("5 seconds", 5),
+                    ("10 seconds", 10),
+                ]
+            )),
             ("Distance Units", ConfigOptions(
                 name="units", obj=cfg,
                 options=[
