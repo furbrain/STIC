@@ -46,7 +46,7 @@ class Hardware:
         self.i2c = busio.I2C(scl=pins.SCL, sda=pins.SDA, frequency=4000000)
         self.drdy_io = digitalio.DigitalInOut(pins.DRDY)
         self.drdy_io.direction = digitalio.Direction.INPUT
-        self.magnetometer = rm3100.RM3100_I2C(self.i2c, drdy_pin=self.drdy_io)
+        self.magnetometer = rm3100.RM3100_I2C(self.i2c, drdy_pin=self.drdy_io, cycle_count=2000)
         self.uart = busio.UART(pins.TX, pins.RX, baudrate=9600)
         self.uart.reset_input_buffer()
         self.laser = laser_egismos.AsyncLaser(self.uart)
