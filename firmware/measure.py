@@ -6,6 +6,8 @@ from laser_egismos import LaserError
 # noinspection PyProtectedMember
 from mag_cal import MagneticAnomalyError, DipAnomalyError, GravityAnomalyError, NotCalibrated
 
+LASER_TIMEOUT = 4.5
+
 try:
     # noinspection PyUnresolvedReferences
     from typing import Dict
@@ -21,6 +23,7 @@ from .utils import check_mem
 
 ERROR_MESSAGES: Dict[type, str] = {
     LaserError: "Laser\nRead\nFailed",
+    asyncio.TimeoutError: "Laser\nRead\nTimeout",
     MagneticAnomalyError: "Magnetic\nAnomaly:\nIron nearby?",
     DipAnomalyError: "Magnetic\nAnomaly:\nIron nearby?",
     NotCalibrated: "Calibration\nneeded\nHold B 3s",
@@ -44,7 +47,11 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
     logger.debug("turning on laser light")
     await devices.laser.set_buzzer(False)
     while True:
-        await devices.laser.set_laser(True)
+        try:
+            await devices.laser.set_laser(True)
+        except LaserError:
+            # possibly received a timeout last time around
+            pass
         btn, click = await devices.both_buttons.wait(a=[Button.SINGLE, Button.LONG],
                                                      b=Button.SINGLE)
         check_mem("button pressed")
@@ -66,7 +73,8 @@ async def get_raw_measurement(devices: hardware.Hardware, disp: display.Display,
     try:
         disp.oled.sleep()
         if with_laser:
-            distance = await asyncio.wait_for(devices.laser.measure(), 3.0) / 1000
+            devices.laser.async_reader.s.read() # clear the buffer
+            distance = await asyncio.wait_for(devices.laser.measure(), LASER_TIMEOUT) / 1000
         else:
             distance = None
         logger.debug(f"Raw Distance: {distance}m")
@@ -99,12 +107,14 @@ async def take_reading(devices: hardware.Hardware,
         for key in ERROR_MESSAGES.keys():
             if isinstance(exc, key):
                 disp.show_big_info(ERROR_MESSAGES[key])
-        logger.info(exc)
-        for i in range(5):
-            await devices.laser.set_laser(False)
-            await asyncio.sleep(0.1)
-            await devices.laser.set_laser(True)
-            await asyncio.sleep(0.1)
+        logger.info(f"Measurement error: {repr(exc)}")
+        if not isinstance(exc, asyncio.TimeoutError):
+            # don't wibble the laser if it's timed out, it'll just get more confused
+            for i in range(5):
+                await devices.laser.set_laser(False)
+                await asyncio.sleep(0.1)
+                await devices.laser.set_laser(True)
+                await asyncio.sleep(0.1)
         devices.beep_sad()
         return False
     else:
