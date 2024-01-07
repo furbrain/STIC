@@ -37,8 +37,8 @@ Measure Mode (to take readings)
 
 Press **A** to take a reading. You will get an error if the device is not already :ref:`calibrated <Sensors>`.
 You can choose either a short press of **A** (the reading is taken just after the button is released) or a long press
-of **A** (the reading is taken once the button has been pressed for a second or so). Play with each mode and see what
-suits you.
+of **A** (the reading is taken after a countdown timer, which defaults to 5 seconds and can be configured).
+Play with each mode and see what suits you.
 
 If the reading is successful you will see three numbers on the screen: 
 .. compass at the top (degrees or grad)
