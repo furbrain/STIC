@@ -18,7 +18,8 @@ except ImportError:
     pass
 
 logger = adafruit_logging.getLogger()
-files = os.listdir()
+files = os.listdir("/")
+files = [x.split('.')[0].upper() for x in files]
 if "DEBUG" in files:
     logger.setLevel(adafruit_logging.DEBUG)
 elif "INFO" in files:

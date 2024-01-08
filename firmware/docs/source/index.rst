@@ -322,9 +322,10 @@ In the top level director of the USB Drive, you may see:
   Debug info stored here if the device crashes or encounters an error
 
 ``DEBUG``
-  If this file is present, then the device is in debug mode. You won't see the normal battery charging screen, but you
-  can double click and start the main device running. You also get a serial connection on
-  ``/dev/ttyACM0`` or ``/dev/ttyUSB0`` on  linux or ``COM1`` on windows
+  If this file is present, then the device is in debug mode. You can also use ``debug.txt``, or in fact
+  any file with ``debug`` (any capitalisation) as the basename. You won't see the normal battery charging screen,
+  but you  can double click **A** and start the main device running. You also get a serial connection on
+  ``/dev/ttyACM0`` or ``/dev/ttyUSB0`` on  linux or ``COM1`` on windows, which will show debug information.
 
 Hardware
 ++++++++
