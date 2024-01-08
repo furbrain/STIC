@@ -33,7 +33,8 @@ class Config:
                  laser_cal: int = 0.157,
                  save_readings: bool = False,
                  low_precision: bool = False,
-                 calib: dict = None):
+                 calib: dict = None,
+                 timer: int = 0):
         self.timeout = timeout
         self.angles = angles
         self.units = units
@@ -51,6 +52,7 @@ class Config:
             self.calib: Optional[Calibration] = Calibration.from_dict(calib)
         else:
             self.calib: Optional[Calibration] = None
+        self.timer = timer
 
     def as_dict(self):
         dct = {}

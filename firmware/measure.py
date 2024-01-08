@@ -58,6 +58,11 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
         if btn == "a":
             if click == Button.SINGLE:
                 await asyncio.sleep(0.3)
+            # long click should start timer.
+            if click == Button.LONG:
+                for i in range(cfg.timer):
+                    devices.beep_bip()
+                    await asyncio.sleep(1)
             success = await take_reading(devices, cfg, disp)
         elif btn == "b":
             logger.debug("B pressed")
