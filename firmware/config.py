@@ -34,7 +34,7 @@ class Config:
                  save_readings: bool = False,
                  low_precision: bool = False,
                  calib: dict = None,
-                 timer: int = 5):
+                 timer: int = 0):
         self.timeout = timeout
         self.angles = angles
         self.units = units
