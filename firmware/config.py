@@ -35,7 +35,7 @@ class Config:
                  low_precision: bool = False,
                  calib: dict = None,
                  flip_monitor: bool = True,
-                 timer: int = 5):
+                 timer: int = 0):
         self.timeout = timeout
         self.angles = angles
         self.units = units

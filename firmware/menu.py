@@ -51,6 +51,7 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
     logger.debug("Menu task started")
     gc.collect()
     await asyncio.sleep(0.1)
+    await devices.laser.set_laser(False)
     items = [
         ("Calibrate", [
             ("Sensors", AsyncAction(calibrate.calibrate_sensors)),
