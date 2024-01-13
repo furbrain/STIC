@@ -197,10 +197,10 @@ class App:
                 axes = mag_cal.Axes(self.config.mag_axes)
                 grav = axes.fix_axes(grav)
                 grav /= 9.81
-            if self.display.inverted and grav[0] < -0.3:
+            if self.display.inverted and grav[0] < -0.5:
                 logger.debug("Flipping to right way up")
                 self.display.inverted = False
-            elif not self.display.inverted and grav[0] > 0.3:
+            elif not self.display.inverted and grav[0] > 0.5:
                 logger.debug("Flipping to inverted")
                 self.display.inverted = True
 
