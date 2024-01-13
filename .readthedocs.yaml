@@ -15,6 +15,7 @@ build:
 
 sphinx:
   configuration: firmware/docs/source/conf.py
-  formats:
-    - pdf
-    - epub
+
+formats:
+  - pdf
+  - epub
