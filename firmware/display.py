@@ -1,6 +1,7 @@
 import adafruit_displayio_sh1106
 import displayio
 import terminalio
+import math
 from adafruit_bitmap_font import bitmap_font
 from adafruit_display_text import label
 from adafruit_progressbar.verticalprogressbar import VerticalProgressBar
@@ -73,17 +74,24 @@ class Display:
         self.set_group_with_icons(self.laser_group)
         self.refresh()
 
-    def update_measurement(self, leg: Leg, reading_index: int):
+    def update_measurement(self, leg: Leg, reading_index: int, show_extents: bool):
         self.set_group_with_icons(self.measurement_group)
-        self.azimuth.text = self.config.get_azimuth_text(leg.azimuth)
-        self.inclination.text = self.config.get_inclination_text(leg.inclination)
-        self.distance.text = self.config.get_distance_text(leg.distance)
-        index = reading_index + 1
-        if index == 0:
-            self.reading_index.hidden = True
+        if show_extents:
+            self.azimuth.text = "Extents"
+            horizontal = math.cos(math.radians(leg.inclination)) * leg.distance
+            vertical = math.sin(math.radians(leg.inclination)) * leg.distance
+            self.inclination.text = "H:"+ self.config.get_distance_text(horizontal)
+            self.distance.text = "V:"+ self.config.get_distance_text(vertical)
         else:
-            self.reading_index.hidden = False
-            self.reading_index.text = str(index)
+            self.azimuth.text = self.config.get_azimuth_text(leg.azimuth)
+            self.inclination.text = self.config.get_inclination_text(leg.inclination)
+            self.distance.text = self.config.get_distance_text(leg.distance)
+            index = reading_index + 1
+            if index == 0:
+                self.reading_index.hidden = True
+            else:
+                self.reading_index.hidden = False
+                self.reading_index.text = str(index)
         self.refresh()
 
     def set_bt_connected(self, connected: bool):

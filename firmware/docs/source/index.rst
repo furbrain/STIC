@@ -51,8 +51,9 @@ failed" or "Magnetic Anomaly: Iron near".
 
 The laser stays on in ``measure`` mode. This does not require much power
 
-Press **B** to cycle through previous readings. You can tell which reading you are looking at by the small number at
-the right side of the display.
+Press **B** to cycle through previous readings. If you have enabled :ref:`show extents <Show Extents>`, you will first see
+the horizontal and vertical extents of the current leg. You can tell which reading you are looking at by the small
+number at the right side of the display. Double click **B** to go back to the most recent reading.
 
 .. |bt_on| image:: bt_on.png
 
@@ -213,6 +214,13 @@ The precision with which readings are displayed on the SAP6 screen. The default 
 inclination (eg 153.4 and +02.6) and mm for distance (eg 5.342m). This can be changed to display one fewer significant
 figure (eg 153, +03, 5.34). Note that both saved trip data and bluetoothed readings will retain full precision even
 with this reduced precision setting.  Press **B** to cycle through options then **A** when you have chosen your option
+
+Show Extents
+************
+
+If set to ``On``, then pressing **B** after a reading will show the horizontal distance of the leg, and also the
+vertical distance. This can be useful for drawing extended elevations.
+
 
 Magnetic Anomaly Detection
 **************************

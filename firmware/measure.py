@@ -45,6 +45,7 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
     devices.laser_enable(True)
     await asyncio.sleep(0.1)
     logger.debug("turning on laser light")
+    showing_extents = False
     await devices.laser.set_buzzer(False)
     while True:
         try:
@@ -52,8 +53,15 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
         except LaserError:
             # possibly received a timeout last time around
             pass
-        btn, click = await devices.both_buttons.wait(a=[Button.SINGLE, Button.LONG],
-                                                     b=Button.SINGLE)
+        if devices.button_b.last_click == Button.DOUBLE:
+            # we often miss the double B click due to the time taken to update the screen
+            # check if this has happened, and then reset it
+            btn = "b"
+            click = Button.DOUBLE
+            devices.button_b.last_click = Button.SINGLE
+        else:
+            btn, click = await devices.both_buttons.wait(a=(Button.SINGLE, Button.LONG),
+                                                     b=(Button.SINGLE, Button.DOUBLE))
         check_mem("button pressed")
         if btn == "a":
             if click == Button.SINGLE:
@@ -64,13 +72,24 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
                     devices.beep_bip()
                     await asyncio.sleep(1)
             success = await take_reading(devices, cfg, disp)
+            showing_extents = False
         elif btn == "b":
-            logger.debug("B pressed")
-            readings.get_prev_reading()
-            success = True
+            if click == Button.SINGLE:
+                logger.debug("B pressed")
+                if cfg.extended and readings.is_first_reading() and not showing_extents:
+                    showing_extents = True
+                else:
+                    readings.get_prev_reading()
+                    showing_extents = False
+                success = True
+            elif click == Button.DOUBLE:
+                logger.debug("B double pressed")
+                readings.get_first_reading()
+                showing_extents = False
+                success = True
         # noinspection PyUnboundLocalVariable
         if readings.current_reading is not None and success:
-            disp.update_measurement(readings.current, readings.current_reading)
+            disp.update_measurement(readings.current, readings.current_reading, showing_extents)
 
 
 async def get_raw_measurement(devices: hardware.Hardware, disp: display.Display, with_laser: bool = True):
