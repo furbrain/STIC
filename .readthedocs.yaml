@@ -13,6 +13,10 @@ build:
   tools:
     python: "3"
 
+python:
+  install:
+    - requirements: firmware/docs/source/requirements.txt
+
 sphinx:
   configuration: firmware/docs/source/conf.py
 
