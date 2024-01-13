@@ -118,11 +118,14 @@ class App:
                 logger.info("Timed out, quitting")
                 self.shutdown_event.set()
 
-    @staticmethod
-    async def counter():
+    #@staticmethod
+    async def counter(self):
         logger.debug("Counter task started")
         i = 0
         while True:
+            await self.devices.button_b.wait(Button.DOUBLE)
+            logger.debug("Double B")
+            continue
             await asyncio.sleep(1)
             i += 1
             logger.info(f"Count: {i}")

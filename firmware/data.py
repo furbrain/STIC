@@ -74,10 +74,16 @@ class Readings:
             )
             self.trip_file.write(f"{', '.join(texts)}\n")
 
+    def is_first_reading(self):
+        return self.current_reading == -1
+
+    def get_first_reading(self):
+        if len(self._queue) > 0:
+            self.current_reading = -1
+
     def get_prev_reading(self):
         if self.current_reading is None:
-            if len(self._queue) > 0:
-                self.current_reading = -1
+            self.get_first_reading()
         else:
             self.current_reading -= 1
             if self.current_reading < -len(self._queue):

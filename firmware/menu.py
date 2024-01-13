@@ -102,6 +102,14 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
                     ("Full", False),
                 ]
             )),
+            ("Show Extents", ConfigOptions(
+                name="extended", obj=cfg,
+                options=[
+                    ("On", True),
+                    ("Off", False),
+                ]
+            )),
+
             ("Anomaly Detection", ConfigOptions(
                 name="anomaly_strictness", obj=cfg,
                 options=[

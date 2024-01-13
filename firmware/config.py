@@ -33,6 +33,7 @@ class Config:
                  laser_cal: int = 0.157,
                  save_readings: bool = False,
                  low_precision: bool = False,
+                 extended: bool = False,
                  calib: dict = None,
                  timer: int = 0):
         self.timeout = timeout
@@ -47,6 +48,7 @@ class Config:
         self.laser_cal = laser_cal
         self.save_readings = save_readings
         self.low_precision = low_precision
+        self.extended = extended
         self._dirty = False
         if calib:
             self.calib: Optional[Calibration] = Calibration.from_dict(calib)
