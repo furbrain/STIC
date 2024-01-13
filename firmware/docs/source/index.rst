@@ -7,15 +7,15 @@ The Shetland Attack Pony 6 (SAP6) Cave Surveying Device
 
 
 Basic Use
------------
+---------
 
 * SAP6 is operated by 2 buttons, **A** (nearer the laser) and **B**
 
-* Turn ON to take readings (this is ``measure`` mode): Press **A** twice in quick succession
+* Turn ON to take readings (this is :ref:`measure <measure>` mode): Press **A** twice in quick succession
 
 * Turn OFF: Press **A** twice in quick succession
 
-* Switch/toggle between ``menu`` and ``measure`` modes: Hold down **B**
+* Switch/toggle between :ref:`menu <menu>` and :ref:`measure <measure>` modes: Hold down **B**
 
 * Select a menu item: Press **A**
 
@@ -31,6 +31,7 @@ Basic Use
 
 * You can use the USB C cable to access files on the SAP6 and to update software for the SAP6 (details below)
 
+.. _measure:
 
 Measure Mode (to take readings)
 -------------------------------
@@ -49,7 +50,7 @@ If the reading fails you will hear an error double beep and see an error message
 failed" or "Magnetic Anomaly: Iron near".
 
 
-The laser stays on in ``measure`` mode. This does not require much power
+The laser stays on in :ref:`measure <measure>` mode. This does not require much power
 
 Press **B** to cycle through previous readings. If you have enabled :ref:`show extents <Show Extents>`, you will first see
 the horizontal and vertical extents of the current leg. You can tell which reading you are looking at by the small
@@ -93,6 +94,8 @@ There are some factors that affect battery consumption:
 * Temperature - poorer capacity with colder temperatures
 * Range  - increased battery usage with longer legs
 * Cave colouration:  increased battery usage with darker targets
+
+.. _menu:
 
 Menu Mode (to change settings)
 ------------------------------
@@ -271,17 +274,19 @@ Software updates
 ++++++++++++++++
 
 You can update the software on the SAP6 with newer versions downloaded from
-`GitHub <https://github.com/furbrain/STIC/releases/latest>`_. Check the software version currently running on your
-SAP6 using the Info menu under Device. To update your software, download a zipped file from the github repository,
-unzip it and replace the files in the firmware directory of the SAP6 with these files. Warning - all files should be
-replaced at the same time as there are various dependencies across the files and the SAP6 may not work if only a single
-file is updated. Check that the device is working immediately after updating.
+`GitHub (https://github.com/furbrain/STIC/releases/latest) <https://github.com/furbrain/STIC/releases/latest>`_.
+Check the software version currently running on your SAP6 using the Info menu under Device. To update your software,
+download a zipped file from the github repository, unzip it and replace the files in the firmware directory of the SAP6
+with these files. Warning - all files should be replaced at the same time as there are various dependencies across the
+files and the SAP6 may not work if only a single file is updated. Check that the device is working immediately after
+updating.
 
 Hacking
 +++++++
 
 This is an open source project - feel free to make your own devices, make adaptations and improvements.
-All the hardware and software designs can be found on `GitHub <https://github.com/furbrain/STIC/releases/latest>`_.
+All the hardware and software designs can be found on `GitHub (https://github.com/furbrain/STIC)
+<https://github.com/furbrain/STIC/>`_.
 
 SAP6 uses `CircuitPython <https://circuitpython.org/>`_. All the code to run it is available on the device itself -
 just plug it into a laptop using a USB C cable and you'll see a USB drive appear.
