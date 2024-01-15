@@ -1,6 +1,7 @@
 import seeed_xiao_nrf52840
 # noinspection PyPackageRequirements
 import digitalio
+import supervisor
 import time
 import asyncio
 import traceback
@@ -40,8 +41,8 @@ def double_click_start() -> bool:
         # wait for release
         while not button_a.value:
             time.sleep(0.03)
-        dbl_click_interval_expired = time.monotonic() + 1.0
-        while time.monotonic() < dbl_click_interval_expired:
+        dbl_click_interval_expired = supervisor.ticks_ms()+1000
+        while supervisor.ticks_ms() < dbl_click_interval_expired:
             if not button_a.value:
                 # button been pressed in relevant time
                 return True
