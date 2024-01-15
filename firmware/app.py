@@ -1,5 +1,5 @@
 import asyncio
-import time
+import supervisor
 import traceback
 from watchdog import WatchDogMode
 
@@ -96,11 +96,11 @@ class App:
         Shuts down  if double-click on button A
         """
         logger.debug("Quitter task started")
-        lockout = time.monotonic() + 0.5
+        lockout = supervisor.ticks_ms() + 500
         while True:
             await self.devices.button_a.wait(Button.DOUBLE)
             check_mem("double click")
-            if time.monotonic() > lockout:
+            if supervisor.ticks_ms() > lockout:
                 logger.info("Double click detected, quitting")
                 self.shutdown_event.set()
 
