@@ -728,6 +728,8 @@ F 0 "J5" H 8030 5092 50  0000 L CNN
 F 1 "Conn_01x02" H 8030 5001 50  0000 L CNN
 F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 7950 5100 50  0001 C CNN
 F 3 "~" H 7950 5100 50  0001 C CNN
+F 4 "9491856 " H 7950 5100 50  0001 C CNN "Farnell Part Number"
+F 5 "B2B-PH-K-S(LF)(SN) " H 7950 5100 50  0001 C CNN "Manufacturer_Part_Number"
 	1    7950 5100
 	1    0    0    -1  
 $EndComp
