@@ -51,7 +51,8 @@ F 0 "LS1" H 2063 6083 50  0000 C CNN
 F 1 "Speaker" H 2063 6174 50  0000 C CNN
 F 2 "KiCad_imports:SPKR_AST1240MLTRQ" H 2100 6300 50  0001 C CNN
 F 3 "~" H 2090 6450 50  0001 C CNN
-F 4 "AST1240MLTRQ" H 2100 6500 50  0001 C CNN "Manufacturer_Part_Number"
+F 4 "AST1240MLTRQ or MCABT-458-RC " H 2100 6500 50  0001 C CNN "Manufacturer_Part_Number"
+F 5 "2433031" H 2100 6500 50  0001 C CNN "Farnell Part Number"
 	1    2100 6500
 	-1   0    0    1   
 $EndComp
@@ -261,16 +262,17 @@ F 7 "http://uk.rs-online.com/web/p/products/6878048P" H 8350 4250 50  0001 L CNN
 F 8 "Molex" H 8350 4150 50  0001 L CNN "Manufacturer_Name"
 F 9 "22-03-5035" H 8350 4050 50  0001 L CNN "Manufacturer_Part_Number"
 F 10 "70248167" H 8350 3950 50  0001 L CNN "Allied_Number"
+F 11 "9979620" H 7700 4650 50  0001 C CNN "Farnell Part Number"
 	1    7700 4650
 	1    0    0    -1  
 $EndComp
 NoConn ~ 7700 4750
 Wire Wire Line
-	7700 4650 7450 4650
+	7700 4650 7600 4650
 Wire Wire Line
 	7450 4650 7450 4500
 Wire Wire Line
-	7700 4850 7450 4850
+	7700 4850 7550 4850
 Wire Wire Line
 	7450 4850 7450 5050
 $Comp
@@ -310,6 +312,7 @@ F 7 "http://uk.rs-online.com/web/p/products/4476596P" H 8400 2450 50  0001 L CNN
 F 8 "Molex" H 8400 2350 50  0001 L CNN "Manufacturer_Name"
 F 9 "53047-0510" H 8400 2250 50  0001 L CNN "Manufacturer_Part_Number"
 F 10 "70266929" H 8400 2150 50  0001 L CNN "Allied_Number"
+F 11 "9732861" H 7750 2850 50  0001 C CNN "Farnell Part Number"
 	1    7750 2850
 	1    0    0    -1  
 $EndComp
@@ -379,6 +382,7 @@ F 7 "http://uk.rs-online.com/web/p/products/3191064P" H 8400 3450 50  0001 L CNN
 F 8 "Molex" H 8400 3350 50  0001 L CNN "Manufacturer_Name"
 F 9 "53047-0310" H 8400 3250 50  0001 L CNN "Manufacturer_Part_Number"
 F 10 "70266925" H 8400 3150 50  0001 L CNN "Allied_Number"
+F 11 "9732853" H 7750 3850 50  0001 C CNN "Farnell Part Number"
 	1    7750 3850
 	1    0    0    -1  
 $EndComp
@@ -663,4 +667,68 @@ Wire Wire Line
 Wire Wire Line
 	3000 3750 2700 3750
 Connection ~ 2700 3750
+$Comp
+L Graphic:SYM_LASER_Large #SYM1
+U 1 1 65AA20FC
+P 9400 3000
+F 0 "#SYM1" H 9400 3200 50  0001 C CNN
+F 1 "Egismos Laser Module 2" H 10100 3000 50  0000 C CNN
+F 2 "" H 9390 2825 50  0001 C CNN
+F 3 "~" H 9430 2800 50  0001 C CNN
+	1    9400 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Battery_Cell BT1
+U 1 1 65AA960B
+P 9400 4800
+F 0 "BT1" H 9518 4896 50  0001 L CNN
+F 1 "Lipo Battery 523450 950mAh" H 9518 4850 50  0000 L CNN
+F 2 "" V 9400 4860 50  0001 C CNN
+F 3 "https://cpc.farnell.com/unbranded/lp-523450-is-3/battery-lithium-pol-3-7v-950-mah/dp/BT06802" V 9400 4860 50  0001 C CNN
+F 4 "2077888 " H 9400 4800 50  0001 C CNN "Farnell Part Number"
+F 5 "LP-523450-IS-3" H 9400 4800 50  0001 C CNN "Manufacturer_Part_Number"
+	1    9400 4800
+	1    0    0    -1  
+$EndComp
+NoConn ~ 9400 4600
+NoConn ~ 9400 4900
+$Comp
+L Connector:Conn_01x03_Male J4
+U 1 1 65ABAE89
+P 9450 3900
+F 0 "J4" H 9558 4181 50  0001 C CNN
+F 1 "3 way molex cable" H 10100 3900 50  0000 C CNN
+F 2 "" H 9450 3900 50  0001 C CNN
+F 3 "~" H 9450 3900 50  0001 C CNN
+F 4 "2913932 " H 9450 3900 50  0001 C CNN "Farnell Part Number"
+F 5 "15134-0301" H 9450 3900 50  0001 C CNN "Manufacturer_Part_Number"
+	1    9450 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7750 5200 7550 5200
+Wire Wire Line
+	7550 5200 7550 4850
+Connection ~ 7550 4850
+Wire Wire Line
+	7550 4850 7450 4850
+Wire Wire Line
+	7600 4650 7600 5100
+Wire Wire Line
+	7600 5100 7750 5100
+Connection ~ 7600 4650
+Wire Wire Line
+	7600 4650 7450 4650
+$Comp
+L Connector_Generic:Conn_01x02 J5
+U 1 1 65AC583E
+P 7950 5100
+F 0 "J5" H 8030 5092 50  0000 L CNN
+F 1 "Conn_01x02" H 8030 5001 50  0000 L CNN
+F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 7950 5100 50  0001 C CNN
+F 3 "~" H 7950 5100 50  0001 C CNN
+	1    7950 5100
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
