@@ -29,6 +29,11 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 extensions = ['sphinx.ext.autosectionlabel', 'sphinx_rtd_theme']
 # noinspection SpellCheckingInspection
+latex_engine="xelatex"
+#latex_additional_files = ["murray.sty"]
 latex_elements = {
-    'extraclassoptions': 'openany,oneside'
+    'extraclassoptions': 'openany,oneside',
+#    'preamble': r"""
+#        \usepackage{murray}
+#    """
 }
