@@ -141,6 +141,7 @@ gcode/
 fab/
 
 # kicad backup files
+*-backups
 *pcb-bak
 *sch-bak
 fp-info-cache

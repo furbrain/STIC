@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "Button-rescue")(type "KiCad")(uri "${KIPRJMOD}/Button-rescue.kicad_sym")(options "")(descr ""))
+)
