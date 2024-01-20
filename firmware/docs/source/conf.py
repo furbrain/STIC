@@ -29,6 +29,4 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 extensions = ['sphinx.ext.autosectionlabel', 'sphinx_rtd_theme']
 # noinspection SpellCheckingInspection
-latex_elements = {
-    'extraclassoptions': 'openany,oneside'
-}
+latex_theme = "howto"
