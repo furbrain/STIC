@@ -141,9 +141,16 @@ gcode/
 fab/
 
 # kicad backup files
+*-backups
 *pcb-bak
 *sch-bak
+*#
+*.lck
+*autosave*
 fp-info-cache
 
 # pdfs in docs
 /docs/*.pdf
+/hardware/*xml
+/hardware/gerbers
+/hardware/bom.csv
