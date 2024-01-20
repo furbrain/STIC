@@ -45,6 +45,12 @@ jobs:
                 ~/bin/freecad --appimage-extract-and-run -c export_hardware.py
                 cd build
                 zip -r ../../hardware.zip *
+            - name: export PCB files
+              run: |
+                cd hardware
+                source make_boms.sh
+                source make_gerbers.sh
+                zip -r ../pcb.zip bom.csv gerbers
             - name: export firmware files
               run: |
                 cd firmware
@@ -60,6 +66,7 @@ jobs:
                 name: artifacts
                 path: |
                   hardware.zip
+                  pcb.zip
                   firmware.zip
                   manual.pdf
             - name: Release
@@ -70,5 +77,6 @@ jobs:
                 generate_release_notes: true
                 files: |
                   hardware.zip
+                  pcb.zip
                   firmware.zip
                   manual.pdf

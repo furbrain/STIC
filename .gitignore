@@ -152,3 +152,5 @@ fp-info-cache
 # pdfs in docs
 /docs/*.pdf
 /hardware/*xml
+/hardware/gerbers
+/hardware/bom.csv
