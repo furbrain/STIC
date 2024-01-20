@@ -47,7 +47,7 @@ def writerow( acsvwriter, columns ):
 components = []
 for net in nets:
     components.extend(net.getInterestingComponents( excludeBOM=True ))
-fields = ["Farnell Part Number", "Manufacturer_Part_Number"]
+fields = ["Description", "Farnell Part Number", "Manufacturer_Part_Number"]
 # Output a field delimited header line
 writerow( out, ['Source:', net.getSource()] )
 writerow( out, ['Date:', net.getDate()] )
