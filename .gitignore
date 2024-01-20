@@ -144,7 +144,11 @@ fab/
 *-backups
 *pcb-bak
 *sch-bak
+*#
+*.lck
+*autosave*
 fp-info-cache
 
 # pdfs in docs
 /docs/*.pdf
+/hardware/*xml
