@@ -386,5 +386,8 @@ may well be able to cut these by hand
 Gaskets
 *******
 
+* ``Rubber\Cap Washer.dxf``
+* ``Rubber\Refined Gasket.dxf``
+
 You can use 1mm silicone sheet or EVA foam for these pieces. Note that EVA foam works well but permanently deforms when
 used so will need replacing if you ever disassemble the device.
