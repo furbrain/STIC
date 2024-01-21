@@ -38,8 +38,8 @@ Measure Mode (to take readings)
 
 Press **A** to take a reading. You will get an error if the device is not already :ref:`calibrated <Sensors>`.
 You can choose either a short press of **A** (the reading is taken just after the button is released) or a long press
-of **A** (the reading is taken after about a second, or can trigger a countdown timer which can be configured).
-Play with each mode and see what suits you.
+of **A** (the reading is taken after about a second, or can trigger a countdown :ref:`timer <Shot Timer>` which can be
+configured). Play with each mode and see what suits you.
 
 If the reading is successful you will see three numbers on the screen: 
 .. compass at the top (degrees or grad)
@@ -74,11 +74,6 @@ be stored in a separate trip file.
 
 There is a battery level indicator on the bottom right of the screen. If you want to save power, turn off the device
 between stations.
-
-When you hold **A** to take a reading, the SAP6 will trigger a timer. The timer mode can be configured to a 0, 3, 5,
-or 10 second countdown. For settings greater than 0, the unit will beep every second until it takes the reading.
-If set to 0, it will take the reading after about a second while the button is still held (this is the normal
-behavior in firmware versions 1.0.2 and prior).
 
 Battery Life
 ------------
@@ -209,6 +204,14 @@ Angle Units
 Choose between degrees and grads for angular measurements. Press **B** to cycle through options then **A** when you
 have chosen your option
 
+Shot Timer
+**********
+
+When you hold **A** to take a reading, the SAP6 will trigger a timer. The timer mode can be configured to a 0, 3, 5,
+or 10 second countdown. For settings greater than 0, the unit will beep every second until it takes the reading.
+If set to 0, it will take the reading after about a second while the button is still held (this is the normal
+behavior in firmware versions 1.0.2 and prior). Press **B** to cycle through options then **A** when you have
+chosen your option
 
 Precision
 *********

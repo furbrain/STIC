@@ -74,7 +74,7 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
                     ("5 minutes", 300),
                 ]
             )),
-            ("Timer", ConfigOptions(
+            ("Shot Timer", ConfigOptions(
                 name="timer", obj=cfg,
                 options=[
                     ("0 seconds", 0),
