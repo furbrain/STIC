@@ -26,7 +26,7 @@ Basic Use
 * You can always double click **A** to turn OFF and then start again (eg if you unintentionally go into calibration
   mode)
 
-* To charge the SAP6, unscrew the blue end cap and use a USB C cable. It takes approx 2 hours for a full charge. Do not
+* To charge the SAP6, unscrew the end cap and use a USB C cable. It takes approx 2 hours for a full charge. Do not
   charge the device from a powerbank whilst taking readings as this may cause interference with the magnetic readings
 
 * You can use the USB C cable to access files on the SAP6 and to update software for the SAP6 (details below)
@@ -42,26 +42,26 @@ of **A** (the reading is taken after about a second, or can trigger a countdown 
 configured). Play with each mode and see what suits you.
 
 If the reading is successful you will see three numbers on the screen: 
-.. compass at the top (degrees or grad)
-.. inclination (+ or - and degrees or grad) 
-.. distance (m or feet) at the bottom 
 
-If the reading fails you will hear an error double beep and see an error message. This will either say "Laser read
-failed" or "Magnetic Anomaly: Iron near".
+  * compass at the top (degrees or grad)
+  * inclination (+ or - and degrees or grad)
+  * distance (m or feet) at the bottom
 
+If the reading fails you will hear an error double beep and see an error message.
+The laser will also flash rapidly several times.
 
 The laser stays on in :ref:`measure <measure>` mode. This does not require much power
 
-Press **B** to cycle through previous readings. If you have enabled :ref:`show extents <Show Extents>`, you will first see
-the horizontal and vertical extents of the current leg. You can tell which reading you are looking at by the small
+Press **B** to cycle through previous readings. If you have enabled :ref:`show extents <Show Extents>`, you will first
+see the horizontal and vertical extents of the current leg. You can tell which reading you are looking at by the small
 number at the right side of the display. Double click **B** to go back to the most recent reading.
 
 .. |bt_on| image:: bt_on.png
 
 .. |bt_off| image:: bt_off.png
 
-If three successive readings are within tolerance they are interpreted as a leg rather than a splay and the device will
-give a success beep (rising) and flash the laser twice. Within tolerance means that, for each of the three pairwise
+If three successive readings are similar they are interpreted as a leg rather than a splay and the device will
+give a success beep (rising) and flash the laser twice. Similar means that, for each of the three pairwise
 comparisons between the three readings, the angular difference is less than 1.7 degrees and the change in distance is
 less than 5cm.
 
@@ -69,8 +69,8 @@ There is a bluetooth indicator on the top right of the screen:
 |bt_on| if connected, |bt_off| if not. If you lose the bluetooth connection, the device will store up to 20 readings in
 the RAM memory. Readings are sent automatically when the bluetooth connection is restored.
 
-Readings can be saved to the flash drive to provide a backup. A reading taken > 8 hours since the previous reading will
-be stored in a separate trip file.
+Readings can be :ref:`saved <Save Readings>` to the flash drive to provide a backup. A reading taken more than 8 hours
+since the previous reading will be stored in a new trip file.
 
 There is a battery level indicator on the bottom right of the screen. If you want to save power, turn off the device
 between stations.
@@ -96,7 +96,7 @@ Menu Mode (to change settings)
 ------------------------------
 
 To navigate through the menu, press **A** to select an item and **B** to move on to the next item. Return to the main
-menu by cycling though menu items to the``BACK`` option
+menu by cycling though menu items to the ``BACK`` option
 
 You can directly turn on in ``menu`` mode by pressing **A** twice while holding down **B**
 
@@ -136,11 +136,11 @@ An example of a good calibration protocol would be to:
   flat with the display up, then with the display down and the laser pointing the other direction. Then one with laser
   pointing up and one with the laser pointing down. These four readings do not need to be accurate
 
-* for readings 9-16, put the blue pointy cap of the SAP6 on a well-defined point and - carefully - take 8 readings that
+* for readings 9-16, put the pointy cap of the SAP6 on a well-defined point and - carefully - take 8 readings that
   all accurately hit a target (this should be a second, well-defined point). Barrel roll (ie rotate around the long
-  axis)  the SAP6 by 45 degrees for each successive reading
+  axis) the SAP6 by 45 degrees for each successive reading
 
-* finally, for readings 17-24, repeat readings 9-16 but have the target be a point rotated around 90° from the previous
+* finally, for readings 17-24, repeat readings 9-16 but with a new target. Ideally around 90° from the previous
   target.
 
 When you press **B** after taking your 24 readings the screen will go blank for a few seconds then it will display your
@@ -151,7 +151,7 @@ Laser
 *****
 
 You shouldn't need to calibrate the laser. However, you might if you want to measure from the front of the device or if
-you have replaced the blue end cap with something with a different length.
+you have replaced the end cap with something with a different length.
 
 To calibrate the laser, place on object exactly one meter from the point on the device you want to measure from. Start
 the laser calibration routine and it will update the distance readings.
@@ -217,9 +217,10 @@ Precision
 *********
 
 The precision with which readings are displayed on the SAP6 screen. The default is 0.1 degrees for compass and
-inclination (eg 153.4 and +02.6) and mm for distance (eg 5.342m). This can be changed to display one fewer significant
-figure (eg 153, +03, 5.34). Note that both saved trip data and bluetoothed readings will retain full precision even
-with this reduced precision setting.  Press **B** to cycle through options then **A** when you have chosen your option
+inclination (eg ``153.4°`` and ``+02.6°``) and mm for distance (eg ``5.342m`` ). This can be changed to display one
+fewer significant figure (eg ``153°``, ``+03°``, ``5.34m``). Note that both saved trip data and bluetoothed readings
+will retain full precision even with this reduced precision setting.  Press **B** to cycle through options then **A**
+when you have chosen your option
 
 Show Extents
 ************
@@ -233,7 +234,7 @@ Magnetic Anomaly Detection
 
 The device records the magnetic dip and field strength during calibration. The device then detects if these change
 significantly when taking any subsequent readings. This would happen if the magnetic field altered, for example due to
-the presence of manmade artefacts such as scaffolding or local geological changes.
+the presence of man-made artefacts such as scaffolding or local geological changes.
 
 You can choose **strict** detection which detects most bad readings at the risk of getting a warning when there is
 nothing wrong. There is also a **relaxed** mode, and finally magnetic anomaly detection can be turned **off**. Press
@@ -278,9 +279,11 @@ Software updates
 
 You can update the software on the SAP6 with newer versions downloaded from
 `GitHub (https://github.com/furbrain/STIC/releases/latest) <https://github.com/furbrain/STIC/releases/latest>`_.
-Check the software version currently running on your SAP6 using the Info menu under Device. To update your software,
-download a zipped file from the github repository, unzip it and replace the files in the firmware directory of the SAP6
-with these files. Warning - all files should be replaced at the same time as there are various dependencies across the
+You can check the software version currently running on your SAP6 using the Info menu under Device.
+
+To update your software, first connect the SAP6 to a computer - it will appear as a drive called ``SAP6``. Next
+download ``firmware.zip`` from the github repository, and extract all the files to the ``firmware`` directory on the
+SAP6. Warning - all files should be replaced at the same time as there are various dependencies across the
 files and the SAP6 may not work if only a single file is updated. Check that the device is working immediately after
 updating.
 
@@ -345,7 +348,7 @@ In the top level director of the USB Drive, you may see:
 ``DEBUG``
   If this file is present, then the device is in debug mode. You can also use ``debug.txt``, or in fact
   any file with ``debug`` (any capitalisation) as the basename. You won't see the normal battery charging screen,
-  but you  can double click **A** and start the main device running. You also get a serial connection on
+  but you can double click **A** and start the main device running. You also get a serial connection on
   ``/dev/ttyACM0`` or ``/dev/ttyUSB0`` on  linux or ``COM1`` on windows, which will show debug information.
 
 Hardware
