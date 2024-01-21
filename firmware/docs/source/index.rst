@@ -351,37 +351,58 @@ In the top level director of the USB Drive, you may see:
   but you can double click **A** and start the main device running. You also get a serial connection on
   ``/dev/ttyACM0`` or ``/dev/ttyUSB0`` on  linux or ``COM1`` on windows, which will show debug information.
 
-Hardware
-++++++++
+Make Your Own
++++++++++++++
 
-You can build your own SAP6! This is a work in progress
+You can build your own SAP6! You will need access to a 3d printer and ideally a laser cutter. You will also need to make
+some PCBs - you can etch these yourself or get a company to do it. `Seeed <https://www.seeedstudio.com/fusion_pcb.html>`_
+and `JLCPCB <https://jlcpcb.com>`_ are some of the many companies that can do this for you.
 
 PCB
 ***
 
-Get the gerbers from **FIXME**, and either make, or get someone to make, the PCB. The traces are pretty chunky so you
-can mill or etch the board yourself
+Get the gerbers from `GitHub (https://github.com/furbrain/STIC/releases/latest) <https://github.com/furbrain/STIC/releases/latest>`_:
+download ``pcb.zip``. That will contain the gerbers for the main board and also the button board. The traces are all
+pretty wide so you can mill or etch the board yourself.
 
-See the BOM for the list of components and where to get them
+See the ``bom.csv`` in ``pcb.zip`` for the list of components and where to get them
 
-Solder the components onto the board - they are all fairly chunky so you don't need to be a whizz at soldering
+Solder the components onto the board - they are all fairly chunky so you don't need to be a whizz at soldering. Don't
+solder the display on initially, this is easier to do while attaching the board to the mount. Note the button 3-pin
+connector goes on the *bottom* of the board.
 
 Plastic parts
 *************
 
+From `GitHub (https://github.com/furbrain/STIC/releases/latest) <https://github.com/furbrain/STIC/releases/latest>`_
+download ``hardware.zip``
+
 You will need to 3d print the following STLs:
 
-* ``shell.stl``
-* ``cap.stl``
-* ``bezel.stl``
-* ``shim.stl``
-* ``mount.stl``
+* ``abs\shell.stl``
+* ``abs\cap.stl``
+* ``abs\bezel.stl``
+* ``abs\shim.stl``
+* ``abs\mount.stl``
+
+The bezel and cap may be best printed upside down. You may find it easier to print the ``cap_with_vanes`` - this
+has some very thin tabs to help support it as it is being printed which can then be removed. Once printed, use a
+soldering iron to push 4 brass M3 inserts into the holes on the end of the shell. You will also need to push one into
+the hole in the mount.
+
+TPU parts
+*********
+
+Print ``tpu\Boot.stl`` in the softest TPU you can get away with.
 
 Acrylic parts
 *************
 
 Ideally, you should laser cut the following DXFs from 3mm clear acrylic. However, the designs are fairly simple so you
 may well be able to cut these by hand
+
+* ``acrylic\End plate.dxf``
+* ``acrylic\Window.dxf``
 
 Gaskets
 *******
@@ -390,4 +411,49 @@ Gaskets
 * ``Rubber\Refined Gasket.dxf``
 
 You can use 1mm silicone sheet or EVA foam for these pieces. Note that EVA foam works well but permanently deforms when
-used so will need replacing if you ever disassemble the device.
+used so will need replacing if you ever disassemble the device. Alternatively, generous use of silicone grease can mean
+you don't need these parts at all.
+
+Making the sled
+***************
+
+* First solder everything apart from the display onto both PCBs. Note you can either use a mini-SPOX connector or
+  JST PH-2.0 connector for the battery. Check it is the right way round for your battery connector. Attaching the battery
+  reversed may cause permanent damage.
+* Put the display in it's location on the mount and put the main pcb on top.
+* Screw the PCB in place using a brass M3 screw, and solder the display in place.
+* Attach the cable to the laser module and the PCB.
+* Screw the laser module in place using M2 or #2 brass screws.
+* Attach your battery to the board, but don't glue it in place just yet.
+
+Installing software
+*******************
+
+**FIXME**
+
+Final Assembly
+**************
+
+You can see a video of this process at `https://www.youtube.com/watch?v=XkpvDELlksQ <https://www.youtube.com/watch?v=XkpvDELlksQ>`_.
+
+* Attach the cable to the connector on the PCB
+* Apply some silicone grease to the bottom of the boot and place on the button PCB. Make sure that A is at
+  the end opposite where the cable comes out
+* Apply some silicone grease to the "shelf" on the boot
+* Push the boot and PCB into the shell. Make sure A is nearest the end. The cable should be pointing into the shell
+* Push the shim into the shell - it should hold it firmly in place. You may need to press the shell down against a
+  hard surface
+* If you have used a mini-SPOX connector for the battery, bend it about 45 degrees towards the laser
+* Put a blob of glue on top of the laser and put the battery on it. **This step is not in the video**
+* Connect the cable from the button to the main PCB
+* Push the sled into the shell, keeping the button cable out of the way
+* The side tabs on the sled should mate into some dents in the inner wall of the shell
+* Smear some silicone grease on the end of the shell, then put the gasket on
+* Put more grease on the gasket, and put the acrylic end plate on, and screw into place with brass M3 screws.
+* Put a little grease in the channel in the base of the cap, and put the cap washer in, then a little more grease on
+  the washer
+* Screw the cap on - and you're done.
+
+You will next need to calibrate the device before you use it. If you are successful in building your own, please let me
+know, especially if you have any suggestions to make for this guide.
+
