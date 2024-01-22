@@ -1,4 +1,9 @@
 import adafruit_displayio_sh1106
+try:
+    # try to load using 9.0 style, fall back to 8.x style
+    from i2cdisplaybus import I2CDisplayBus as I2CDisplay
+except ImportError:
+    from displayio import I2CDisplay
 import displayio
 import terminalio
 import math
@@ -26,7 +31,7 @@ class Display:
     def __init__(self, devices: Hardware, config: Config):
         self.devices = devices
         self.config = config
-        bus = displayio.I2CDisplay(self.devices.i2c, device_address=0x3c)
+        bus = I2CDisplay(self.devices.i2c, device_address=0x3c)
         # noinspection PyTypeChecker
         self.oled = adafruit_displayio_sh1106.SH1106(bus, width=WIDTH, height=HEIGHT,
                                                      rotation=0, auto_refresh=False, colstart=2)
@@ -68,7 +73,7 @@ class Display:
             if self.icon_group in grp:
                 grp.remove(self.icon_group)
         group.append(self.icon_group)
-        self.oled.show(group)
+        self.oled.root_group = group
 
     def show_start_screen(self):
         self.set_group_with_icons(self.laser_group)
@@ -140,7 +145,7 @@ class Display:
         splash.append(logbox)
         logterm = terminalio.Terminal(logbox, terminalio.FONT)
 
-        self.oled.show(splash)
+        self.oled.root_group = splash
         logterm.write(text)
         self.oled.refresh()
 
@@ -151,7 +156,7 @@ class Display:
         self.show_group(self.measurement_group)
 
     def show_group(self, group: displayio.Group):
-        self.oled.show(group)
+        self.oled.root_group = group
         self.refresh()
 
     @property
