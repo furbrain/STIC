@@ -93,7 +93,7 @@ atexit.register(displayio.release_displays)
 group = displayio.Group()
 text = label.Label(terminalio.FONT, text="Press B", color=0xffffff, x=30, y=31)
 group.append(text)
-oled.show(group)
+oled.root_group = group
 oled.refresh()
 
 button_b = digitalio.DigitalInOut(pins.BUTTON_B)
