@@ -18,10 +18,17 @@ except ImportError:
     from ulab import numpy as np
 
 from . import utils
-from . import display
-from . import hardware
 from . import config
-from . import measure
+from .debug import logger
+
+try:
+    # noinspection PyUnresolvedReferences
+    # import display and hardware only for type checking - does not import on device
+    import typing
+    from . import display
+    from . import hardware
+except ImportError:
+    pass
 
 CAL_DATA_FILE = "calibration_data.json"
 CAL_DUE = b"CALIBRATE_ME"
@@ -32,6 +39,7 @@ accuracy: Optional[float] = None
 
 
 async def calibrate_sensors(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+    from . import measure
     prelude = "Take a series of\r\nreadings, press\r\nA for a leg,\r\nB to finish"
     reminder = "Ideally at least 24\r\nWith two groups\r\nin same direction"
     fname = CAL_DATA_FILE
@@ -58,20 +66,19 @@ def calibration_due():
 
 def calibrate_if_due():
     global cal, accuracy
-    from . import debug
     if not calibration_due():
-        debug.logger.debug("No calibration due")
-        debug.logger.debug(microcontroller.nvm[0:10])
+        logger.debug("No calibration due")
+        logger.debug(microcontroller.nvm[0:10])
         return
     utils.clear_nvm()
     try:
-        debug.logger.debug("Loading calibration data")
+        logger.debug("Loading calibration data")
         cfg = config.Config.load()
         with open(CAL_DATA_FILE) as f:
             data = json.load(f)
-        debug.logger.debug("Running calibration")
+        logger.debug("Running calibration")
         cal = mag_cal.Calibration(mag_axes=cfg.mag_axes, grav_axes=cfg.grav_axes)
-        debug.logger.debug("Checking accuracy")
+        logger.debug("Checking accuracy")
         accuracy = cal.calibrate(np.array(data['mag']), np.array(data['grav']))
     except Exception as e:
         cal = e
@@ -81,11 +88,11 @@ def calibrate_if_due():
 async def show_cal_results(devices: hardware.Hardware, cfg: config.Config,
                            disp: display.Display):
     global cal, accuracy
-    if cal is None or accuracy is None:
-        return
     if isinstance(cal, Exception):
-        from . import debug
-        debug.logger.error(cal)
+        raise cal
+    if cal is None or accuracy is None:
+        logger.debug(f"No calibration needed: cal {cal!r} accuracy {accuracy!r}")
+        return
     if accuracy < 0.25:
         quality = "excellent"
     elif accuracy < 0.5:
@@ -94,6 +101,7 @@ async def show_cal_results(devices: hardware.Hardware, cfg: config.Config,
         quality = "acceptable"
     else:
         quality = "poor"
+    logger.debug("Showing accuracy")
     report = f"Accuracy is {accuracy:.3f}°\r\nThis is {quality}\r\nPress A to Save\r\nB to Discard"
     disp.show_info(report)
     button, click = await devices.both_buttons.wait(a=Button.SINGLE, b=Button.SINGLE)

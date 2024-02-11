@@ -10,6 +10,7 @@ import storage
 
 try:
     # noinspection PyUnresolvedReferences
+    # we try to import typing, this fails on circuitpython but gives us code completion in editors
     import typing
     from . import config
     from . import display

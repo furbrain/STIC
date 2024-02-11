@@ -215,7 +215,10 @@ class App:
         all_background_tasks = [asyncio.create_task(t) for t in self.background_tasks]
         self.devices.beep_happy()
         check_mem("show calibration results if needed")
-        await calibrate.show_cal_results(self.devices, self.config, self.display)
+        try:
+            await calibrate.show_cal_results(self.devices, self.config, self.display)
+        except Exception as exc:
+            asyncio.get_event_loop().call_exception_handler({"message": "Calibration error", "exception": exc})
         check_mem("starting main task")
         await self.switch_task(self.mode)
         await self.shutdown_event.wait()
@@ -260,17 +263,18 @@ class App:
         check_mem("leaving app")
         return clean_shutdown
 
+    def exception_handler(self, loop, context):
+        logger.info("Exception received")
+        self.exception_context.update(context)
+        logger.debug("Triggering shutdown")
+        self.shutdown_event.set()
+
     def setup_exception_handler(self):
         logger.debug("Asyncio exception handler created")
 
         # noinspection PyUnusedLocal
-        def exception_handler(loop, context):
-            logger.info("Exception received")
-            self.exception_context.update(context)
-            logger.debug("Triggering shutdown")
-            self.shutdown_event.set()
 
-        asyncio.get_event_loop().set_exception_handler(exception_handler)
+        asyncio.get_event_loop().set_exception_handler(self.exception_handler)
 
     @staticmethod
     def clear_exception_handler():
