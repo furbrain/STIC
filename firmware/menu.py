@@ -50,6 +50,7 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
     global action_item
     logger.debug("Menu task started")
     gc.collect()
+    devices.laser_enable(True)
     await asyncio.sleep(0.1)
     await devices.laser.set_laser(False)
     items = [
@@ -132,6 +133,7 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
     ]
     debug_items = [
         ("Debug", [
+            ("json test", debug.json_test),
             ("Save shots", AsyncAction(measure.save_multiple_shots)),
             ("Cal From Saved", AsyncAction(calibrate.reset_to_calibrate)),
             ("Battery test", AsyncAction(debug.battery_test)),

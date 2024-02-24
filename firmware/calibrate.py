@@ -91,7 +91,7 @@ async def show_cal_results(devices: hardware.Hardware, cfg: config.Config,
     if isinstance(cal, Exception):
         raise cal
     if cal is None or accuracy is None:
-        logger.debug(f"No calibration needed: cal {cal!r} accuracy {accuracy!r}")
+        logger.debug(f"No calibration needed: cal {cal} accuracy {accuracy}")
         return
     if accuracy < 0.25:
         quality = "excellent"

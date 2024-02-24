@@ -160,5 +160,6 @@ shutil.copy("manual.pdf", path)
 print("Copying python files")
 for f in glob.glob("../*.py"):
     shutil.copy(f, fw_path)
+shutil.copy("safemode.py", path)
 shutil.copy("boot.py", path)
 shutil.copy("code.py", path)

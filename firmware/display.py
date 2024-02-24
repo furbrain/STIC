@@ -58,6 +58,7 @@ class Display:
         self.bt_pending_bitmap.fill(0)
         self.bt_pending_tile = TileGrid(self.bt_pending_bitmap, pixel_shader=palette, x=115, y=19)
         batt_icon = TileGrid(bitmaps['batt_icon'], pixel_shader=palette, x=115, y=48)
+        self.bt_pending_count = 0
         self.batt_level = VerticalProgressBar((118, 53), (6, 8), max_value=100, border_thickness=0)
         self.icon_group.append(self.bt_icon)
         self.icon_group.append(batt_icon)
@@ -100,21 +101,25 @@ class Display:
         self.refresh()
 
     def set_bt_connected(self, connected: bool):
-        if connected:
-            self.bt_icon[0] = 1
-        else:
-            self.bt_icon[0] = 0
-        self.refresh()
+        currently_connected = self.bt_icon[0] == 1
+        if currently_connected != connected:
+            if connected:
+                self.bt_icon[0] = 1
+            else:
+                self.bt_icon[0] = 0
+            self.refresh()
 
     def set_bt_pending_count(self, count: int):
         count = min(count, 4)
-        self.bt_pending_bitmap.fill(0)
-        for i in range(count):
-            self.bt_pending_bitmap[i * 3, 0] = 1
-            self.bt_pending_bitmap[i * 3 + 1, 0] = 1
-            self.bt_pending_bitmap[i * 3, 1] = 1
-            self.bt_pending_bitmap[i * 3 + 1, 1] = 1
-
+        if count != self.bt_pending_count:
+            self.bt_pending_count = count
+            self.bt_pending_bitmap.fill(0)
+            for i in range(count):
+                self.bt_pending_bitmap[i * 3, 0] = 1
+                self.bt_pending_bitmap[i * 3 + 1, 0] = 1
+                self.bt_pending_bitmap[i * 3, 1] = 1
+                self.bt_pending_bitmap[i * 3 + 1, 1] = 1
+            self.refresh()
     def set_batt_level(self, voltage):
         self.batt_level.value = convert_voltage_to_progress(voltage, 100)
         self.refresh()

@@ -1,4 +1,6 @@
 import asyncio
+import gc
+import json
 import time
 
 import adafruit_logging
@@ -6,7 +8,6 @@ import os
 
 import microcontroller
 # noinspection PyPackageRequirements
-import storage
 
 try:
     # noinspection PyUnresolvedReferences
@@ -52,11 +53,18 @@ def breaker():
     a = b
 
 
+def json_test():
+    gc.collect()
+    with open("/jsontest.log", "w") as f:
+        json.dump({"a": 1}, f)
+
+
 async def menu_item_test(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+    from .display import font_20
     for i in range(5):
         await asyncio.sleep(1)
-        disp.show_info(f"MENU TEST: {i}\r\nPhil was here\r\nHere is a very long line " +
-                       f"indeed")
+        disp.show_info(f"MENU TEST: {i}\r\nMem_free:{gc.mem_free()}\r\nglyphs: {len(font_20._glyphs)}")
+        gc.collect()
 
 async def battery_test(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
     from . import measure

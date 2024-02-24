@@ -52,8 +52,6 @@ class App:
             self.batt_monitor(),
             self.flip_monitor(),
         ]
-        if logger.getEffectiveLevel() <= INFO:
-            self.background_tasks.append(self.counter())
         self.current_task: Optional[asyncio.Task] = None
         self.exception_context = {}
         self.shutdown_event = asyncio.Event()
@@ -117,18 +115,6 @@ class App:
             except asyncio.TimeoutError:
                 logger.info("Timed out, quitting")
                 self.shutdown_event.set()
-
-    #@staticmethod
-    async def counter(self):
-        logger.debug("Counter task started")
-        i = 0
-        while True:
-            await self.devices.button_b.wait(Button.DOUBLE)
-            logger.debug("Double B")
-            continue
-            await asyncio.sleep(1)
-            i += 1
-            logger.info(f"Count: {i}")
 
     @staticmethod
     async def watchdog():

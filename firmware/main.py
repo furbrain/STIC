@@ -66,6 +66,12 @@ async def main(app_mode):
 def run():
     app_used = False
     check_mem("First run")
+    try:
+        #this code write to the flash when possible. This stops crashes happening later when memory is low
+        with open("/last_run.txt", "w") as f:
+            f.write("started")
+    except OSError:
+        pass
     asyncio.new_event_loop() #create a new event loop first time around
     while True:
         clean_shutdown = False
