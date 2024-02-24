@@ -57,6 +57,7 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
         ("Calibrate", [
             ("Sensors", AsyncAction(calibrate.calibrate_sensors)),
             ("Laser", AsyncAction(calibrate.calibrate_distance)),
+            ("Cal From Saved", AsyncAction(calibrate.reset_to_calibrate)),
         ]),
         ("Info", [
             ("Raw Data", AsyncAction(info.raw_readings)),
@@ -133,11 +134,8 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
     ]
     debug_items = [
         ("Debug", [
-            ("json test", debug.json_test),
             ("Save shots", AsyncAction(measure.save_multiple_shots)),
-            ("Cal From Saved", AsyncAction(calibrate.reset_to_calibrate)),
             ("Battery test", AsyncAction(debug.battery_test)),
-            ("Test item", AsyncAction(debug.menu_item_test)),
             ("Freeze", debug.freeze),
             ("ValueError", debug.breaker),
         ])
@@ -147,6 +145,8 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
     menu_root = disp.get_menu()
     # noinspection PyTypeChecker
     build_menu(menu_root, items)
+    # clear memory before show group to minimise memory usage
+    disp.clear_memory()
     menu_root.show_menu()
     disp.refresh()
     while True:
@@ -160,6 +160,8 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
                 logger.debug(f"Running {action_item}")
                 await action_item(devices, cfg, disp)
                 action_item = None
+            # clear memory before show group to minimise memory usage
+            disp.clear_memory()
             menu_root.show_menu()
             disp.refresh()
         elif button == "b":
@@ -167,6 +169,9 @@ async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Dis
             gc.collect()
             devices.beep_bop()
             menu_root.scroll(1)
+            # clear memory before show group to minimise memory usage
+            disp.clear_memory()
+            disp.show_group(None)
             menu_root.show_menu()
             disp.refresh()
 

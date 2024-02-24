@@ -164,6 +164,9 @@ class Display:
         self.oled.root_group = group
         self.refresh()
 
+    def clear_memory(self):
+        self.oled.group = None
+
     @property
     def inverted(self):
         """

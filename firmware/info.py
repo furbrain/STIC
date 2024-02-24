@@ -74,12 +74,14 @@ async def orientation(devices: hardware.Hardware, cfg: config.Config, disp: disp
 
 # noinspection PyUnusedLocal
 async def device(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+    import gc
+    gc.collect()
+    mem_free = gc.mem_free()
     text = f"""
-        Name: {get_long_name()}
-        BT Name: {get_short_name()}
+        {get_long_name()} ({get_short_name()})
         SW Version: {get_sw_version()}
-        HW Version: {get_hw_version()}
-        CP Version: {uname().release}
+        HW: {get_hw_version()} CP: {uname().release}
+        Mem Free: {mem_free}
         """
     disp.show_info(text, clean=True)
     await devices.button_a.wait_for_click()

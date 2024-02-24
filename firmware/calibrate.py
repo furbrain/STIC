@@ -56,7 +56,9 @@ async def reset_to_calibrate(devices: hardware.Hardware, cfg: config.Config, dis
         for a few seconds
     """, clean=True)
     await asyncio.sleep(3)
+    devices.beep_shutdown()
     utils.set_nvm(CAL_DUE)
+    await devices.buzzer.wait()
     microcontroller.reset()
 
 
