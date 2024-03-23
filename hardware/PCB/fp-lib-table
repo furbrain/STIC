@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "STIC")(type "KiCad")(uri "${KIPRJMOD}/STIC.pretty")(options "")(descr ""))
+)
