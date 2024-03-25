@@ -1,17 +1,19 @@
 import asyncio
-import supervisor
 import traceback
-from watchdog import WatchDogMode
 
 import mag_cal
 import microcontroller
 # noinspection PyPackageRequirements
+import supervisor
+# noinspection PyPackageRequirements
 from async_button import Button
+# noinspection PyPackageRequirements
+from watchdog import WatchDogMode
 
-from .import calibrate
-from .display import Display
-from .measure import measure, take_reading
+from . import version
+from . import calibrate
 from .data import readings
+from .measure import measure, take_reading
 from .menu import menu
 from .utils import simplify, check_mem
 
@@ -22,9 +24,8 @@ except ImportError:
     pass
 
 
-from .import hardware
 from .config import Config
-from .debug import logger, INFO
+from .debug import logger
 
 
 class App:
@@ -37,9 +38,9 @@ class App:
 
     def __init__(self, mode=MEASURE):
         check_mem("creating app")
-        self.devices = hardware.Hardware()
+        self.devices = version.get_device()
         self.config = Config.load()
-        self.display = Display(self.devices, self.config)
+        self.display = self.devices.create_display(self.config)
         self.mode = mode
         self.menu_action = None
         self.background_tasks: List[Coroutine] = [
@@ -152,8 +153,8 @@ class App:
         # noinspection PyPep8Naming
         CALLBACKS = {
             0x34: lambda: self.bt_quit_now(),
-            0x36: lambda: self.devices.laser.set_laser(True),
-            0x37: lambda: self.devices.laser.set_laser(False),
+            0x36: lambda: self.devices.laser_on(True),
+            0x37: lambda: self.devices.laser_on(False),
             0x38: lambda: take_reading(self.devices, self.config, self.display),
 
         }
@@ -249,6 +250,7 @@ class App:
         check_mem("leaving app")
         return clean_shutdown
 
+    # noinspection PyUnusedLocal
     def exception_handler(self, loop, context):
         logger.info("Exception received")
         self.exception_context.update(context)

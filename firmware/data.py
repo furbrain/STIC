@@ -120,6 +120,7 @@ class Readings:
         if self._trip_file:
             self._trip_file.flush()
 
+    # noinspection PyTypeChecker
     @staticmethod
     def _same_shots(a: Leg, b: Leg) -> bool:
         """

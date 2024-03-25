@@ -1,27 +1,13 @@
-import atexit
-import time
-import laser_egismos
-import pwmio
 import async_button
 import async_buzzer
-import displayio
-import rm3100
-import seeed_xiao_nrf52840
-import busio
-import digitalio
 
 try:
     from typing import Optional
 except ImportError:
     pass
 
-from . import invertingpwmio
 from . import bluetooth
-from . import pins
-from .debug import logger
-
-
-# Pin definitions
+from .stubs import Magnetometer, Accelerometer, abstractmethod
 
 HAPPY = (("C6", 50.0), ("E6", 50.0), ("G6", 50.0), ("C7", 50.0))
 BIP = (("A7", 50),)
@@ -30,36 +16,15 @@ SAD = (("G6", 100), ("C6", 200))
 
 
 # noinspection PyAttributeOutsideInit
-class Hardware:
-    def __init__(self):
-        logger.debug("Initialising hardware")
-        import displayio
-        displayio.release_displays()
-        self.las_en_pin = digitalio.DigitalInOut(pins.LASER_EN)
-        self.las_en_pin.switch_to_output(False)
-        self.peripheral_enable_io = digitalio.DigitalInOut(pins.PERIPH_EN)
-        self.peripheral_enable_io.switch_to_output(True)
-        time.sleep(0.1)
-        self.button_a = async_button.Button(pins.BUTTON_A, value_when_pressed=False, long_click_enable=True)
-        self.button_b = async_button.Button(pins.BUTTON_B, value_when_pressed=False, long_click_enable=True)
-        self.both_buttons = async_button.MultiButton(a=self.button_a, b=self.button_b)
-        self.i2c = busio.I2C(scl=pins.SCL, sda=pins.SDA, frequency=4000000)
-        self.drdy_io = digitalio.DigitalInOut(pins.DRDY)
-        self.drdy_io.direction = digitalio.Direction.INPUT
-        self.magnetometer = rm3100.RM3100_I2C(self.i2c, drdy_pin=self.drdy_io, cycle_count=2000)
-        self.uart = busio.UART(pins.TX, pins.RX, baudrate=9600)
-        self.uart.reset_input_buffer()
-        self.laser = laser_egismos.AsyncLaser(self.uart)
-        if pins.BUZZER_B is None:
-            self.pwm = pwmio.PWMOut(pins.BUZZER_A, variable_frequency=True)
-        else:
-            self.pwm = invertingpwmio.InvertingPWMOut(pins.BUZZER_A, pins.BUZZER_B)
-        self.buzzer = async_buzzer.Buzzer(self.pwm)
-        self.battery = seeed_xiao_nrf52840.Battery()
-        self.accelerometer = seeed_xiao_nrf52840.IMU()
-        self.bt = bluetooth.BluetoothServices()
-        self.atexit_handler = self.deinit
-        atexit.register(self.atexit_handler)
+class HardwareBase:
+    button_a: async_button.Button
+    button_b: async_button.Button
+    both_buttons: async_button.MultiButton
+    buzzer: async_buzzer.Buzzer
+    magnetometer: Magnetometer
+    accelerometer: Accelerometer
+    bt: bluetooth.BluetoothServices
+    batt_voltage: float
 
     def __enter__(self):
         return self
@@ -67,12 +32,25 @@ class Hardware:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.deinit()
 
-    def laser_enable(self, value: bool) -> None:
-        self.las_en_pin.value = value
+    @abstractmethod
+    def create_display(self, cfg):
+        pass
 
-    @property
-    def batt_voltage(self) -> float:
-        return self.battery.voltage
+    @abstractmethod
+    def laser_enable(self, value):
+        pass
+
+    @abstractmethod
+    def laser_on(self, value):
+        pass
+
+    @abstractmethod
+    def laser_measure(self):
+        pass
+
+    @abstractmethod
+    def peripherals_enable(self, value):
+        pass
 
     def beep_happy(self):
         self.buzzer.play(HAPPY)
@@ -93,28 +71,12 @@ class Hardware:
     async def beep_wait(self):
         await self.buzzer.wait()
 
+    @abstractmethod
+    def charge_status(self):
+        pass
+
+    @abstractmethod
     def deinit(self):
-        # release display
-        displayio.release_displays()
-        time.sleep(0.1)
-        self.las_en_pin.value = False
-        self.bt.deinit()
-        self.accelerometer.deinit()
-        self.battery.deinit()
-        self.pwm.deinit()
-        self.uart.deinit()
-        self.i2c.deinit()
-        self.drdy_io.deinit()
-        try:
-            self.button_b.deinit()
-        except KeyError:
-            pass
-        try:
-            self.button_a.deinit()
-        except KeyError:
-            pass
-        self.peripheral_enable_io.value = False
-        time.sleep(0.1)
-        self.las_en_pin.deinit()
-        self.peripheral_enable_io.deinit()
-        atexit.unregister(self.atexit_handler)
+        pass
+
+

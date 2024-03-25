@@ -6,8 +6,6 @@ from laser_egismos import LaserError
 # noinspection PyProtectedMember
 from mag_cal import MagneticAnomalyError, DipAnomalyError, GravityAnomalyError, NotCalibrated
 
-LASER_TIMEOUT = 4.5
-
 try:
     # noinspection PyUnresolvedReferences
     from typing import Dict
@@ -21,6 +19,8 @@ from .data import readings, Leg
 from .debug import logger
 from .utils import check_mem
 
+LASER_TIMEOUT = 4.5
+
 ERROR_MESSAGES: Dict[type, str] = {
     LaserError: "Laser\nRead\nFailed",
     asyncio.TimeoutError: "Laser\nRead\nTimeout",
@@ -31,7 +31,7 @@ ERROR_MESSAGES: Dict[type, str] = {
 }
 
 
-async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+async def measure(devices: hardware.HardwareBase, cfg: config.Config, disp: display.DisplayBase):
     """
     This is the main measurement task
     :return:
@@ -46,10 +46,9 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
     await asyncio.sleep(0.1)
     logger.debug("turning on laser light")
     showing_extents = False
-    await devices.laser.set_buzzer(False)
     while True:
         try:
-            await devices.laser.set_laser(True)
+            await devices.laser_on(True)
         except LaserError:
             # possibly received a timeout last time around
             pass
@@ -61,7 +60,7 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
             devices.button_b.last_click = Button.SINGLE
         else:
             btn, click = await devices.both_buttons.wait(a=(Button.SINGLE, Button.LONG),
-                                                     b=(Button.SINGLE, Button.DOUBLE))
+                                                         b=(Button.SINGLE, Button.DOUBLE))
         check_mem("button pressed")
         if btn == "a":
             if click == Button.SINGLE:
@@ -92,40 +91,42 @@ async def measure(devices: hardware.Hardware, cfg: config.Config, disp: display.
             disp.update_measurement(readings.current, readings.current_reading, showing_extents)
 
 
-async def get_raw_measurement(devices: hardware.Hardware, disp: display.Display, with_laser: bool = True):
+async def get_raw_measurement(devices: hardware.HardwareBase, disp: display.DisplayBase, with_laser: bool = True):
     logger.info("Taking a reading")
     try:
-        disp.oled.sleep()
+        disp.sleep()
         if with_laser:
-            devices.laser.async_reader.s.read() # clear the buffer
-            distance = await asyncio.wait_for(devices.laser.measure(), LASER_TIMEOUT) / 1000
+            distance = await asyncio.wait_for(devices.laser_measure(), LASER_TIMEOUT) / 1000
         else:
             distance = None
         logger.debug(f"Raw Distance: {distance}m")
-        await devices.laser.set_laser(False)
+        await devices.laser_on(False)
         await asyncio.sleep(0.1)
         mag = devices.magnetometer.magnetic
         logger.debug(f"Mag: {mag}")
         grav = devices.accelerometer.acceleration
         logger.debug(f"Grav: {grav}")
         await asyncio.sleep(0.1)
-        await devices.laser.set_laser(True)
+        await devices.laser_on(True)
     finally:
-        disp.oled.wake()
+        disp.sleep(wake=True)
     return mag, grav, distance
 
-async def take_reading(devices: hardware.Hardware,
+
+async def take_reading(devices: hardware.HardwareBase,
                        cfg: config.Config,
-                       disp: display.Display) -> bool:
+                       disp: display.DisplayBase) -> bool:
     # take a reading
     try:
         mag, grav, distance = await get_raw_measurement(devices, disp, True)
         if cfg.calib is None:
             raise NotCalibrated()
+        # noinspection PyTypeChecker
         azimuth, inclination, _ = cfg.calib.get_angles(mag, grav)
         distance += cfg.laser_cal
         logger.debug(f"Distance: {distance}m")
         if cfg.anomaly_strictness is not None:
+            # noinspection PyTypeChecker
             cfg.calib.raise_if_anomaly(mag, grav, cfg.anomaly_strictness)
     except tuple(ERROR_MESSAGES.keys()) as exc:
         for key in ERROR_MESSAGES.keys():
@@ -135,9 +136,9 @@ async def take_reading(devices: hardware.Hardware,
         if not isinstance(exc, asyncio.TimeoutError):
             # don't wibble the laser if it's timed out, it'll just get more confused
             for i in range(5):
-                await devices.laser.set_laser(False)
+                await devices.laser_on(False)
                 await asyncio.sleep(0.1)
-                await devices.laser.set_laser(True)
+                await devices.laser_on(True)
                 await asyncio.sleep(0.1)
         devices.beep_sad()
         return False
@@ -147,9 +148,9 @@ async def take_reading(devices: hardware.Hardware,
         devices.bt.disto.send_data(azimuth, inclination, distance)
         if readings.triple_shot():
             for _ in range(2):
-                await devices.laser.set_laser(False)
+                await devices.laser_on(False)
                 await asyncio.sleep(0.2)
-                await devices.laser.set_laser(True)
+                await devices.laser_on(True)
                 await asyncio.sleep(0.2)
             devices.beep_happy()
         else:
@@ -161,7 +162,7 @@ async def take_multiple_readings(devices, disp, fname, prelude, reminder):
     devices.laser_enable(True)
     disp.show_info(prelude)
     await devices.button_a.wait(Button.SINGLE)
-    await devices.laser.set_laser(True)
+    await devices.laser_on(True)
     mags = []
     gravs = []
     count = 0
@@ -186,7 +187,9 @@ async def take_multiple_readings(devices, disp, fname, prelude, reminder):
     except OSError:
         pass
 
-async def save_multiple_shots(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+
+# noinspection PyUnusedLocal
+async def save_multiple_shots(devices: hardware.HardwareBase, cfg: config.Config, disp: display.DisplayBase):
     prelude = "Press A\r\nto start recording\r\nPress B to stop"
     reminder = "Press B to stop"
     fname = "debug_shots.json"

@@ -1,11 +1,8 @@
-import gc
 import os
 
 import microcontroller
 import memorymap
 import sys
-
-from .debug import logger
 
 
 def get_int_at(addr: int, num_bytes: int) -> int:
@@ -106,6 +103,8 @@ def clean_block_text(text: str) -> str:
 
 
 def check_mem(text: str):
+    from .debug import logger
+    import gc
     gc.collect()
     logger.debug(f"{text} mem: {gc.mem_free()}")
 
@@ -114,7 +113,7 @@ MIN_VOLTAGE = 3.5
 MAX_VOLTAGE = 4.2
 
 
-def diskfree():
+def disk_free():
     """
     :return: Disk space available in kB
     """

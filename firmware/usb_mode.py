@@ -6,8 +6,7 @@ from adafruit_display_text import label
 import displayio
 
 from . import config
-from . import hardware
-from . import display
+from . import version
 from .debug import logger
 from .bitmaps import bitmaps, palette
 from .utils import convert_voltage_to_progress, usb_power_connected
@@ -21,9 +20,9 @@ def usb_charge_monitor():
     logger.debug("Releasing displays")
     displayio.release_displays()
     logger.debug("Showing Charging symbol")
-    with hardware.Hardware() as devices:
+    with version.get_device() as devices:
         cfg = config.Config.load()
-        disp = display.Display(devices, cfg)
+        disp = devices.create_display(cfg)
         group = displayio.Group()
         battery_bmp = bitmaps['battery']
         battery_tile = displayio.TileGrid(battery_bmp, pixel_shader=palette, x=32, y=14)
@@ -50,7 +49,7 @@ def usb_charge_monitor():
         disp.show_group(group)
         disconnected_count = 0
         while True:
-            if not devices.battery.charge_status:
+            if not devices.charge_status():
                 progress = BAR_WIDTH
                 status_label.text = "Fully Charged"
                 voltage_label.text = "4.2V"

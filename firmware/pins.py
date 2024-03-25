@@ -1,10 +1,13 @@
 # noinspection PyPackageRequirements
 import board
+import microcontroller
 
-hardware = "phil"
-# noinspection PyUnresolvedReferences
-if hardware == "phil":
-    # Phil's pinout
+
+class Pins:
+    BUTTON_A: microcontroller.Pin
+
+
+class PinsA(Pins):
     LASER_EN = board.D0
     RX = board.D1
     TX = board.D2
@@ -16,7 +19,9 @@ if hardware == "phil":
     SDA = board.D7
     SCL = board.D8
     DRDY = board.D9
-elif hardware == "brendan":
+
+
+class PinsB:
     # Brendan's pinout
     LASER_EN = board.D0
     RX = board.RX

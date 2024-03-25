@@ -1,8 +1,18 @@
 import binascii
 
-
 __version__ = "1.2.0"
-__hw_version__ = "1.0.0"
+
+from . import layouts
+
+try:
+    # noinspection PyUnresolvedReferences
+    from typing import Tuple, Optional
+except ImportError:
+    pass
+
+LAYOUTS = {(1, 0, 0): layouts.layout_1}
+DEVICES = {(1, 0, 0): "hardware_v1",
+           (1, 1, 0): "hardware_v1"}
 
 ADJECTIVES = [
     "Angry",
@@ -32,7 +42,7 @@ BASENAME = "SAP6"
 
 
 def get_id_indexes():
-    import microcontroller # hidden so can use version.py in documentation
+    import microcontroller  # hidden so can use version.py in documentation
     crc = binascii.crc32(microcontroller.cpu.uid)
     a = crc % 100
     return a // 10, a % 10
@@ -52,5 +62,37 @@ def get_sw_version() -> str:
     return __version__
 
 
-def get_hw_version() -> str:
-    return __hw_version__
+def get_hw_version() -> Tuple[int, int, int]:
+    import microcontroller
+    version = tuple(microcontroller.nvm[-3:])
+    if version == (255, 255, 255):
+        version = (1, 0, 0)
+    return version
+
+
+def get_hw_version_as_str() -> str:
+    v = get_hw_version()
+    return ".".join(str(x) for x in v)
+
+
+def get_layout(version: Optional[Tuple[int, int, int]] = None) -> layouts.Layout:
+    if version is None:
+        version = get_hw_version()
+    return LAYOUTS[version]
+
+
+def get_pins(layout: Optional[layouts.Layout] = None):
+    if layout is None:
+        layout = get_layout()
+    from . import pins
+    pin_group = getattr(pins, layout.pins)
+    return pin_group
+
+
+def get_device(version: Optional[Tuple[int, int, int]] = None):
+    layout = get_layout(version)
+    dev = layout.hardware
+    pins = get_pins(layout)
+    mod = __import__(f"firmware.versions.{dev}")
+    module = getattr(mod.versions, dev)
+    return module.Hardware(pins)

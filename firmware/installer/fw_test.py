@@ -12,7 +12,10 @@ import seeed_xiao_nrf52840
 import pwmio
 import atexit
 
-import firmware.pins as pins
+# noinspection PyUnresolvedReferences
+import firmware.version as version
+
+pins = version.get_pins()
 
 print("Checking voltage")
 bat = seeed_xiao_nrf52840.Battery()
@@ -71,6 +74,8 @@ uart.reset_input_buffer()
 laser = laser_egismos.Laser(uart)
 print(f"{laser.distance}m")
 print("\n")
+laser.set_buzzer(False)
+print(f"Laser buzzer turned off")
 uart.deinit()
 
 print("Testing i2c devices")
@@ -80,6 +85,7 @@ drdy_io = digitalio.DigitalInOut(pins.DRDY)
 drdy_io.direction = digitalio.Direction.INPUT
 
 print("Testing magnetometer")
+# noinspection PyTypeChecker
 magnetometer = rm3100.RM3100_I2C(i2c, drdy_pin=drdy_io)
 print(magnetometer.magnetic)
 print("\n")

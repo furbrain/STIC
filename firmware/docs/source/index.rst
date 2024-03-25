@@ -355,13 +355,15 @@ Make Your Own
 +++++++++++++
 
 You can build your own SAP6! You will need access to a 3d printer and ideally a laser cutter. You will also need to make
-some PCBs - you can etch these yourself or get a company to do it. `Seeed <https://www.seeedstudio.com/fusion_pcb.html>`_
-and `JLCPCB <https://jlcpcb.com>`_ are some of the many companies that can do this for you.
+some PCBs - you can etch these yourself or get a company to do it.
+`Seeed <https://www.seeedstudio.com/fusion_pcb.html>`_ and `JLCPCB <https://jlcpcb.com>`_ are some of the many
+companies that can do this for you.
 
 PCB
 ***
 
-Get the gerbers from `GitHub (https://github.com/furbrain/STIC/releases/latest) <https://github.com/furbrain/STIC/releases/latest>`_:
+Get the gerbers from
+`GitHub (https://github.com/furbrain/STIC/releases/latest) <https://github.com/furbrain/STIC/releases/latest>`_:
 download ``pcb.zip``. That will contain the gerbers for the main board and also the button board. The traces are all
 pretty wide so you can mill or etch the board yourself.
 
@@ -418,8 +420,8 @@ Making the sled
 ***************
 
 * First solder everything apart from the display onto both PCBs. Note you can either use a mini-SPOX connector or
-  JST PH-2.0 connector for the battery. Check it is the right way round for your battery connector. Attaching the battery
-  reversed may cause permanent damage.
+  JST PH-2.0 connector for the battery. Check it is the right way round for your battery connector.
+  Attaching the battery reversed may cause permanent damage.
 * Put the display in it's location on the mount and put the main pcb on top.
 * Screw the PCB in place using a brass M3 screw, and solder the display in place.
 * Attach the cable to the laser module and the PCB.
@@ -434,7 +436,8 @@ Installing software
 Final Assembly
 **************
 
-You can see a video of this process at `https://www.youtube.com/watch?v=XkpvDELlksQ <https://www.youtube.com/watch?v=XkpvDELlksQ>`_.
+You can see a video of this process at
+`https://www.youtube.com/watch?v=XkpvDELlksQ <https://www.youtube.com/watch?v=XkpvDELlksQ>`_.
 
 * Attach the cable to the connector on the PCB
 * Apply some silicone grease to the bottom of the boot and place on the button PCB. Make sure that A is at

@@ -1,6 +1,7 @@
 import seeed_xiao_nrf52840
 # noinspection PyPackageRequirements
 import digitalio
+# noinspection PyPackageRequirements
 import supervisor
 import time
 import asyncio
@@ -11,6 +12,7 @@ import microcontroller
 # noinspection PyPackageRequirements
 import board
 import _bleio
+# noinspection PyPackageRequirements
 import storage
 
 try:
@@ -18,15 +20,16 @@ try:
 except ImportError:
     pass
 
-from . import pins
 from . import app
 from . import calibrate
 from . import usb_mode
+from . import version
 from .utils import usb_power_connected, check_mem
 from .debug import logger, DEBUG
 
-
 LIGHT_SLEEP_TIMEOUT = 6 * 60 * 60  # light sleep for 6 hours
+
+pins = version.get_pins()
 
 
 def double_click_start() -> bool:
@@ -41,7 +44,7 @@ def double_click_start() -> bool:
         # wait for release
         while not button_a.value:
             time.sleep(0.03)
-        dbl_click_interval_expired = supervisor.ticks_ms()+1000
+        dbl_click_interval_expired = supervisor.ticks_ms() + 1000
         while supervisor.ticks_ms() < dbl_click_interval_expired:
             if not button_a.value:
                 # button been pressed in relevant time
@@ -67,13 +70,14 @@ def run():
     app_used = False
     check_mem("First run")
     try:
-        #this code write to the flash when possible. This stops crashes happening later when memory is low
+        # this code write to the flash when possible. This stops crashes happening later when memory is low
         with open("/last_run.txt", "w") as f:
             f.write("started")
     except OSError:
         pass
-    asyncio.new_event_loop() #create a new event loop first time around
+    asyncio.new_event_loop()  # create a new event loop first time around
     while True:
+        # noinspection PyUnusedLocal
         clean_shutdown = False
         if usb_power_connected() != storage.getmount("/").readonly:
             logger.info("Restarting microcontroller so can correctly mount flash")

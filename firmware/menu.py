@@ -19,7 +19,7 @@ try:
     # noinspection PyUnresolvedReferences
     from typing import Callable, Optional, Coroutine, Any
 
-    AsyncActionItem = Optional[Callable[[hardware.Hardware, config.Config, display.Display], Coroutine]]
+    AsyncActionItem = Optional[Callable[[hardware.HardwareBase, config.Config, display.DisplayBase], Coroutine]]
 except ImportError:
     pass
 
@@ -46,13 +46,13 @@ class ConfigOptions(Options):
                          on_value_set=lambda x: obj.set_var(name, x))
 
 
-async def menu(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display.DisplayBase):
     global action_item
     logger.debug("Menu task started")
     gc.collect()
     devices.laser_enable(True)
     await asyncio.sleep(0.1)
-    await devices.laser.set_laser(False)
+    await devices.laser_on(False)
     items = [
         ("Calibrate", [
             ("Sensors", AsyncAction(calibrate.calibrate_sensors)),

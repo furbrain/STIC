@@ -21,11 +21,13 @@ from . import utils
 from . import config
 from .debug import logger
 
+# import display and hardware only for type checking - does not import on device
 try:
     # noinspection PyUnresolvedReferences
-    # import display and hardware only for type checking - does not import on device
     import typing
+    # noinspection PyUnresolvedReferences
     from . import display
+    # noinspection PyUnresolvedReferences
     from . import hardware
 except ImportError:
     pass
@@ -38,7 +40,7 @@ cal = None
 accuracy: Optional[float] = None
 
 
-async def calibrate_sensors(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+async def calibrate_sensors(devices: hardware.HardwareBase, cfg: config.Config, disp: display.DisplayBase):
     from . import measure
     prelude = "Take a series of\r\nreadings, press\r\nA for a leg,\r\nB to finish"
     reminder = "Ideally at least 24\r\nWith two groups\r\nin same direction"
@@ -48,7 +50,7 @@ async def calibrate_sensors(devices: hardware.Hardware, cfg: config.Config, disp
 
 
 # noinspection PyUnusedLocal
-async def reset_to_calibrate(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+async def reset_to_calibrate(devices: hardware.HardwareBase, cfg: config.Config, disp: display.DisplayBase):
     disp.show_info("""
         Resetting to run
         calibration. The
@@ -87,8 +89,8 @@ def calibrate_if_due():
         return
 
 
-async def show_cal_results(devices: hardware.Hardware, cfg: config.Config,
-                           disp: display.Display):
+async def show_cal_results(devices: hardware.HardwareBase, cfg: config.Config,
+                           disp: display.DisplayBase):
     global cal, accuracy
     if isinstance(cal, Exception):
         raise cal
@@ -115,7 +117,7 @@ async def show_cal_results(devices: hardware.Hardware, cfg: config.Config,
     cal = None
 
 
-async def calibrate_distance(devices: hardware.Hardware, cfg: config.Config, disp: display.Display):
+async def calibrate_distance(devices: hardware.HardwareBase, cfg: config.Config, disp: display.DisplayBase):
     devices.laser_enable(True)
     disp.show_info("Place device\r\n1m from an object\r\nand press A")
     await devices.button_a.wait(Button.SINGLE)
@@ -123,7 +125,7 @@ async def calibrate_distance(devices: hardware.Hardware, cfg: config.Config, dis
     await asyncio.sleep(1)
     dist = 0
     for i in range(10):
-        dist += await devices.laser.measure()
+        dist += await devices.laser_measure()
         devices.beep_bip()
     dist /= 10.0
     dist = 1000 - dist
