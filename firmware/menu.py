@@ -162,17 +162,14 @@ async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display
                 await action_item(devices, cfg, disp)
                 action_item = None
             # clear memory before show group to minimise memory usage
-            disp.clear_memory()
-            menu_root.show_menu()
-            disp.refresh()
         elif button == "b":
             logger.debug("Menu: Scroll")
             gc.collect()
             devices.beep_bop()
             menu_root.scroll(1)
             # clear memory before show group to minimise memory usage
-            disp.clear_memory()
-            menu_root.show_menu()
-            disp.refresh()
+        disp.clear_memory()
+        menu_root.show_menu()
+        disp.refresh()
 
 # noinspection PyUnusedLocal
