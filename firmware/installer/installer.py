@@ -45,7 +45,6 @@ parser.add_argument("-hw", "--hw-version",
 
 parser.add_argument("-d", "--debug",
                     help="Place a DEBUG file in the root directory, putting device in debug mode",
-                    default=DEFAULT_HW_VERSION,
                     action="store_true")
 
 

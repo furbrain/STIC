@@ -171,7 +171,6 @@ async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display
             menu_root.scroll(1)
             # clear memory before show group to minimise memory usage
             disp.clear_memory()
-            disp.show_group(None)
             menu_root.show_menu()
             disp.refresh()
 
