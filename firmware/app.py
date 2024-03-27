@@ -42,7 +42,6 @@ class App:
         self.config = Config.load()
         self.display = self.devices.create_display(self.config)
         self.mode = mode
-        self.menu_action = None
         self.background_tasks: List[Coroutine] = [
             self.quitter_task(),
             self.timeout(),

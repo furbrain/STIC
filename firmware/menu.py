@@ -17,7 +17,7 @@ from .config import Config
 
 try:
     # noinspection PyUnresolvedReferences
-    from typing import Callable, Optional, Coroutine, Any
+    from typing import Callable, Optional, Coroutine
 
     AsyncActionItem = Optional[Callable[[hardware.HardwareBase, config.Config, display.DisplayBase], Coroutine]]
 except ImportError:
@@ -57,7 +57,7 @@ async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display
         ("Calibrate", [
             ("Sensors", AsyncAction(calibrate.calibrate_sensors)),
             ("Laser", AsyncAction(calibrate.calibrate_distance)),
-            ("Cal From Saved", AsyncAction(calibrate.reset_to_calibrate)),
+            ("Cal From Saved", AsyncAction(calibrate.cal_from_saved)),
         ]),
         ("Info", [
             ("Raw Data", AsyncAction(info.raw_readings)),
@@ -145,8 +145,9 @@ async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display
     menu_root = disp.get_menu()
     # noinspection PyTypeChecker
     build_menu(menu_root, items)
-    # clear memory before show group to minimise memory usage
+    # clear display memory and dicts before show group to minimise memory usage
     disp.clear_memory()
+    del items, debug_items
     menu_root.show_menu()
     disp.refresh()
     while True:
@@ -154,24 +155,19 @@ async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display
         if button == "a":
             devices.beep_bip()
             logger.debug("Menu: Click")
-            gc.collect()
             menu_root.click()
             if action_item is not None:
                 logger.debug(f"Running {action_item}")
                 await action_item(devices, cfg, disp)
                 action_item = None
             # clear memory before show group to minimise memory usage
-            disp.clear_memory()
-            menu_root.show_menu()
-            disp.refresh()
         elif button == "b":
             logger.debug("Menu: Scroll")
-            gc.collect()
             devices.beep_bop()
             menu_root.scroll(1)
             # clear memory before show group to minimise memory usage
-            disp.clear_memory()
-            menu_root.show_menu()
-            disp.refresh()
+        disp.clear_memory()
+        menu_root.show_menu()
+        disp.refresh()
 
 # noinspection PyUnusedLocal

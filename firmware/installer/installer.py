@@ -18,8 +18,6 @@ FIRMWARE_FILE = "firmware.uf2"
 
 BOOTLOADER_NAME = "XIAO-SENSE"
 
-SAP6_NAMES = ['CIRCUITPY', 'SAP6']
-
 DEFAULT_HW_VERSION = "1.0.0"
 
 RESET_DEVICE = False
@@ -46,7 +44,6 @@ parser.add_argument("-hw", "--hw-version",
 parser.add_argument("-d", "--debug",
                     help="Place a DEBUG file in the root directory, putting device in debug mode",
                     action="store_true")
-
 
 options = parser.parse_args()
 
@@ -83,6 +80,7 @@ def clear_folder(path_to_clear):
     if len(os.listdir(path_to_clear)) > 0:
         print("Clear failed: ", os.listdir(path_to_clear))
         sys.exit(1)
+
 
 def find_serial_port():
     for tty_file in os.listdir(TTY_SYS_DIR):

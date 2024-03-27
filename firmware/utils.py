@@ -1,8 +1,19 @@
+import asyncio
 import os
 
 import microcontroller
 import memorymap
 import sys
+
+try:
+    import typing
+    # noinspection PyUnresolvedReferences
+    from . import display
+except ImportError:
+    pass
+
+MIN_VOLTAGE = 3.5
+MAX_VOLTAGE = 4.2
 
 
 def get_int_at(addr: int, num_bytes: int) -> int:
@@ -109,8 +120,21 @@ def check_mem(text: str):
     logger.debug(f"{text} mem: {gc.mem_free()}")
 
 
-MIN_VOLTAGE = 3.5
-MAX_VOLTAGE = 4.2
+# noinspection PyPep8Naming
+def lstsq(A, B):
+    from mag_cal.utils import np, ULAB_PRESENT
+    if ULAB_PRESENT:
+        from ulab import scipy
+    else:
+        import scipy
+
+    A_sq = np.dot(A.T, A)
+    R = np.linalg.cholesky(A_sq)
+    if ULAB_PRESENT:
+        x = scipy.linalg.cho_solve(R, np.dot(A.T, B))
+    else:
+        x = scipy.linalg.cho_solve((R, True), np.dot(A.T, B))
+    return x, None
 
 
 def disk_free():
@@ -121,3 +145,17 @@ def disk_free():
     block_size = data[0]
     free_blocks = data[3]
     return (block_size * free_blocks) / 1024
+
+
+class Updater:
+    def __init__(self, disp: display.DisplayBase):
+        self.text = ""
+        self.disp = disp
+
+    async def update(self, text: str):
+        from .debug import logger
+        logger.debug(text)
+        self.text += "\r\n" + text
+        self.disp.show_info(self.text)
+        self.disp.clear_memory()
+        await asyncio.sleep(0)
