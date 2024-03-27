@@ -145,8 +145,9 @@ async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display
     menu_root = disp.get_menu()
     # noinspection PyTypeChecker
     build_menu(menu_root, items)
-    # clear memory before show group to minimise memory usage
+    # clear display memory and dicts before show group to minimise memory usage
     disp.clear_memory()
+    del items, debug_items
     menu_root.show_menu()
     disp.refresh()
     while True:

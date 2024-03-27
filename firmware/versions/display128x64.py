@@ -1,7 +1,7 @@
 import math
 try:
     # noinspection PyUnresolvedReferences
-    from typing import Optional
+    from typing import Optional, Sequence
 except ImportError:
     pass
 
@@ -35,20 +35,6 @@ class Display(DisplayBase):
     def __init__(self, oled: BusDisplay, config: Config):
         self._config = config
         self.oled = oled
-        text = " " * 20
-
-        self._measurement_group = displayio.Group()
-        self._azimuth = label.Label(font_20, text=text, color=0xffffff, x=1, y=9)
-        self._inclination = label.Label(font_20, text=text, color=0xffffff, x=1, y=31)
-        self._distance = label.Label(font_20, text=text, color=0xffffff, x=1, y=53)
-        self._reading_index = label.Label(terminalio.FONT, text="  ", color=0xffffff)
-        self._reading_index.anchored_position = (127, 32)
-        self._reading_index.anchor_point = (1.0, 0.5)
-        self._measurement_group.append(self._azimuth)
-        self._measurement_group.append(self._inclination)
-        self._measurement_group.append(self._distance)
-        self._measurement_group.append(self._reading_index)
-
         self._icon_group = displayio.Group()
         self._bt_icon = TileGrid(bitmaps['bt'], pixel_shader=palette,
                                  width=1, height=1,
@@ -69,10 +55,24 @@ class Display(DisplayBase):
         self._laser_group.append(laser_group)
         self._inverted = False
 
+    @staticmethod
+    def create_big_text_group(big_text: Sequence[str], index_txt):
+        measurement_group = displayio.Group()
+        azimuth = label.Label(font_20, text=big_text[0], color=0xffffff, x=1, y=9)
+        inclination = label.Label(font_20, text=big_text[1], color=0xffffff, x=1, y=31)
+        distance = label.Label(font_20, text=big_text[2], color=0xffffff, x=1, y=53)
+        reading_index = label.Label(terminalio.FONT, text=index_txt, color=0xffffff)
+        reading_index.anchored_position = (127, 32)
+        reading_index.anchor_point = (1.0, 0.5)
+        measurement_group.append(azimuth)
+        measurement_group.append(inclination)
+        measurement_group.append(distance)
+        measurement_group.append(reading_index)
+        return measurement_group
+
     def _set_group_with_icons(self, group):
-        for grp in self._measurement_group, self._laser_group:
-            if self._icon_group in grp:
-                grp.remove(self._icon_group)
+        if self._icon_group in self._laser_group:
+            self._laser_group.remove(self._icon_group)
         group.append(self._icon_group)
         self.oled.root_group = group
 
@@ -81,23 +81,23 @@ class Display(DisplayBase):
         self.refresh()
 
     def update_measurement(self, leg: Leg, reading_index: int, show_extents: bool):
-        self._set_group_with_icons(self._measurement_group)
         if show_extents:
-            self._azimuth.text = "Extents"
+            azimuth_text = "Extents"
             horizontal = math.cos(math.radians(leg.inclination)) * leg.distance
             vertical = math.sin(math.radians(leg.inclination)) * leg.distance
-            self._inclination.text = "H:" + self._config.get_distance_text(horizontal)
-            self._distance.text = "V:" + self._config.get_distance_text(vertical)
+            inclination_text = "H:" + self._config.get_distance_text(horizontal)
+            distance_text = "V:" + self._config.get_distance_text(vertical)
         else:
-            self._azimuth.text = self._config.get_azimuth_text(leg.azimuth)
-            self._inclination.text = self._config.get_inclination_text(leg.inclination)
-            self._distance.text = self._config.get_distance_text(leg.distance)
-            index = reading_index + 1
-            if index == 0:
-                self._reading_index.hidden = True
-            else:
-                self._reading_index.hidden = False
-                self._reading_index.text = str(index)
+            azimuth_text = self._config.get_azimuth_text(leg.azimuth)
+            inclination_text = self._config.get_inclination_text(leg.inclination)
+            distance_text = self._config.get_distance_text(leg.distance)
+        index = reading_index + 1
+        if index == 0:
+            index_text = ""
+        else:
+            index_text = str(index)
+        group = self.create_big_text_group((azimuth_text, inclination_text, distance_text), index_text)
+        self._set_group_with_icons(group)
         self.refresh()
 
     def set_bt_connected(self, connected: bool):
@@ -153,16 +153,15 @@ class Display(DisplayBase):
         self.oled.refresh()
 
     def show_big_info(self, text):
-        lines = text.splitlines()
-        for lbl, line in zip((self._azimuth, self._inclination, self._distance), lines):
-            lbl.text = line
-        self.show_group(self._measurement_group)
+        group = self.create_big_text_group(text.splitlines(), "")
+        self.show_group(group)
 
     def show_group(self, group: Optional[displayio.Group]):
         self.oled.root_group = group
         self.refresh()
 
     def clear_memory(self):
+        font_20._glyphs = {}
         self.oled.group = None
 
     @property
