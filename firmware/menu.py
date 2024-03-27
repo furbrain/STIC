@@ -17,7 +17,7 @@ from .config import Config
 
 try:
     # noinspection PyUnresolvedReferences
-    from typing import Callable, Optional, Coroutine, Any
+    from typing import Callable, Optional, Coroutine
 
     AsyncActionItem = Optional[Callable[[hardware.HardwareBase, config.Config, display.DisplayBase], Coroutine]]
 except ImportError:

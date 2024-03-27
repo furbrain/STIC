@@ -11,8 +11,6 @@ except ImportError:
     pass
 
 LAYOUTS = {(1, 0, 0): layouts.layout_1}
-DEVICES = {(1, 0, 0): "hardware_v1",
-           (1, 1, 0): "hardware_v1"}
 
 ADJECTIVES = [
     "Angry",

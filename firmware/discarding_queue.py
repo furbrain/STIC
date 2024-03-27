@@ -1,6 +1,6 @@
 try:
     # noinspection PyUnresolvedReferences
-    from typing import Optional, Sequence, Iterator, Union
+    from typing import Optional, Sequence, Iterator
     # noinspection PyUnresolvedReferences
     from typing_extensions import SupportsIndex
 except ImportError:

@@ -16,7 +16,7 @@ import _bleio
 import storage
 
 try:
-    from typing import List, Awaitable, Coroutine, Callable
+    from typing import List, Coroutine, Callable
 except ImportError:
     pass
 

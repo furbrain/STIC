@@ -1,16 +1,9 @@
 import asyncio
-
-
-try:
-    # noinspection PyUnresolvedReferences
-    from typing import Optional
-except ImportError:
-    pass
-
 import mag_cal
 from async_button import Button
 import json
 import microcontroller
+
 try:
     import numpy as np
 except ImportError:
@@ -24,7 +17,7 @@ from .debug import logger
 # import display and hardware only for type checking - does not import on device
 try:
     # noinspection PyUnresolvedReferences
-    import typing
+    from typing import Optional
     # noinspection PyUnresolvedReferences
     from . import display
     # noinspection PyUnresolvedReferences

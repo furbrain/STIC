@@ -5,7 +5,7 @@ from collections import namedtuple
 import atexit
 try:
     # noinspection PyUnresolvedReferences
-    from typing import Optional, Union, TextIO
+    from typing import Optional, TextIO
 except ImportError:
     pass
 
@@ -18,12 +18,6 @@ from .discarding_queue import DiscardingQueue
 Leg = namedtuple("Leg", ("azimuth", "inclination", "distance"))
 
 READINGS_DIR = "/readings/"
-
-
-class FailedLeg:
-    """
-    This class simply represents a failed reading
-    """
 
 
 class Readings:
@@ -92,10 +86,6 @@ class Readings:
     @property
     def current(self) -> Leg:
         return self._queue[self.current_reading]
-
-    @property
-    def reading_taken(self) -> bool:
-        return self.current_reading is not None
 
     @property
     def trip_file(self):
