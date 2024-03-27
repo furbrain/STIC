@@ -14,9 +14,7 @@ from . import version
 
 class BluetoothServices:
     disto = caveble.SurveyProtocolService()
-    batt_service = BatteryService()
-    advertisement = ProvideServicesAdvertisement(disto,
-                                                 batt_service)
+    advertisement = ProvideServicesAdvertisement(disto)
 
     def __init__(self):
         self.ble = BLERadio()
@@ -36,9 +34,6 @@ class BluetoothServices:
 
     async def disto_background_task(self, callback=None):
         await self.disto.background_task(callback)
-
-    def set_battery_level(self, voltage):
-        self.batt_service.level = utils.convert_voltage_to_progress(voltage, 100)
 
     @property
     def connected(self):
