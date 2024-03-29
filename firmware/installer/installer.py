@@ -81,7 +81,6 @@ def clear_folder(path_to_clear):
         print("Clear failed: ", os.listdir(path_to_clear))
         sys.exit(1)
 
-
 def find_serial_port():
     for tty_file in os.listdir(TTY_SYS_DIR):
         dev_data = os.path.join(TTY_SYS_DIR, tty_file, "device/interface")
