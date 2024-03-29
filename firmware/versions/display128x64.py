@@ -50,9 +50,7 @@ class Display(DisplayBase):
         self._icon_group.append(batt_icon)
         self._icon_group.append(self._batt_level)
         self._icon_group.append(self._bt_pending_tile)
-
-        self._laser_group = displayio.Group()
-        self._laser_group.append(laser_group)
+        self._current_group = None
         self._inverted = False
 
     @staticmethod
@@ -71,13 +69,14 @@ class Display(DisplayBase):
         return measurement_group
 
     def _set_group_with_icons(self, group):
-        if self._icon_group in self._laser_group:
-            self._laser_group.remove(self._icon_group)
-        group.append(self._icon_group)
-        self.oled.root_group = group
+        if self._current_group:
+            self._icon_group.remove(self._current_group)
+        self._current_group = group
+        self._icon_group.append(self._current_group)
+        self.oled.root_group = self._icon_group
 
     def show_start_screen(self):
-        self._set_group_with_icons(self._laser_group)
+        self._set_group_with_icons(laser_group)
         self.refresh()
 
     def update_measurement(self, leg: Leg, reading_index: int, show_extents: bool):
@@ -161,6 +160,9 @@ class Display(DisplayBase):
         self.refresh()
 
     def clear_memory(self):
+        if self._current_group:
+            self._icon_group.remove(self._current_group)
+            self._current_group = None
         font_20._glyphs = {}
         self.oled.group = None
 
@@ -189,7 +191,7 @@ class Display(DisplayBase):
                 self.oled.sleep()
 
     def deinit(self):
-        self._laser_group.remove(laser_group)
+        pass
 
 
 def get_laser_bitmap_group():
