@@ -1,6 +1,5 @@
 import os
 import re
-import struct
 from collections import namedtuple
 import atexit
 try:
