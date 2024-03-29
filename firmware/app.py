@@ -172,6 +172,7 @@ class App:
                 self.devices.beep_sad()
                 raise LowBattery(f"Battery low ({voltage:3.1f}v)")
             self.display.set_batt_level(voltage)
+            self.devices.bt.set_battery_level(voltage)
             await asyncio.sleep(2.0)
 
     async def flip_monitor(self):
