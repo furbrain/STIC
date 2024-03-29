@@ -57,7 +57,7 @@ async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display
         ("Calibrate", [
             ("Sensors", AsyncAction(calibrate.calibrate_sensors)),
             ("Laser", AsyncAction(calibrate.calibrate_distance)),
-            ("Cal From Saved", AsyncAction(calibrate.reset_to_calibrate)),
+            ("Cal From Saved", AsyncAction(calibrate.cal_from_saved)),
         ]),
         ("Info", [
             ("Raw Data", AsyncAction(info.raw_readings)),
@@ -155,7 +155,6 @@ async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display
         if button == "a":
             devices.beep_bip()
             logger.debug("Menu: Click")
-            gc.collect()
             menu_root.click()
             if action_item is not None:
                 logger.debug(f"Running {action_item}")
@@ -164,7 +163,6 @@ async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display
             # clear memory before show group to minimise memory usage
         elif button == "b":
             logger.debug("Menu: Scroll")
-            gc.collect()
             devices.beep_bop()
             menu_root.scroll(1)
             # clear memory before show group to minimise memory usage
