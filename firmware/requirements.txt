@@ -10,8 +10,8 @@ circuitpython-rm3100
 circuitpython-mag-cal
 numpy==1.24.2
 scipy
-Pillow==9.4.0
-pip==22.3.1
+Pillow==10.2.0
+pip==24.0
 pyftdi==0.54.0
 pyserial==3.5
 pyusb==1.2.1

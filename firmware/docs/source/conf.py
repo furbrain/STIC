@@ -8,9 +8,10 @@
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
-# noinspection PyPep8
-import version as v
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
+
+# noinspection PyUnresolvedReferences
+import firmware.version as v  # noqa: E402
 
 project = 'SAP6'
 # noinspection PyShadowingBuiltins
