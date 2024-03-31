@@ -16,7 +16,7 @@ jobs:
             
             - name: Get freecad from cache
               id: cache-freecad
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with: 
                 path: ~/bin/freecad
                 key: freecad-0.21.1
@@ -28,7 +28,7 @@ jobs:
                 wget -O ~/bin/freecad https://github.com/FreeCAD/FreeCAD/releases/download/0.21.1/FreeCAD_0.21.1-Linux-x86_64.AppImage
                 chmod 755 ~/bin/freecad
             
-            - uses: actions/cache/save@v3
+            - uses: actions/cache/save@v4
               if: always()
               with:
                 path: ~/bin/freecad
@@ -62,7 +62,7 @@ jobs:
                 make latexpdf
                 cp build/latex/sap6.pdf ../../manual.pdf
             - name: 'Upload Artifacts'
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                 name: artifacts
                 path: |
