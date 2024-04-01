@@ -55,7 +55,7 @@ jobs:
             - name: export firmware files
               run: |
                 cd firmware
-                zip ../firmware.zip *.py
+                zip ../firmware.zip *.py versions/*.py
             - name: generate manual
               run: |
                 cd firmware/docs
