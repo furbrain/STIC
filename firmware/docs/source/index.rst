@@ -143,9 +143,9 @@ An example of a good calibration protocol would be to:
 * finally, for readings 17-24, repeat readings 9-16 but with a new target. Ideally around 90° from the previous
   target.
 
-When you press **B** after taking your 24 readings the screen will show the calibration process then it will display your
-calibration accuracy. For accurate readings this number should be under 0.5. You can then choose to either save this
-calibration to use for subsequent readings (press **A**) or you can discard the calibration (press **B**).
+When you press **B** after taking your 24 readings the screen will show the calibration process then it will display
+your calibration accuracy. For accurate readings this number should be under 0.5. You can then choose to either save
+this calibration to use for subsequent readings (press **A**) or you can discard the calibration (press **B**).
 
 Laser
 *****

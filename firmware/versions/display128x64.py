@@ -191,7 +191,8 @@ class Display(DisplayBase):
                 self.oled.sleep()
 
     def deinit(self):
-        pass
+        if self._current_group:
+            self._icon_group.remove(self._current_group)
 
 
 def get_laser_bitmap_group():
