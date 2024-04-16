@@ -128,12 +128,12 @@ def lstsq(A, B):
     else:
         import scipy
 
-    A_sq = np.dot(A.T, A)
+    A_sq = np.dot(A.transpose(), A)
     R = np.linalg.cholesky(A_sq)
     if ULAB_PRESENT:
-        x = scipy.linalg.cho_solve(R, np.dot(A.T, B))
+        x = scipy.linalg.cho_solve(R, np.dot(A.transpose(), B))
     else:
-        x = scipy.linalg.cho_solve((R, True), np.dot(A.T, B))
+        x = scipy.linalg.cho_solve((R, True), np.dot(A.transpose(), B))
     return x, None
 
 
