@@ -300,8 +300,8 @@ Hard Reset
 Very occasionally the device will get a hard crash. The simplest thing to do is to perform a hard reset.
 The hard reset button is surface mounted on the PCB next to the USB socket.
 Use a toothpick to feel for this button on the PCB in the area indicated. You will need
-to press down rather than in, and you should feel a definite click when you have found it. This will
-restart your device from safe mode and after a crash.
+to press down rather than in (in the direction of the arrow on the image), and you should feel a definite
+click when you have found it. This will restart your device from safe mode and after a crash.
 
 USB Drive not appearing
 +++++++++++++++++++++++
