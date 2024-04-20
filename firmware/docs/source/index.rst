@@ -270,6 +270,61 @@ If you are having problems connecting to your bluetooth device try selecting thi
 recorded connections within the device so you can start again.
 
 
+Troubleshooting
+---------------
+
+.. image:: end_with_labels.jpg
+  :width: 600
+
+LEDs
+++++
+
+You may see some flashing LEDs at the position indicated.
+
+.. list-table:: LED
+   :widths: 50 50
+   :header-rows: 1
+
+   * - Pattern
+     - Meaning
+   * - Solid Green
+     - Device is charging
+   * - Yellow (or red+green), 3 flashes
+     - Device is in safe mode
+   * - Red, 2 flashes
+     - Device has crashed
+
+Hard Reset
+++++++++++
+
+Very occasionally the device will get a hard crash. The simplest thing to do is to perform a hard reset.
+The hard reset button is surface mounted on the PCB next to the USB socket.
+Use a toothpick to feel for this button on the PCB in the area indicated. You will need
+to press down rather than in, and you should feel a definite click when you have found it. This will
+restart your device from safe mode and after a crash.
+
+USB Drive not appearing
++++++++++++++++++++++++
+
+Occasionally you may get a condition where the device is unresponsive and it will not appear as a hard drive
+when connected to a laptop (or it repeatedly appears and disappears). In this situation it can be useful to
+deliberately enter safe mode. Safe mode is a special mode where the code on the device does not run,
+but the usb drive is available.To enter safe mode, press the reset button twice with about a 1 second gap.
+You should then see repeated yellow flashes x3.
+
+You should now be able to connect it, :ref:`update the firmware <Software updates>` and possibly repair the
+filesystem - use `fsck <https://www.tecmint.com/fsck-repair-file-system-errors-in-linux/>`_ on Linux, or
+`chkdsk <https://www.avast.com/c-chkdsk-windows>`_ on Windows.
+
+Finally press the reset button one more time to go back to the normal mode.
+
+Still having problems
++++++++++++++++++++++
+
+If you are still having problems please `email me <mailto:beardydoc@gmail.com>`_. Include
+the contents of ``error.log``, ``calibration_data.json``, and ``config.json`` if they are present
+on the device.
+
 
 Updating your software and hacking
 ----------------------------------
