@@ -147,6 +147,8 @@ When you press **B** after taking your 24 readings the screen will show the cali
 your calibration accuracy. For accurate readings this number should be under 0.5. You can then choose to either save
 this calibration to use for subsequent readings (press **A**) or you can discard the calibration (press **B**).
 
+A video of the process is available on youtube: `https://youtu.be/5jN5ZtVXrps <https://youtu.be/5jN5ZtVXrps>`_
+
 Laser
 *****
 
