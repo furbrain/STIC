@@ -19,3 +19,18 @@ class PinsA(Pins):
     SDA = board.D7
     SCL = board.D8
     DRDY = board.D9
+
+
+class PinsB:
+    # Brendan's pinout
+    LASER_EN = board.D0
+    RX = board.RX
+    TX = board.TX
+    BUTTON_A = board.D3
+    BUTTON_B = board.D2
+    BUZZER_A = board.D8
+    BUZZER_B = None
+    PERIPH_EN = board.D1
+    SDA = board.SDA
+    SCL = board.SCL
+    DRDY = board.D9

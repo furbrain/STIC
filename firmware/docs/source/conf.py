@@ -11,8 +11,8 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
 
 # noinspection PyUnresolvedReferences
+# noinspection PyPep8
 import firmware.version as v  # noqa: E402
-
 project = 'SAP6'
 # noinspection PyShadowingBuiltins
 copyright = '2023, Phil Underwood'

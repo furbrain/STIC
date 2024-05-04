@@ -10,7 +10,8 @@ try:
 except ImportError:
     pass
 
-LAYOUTS = {(1, 0, 0): layouts.layout_1}
+LAYOUTS = {(6, 1, 0): layouts.layout_6_1,
+           (6, 2, 0): layouts.layout_6_2}
 
 ADJECTIVES = [
     "Angry",
@@ -64,7 +65,7 @@ def get_hw_version() -> Tuple[int, int, int]:
     import microcontroller
     version = tuple(microcontroller.nvm[-3:])
     if version == (255, 255, 255):
-        version = (1, 0, 0)
+        version = (6, 1, 0)
     return version
 
 

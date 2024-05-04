@@ -20,6 +20,8 @@ BOOTLOADER_NAME = "XIAO-SENSE"
 
 DEFAULT_HW_VERSION = "1.0.0"
 
+DEFAULT_HW_VERSION = "6.1.0"
+
 RESET_DEVICE = False
 
 parser = argparse.ArgumentParser(
@@ -80,7 +82,6 @@ def clear_folder(path_to_clear):
     if len(os.listdir(path_to_clear)) > 0:
         print("Clear failed: ", os.listdir(path_to_clear))
         sys.exit(1)
-
 
 def find_serial_port():
     for tty_file in os.listdir(TTY_SYS_DIR):
