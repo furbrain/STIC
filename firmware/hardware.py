@@ -1,3 +1,5 @@
+import asyncio
+
 import async_button
 import async_buzzer
 
@@ -26,6 +28,9 @@ class HardwareBase:
     bt: bluetooth.BluetoothServices
     batt_voltage: float
 
+    def __init__(self):
+        self.laser_task: Optional[asyncio.Task] = None
+
     def __enter__(self):
         return self
 
@@ -41,11 +46,24 @@ class HardwareBase:
         pass
 
     @abstractmethod
-    def laser_on(self, value):
+    async def laser_on(self, value):
         pass
 
+    def flash_laser(self, count: int, speed: float):
+        if self.laser_task:
+            if not self.laser_task.done():
+                self.laser_task.cancel()
+        self.laser_task = asyncio.create_task(self._flash_laser(count, speed))
+
+    async def _flash_laser(self, count: int, speed: float):
+        for _ in range(count):
+            await self.laser_on(False)
+            await asyncio.sleep(speed)
+            await self.laser_on(True)
+            await asyncio.sleep(speed)
+
     @abstractmethod
-    def laser_measure(self):
+    async def laser_measure(self):
         pass
 
     @abstractmethod

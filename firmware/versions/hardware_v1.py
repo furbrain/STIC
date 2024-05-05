@@ -1,3 +1,4 @@
+import asyncio
 import time
 
 import async_button
@@ -21,6 +22,7 @@ from ..hardware import HardwareBase
 class Hardware(HardwareBase):
     def __init__(self, pins):
         logger.debug("Initialising hardware")
+        super().__init__()
         import displayio
         displayio.release_displays()
         self._las_en_pin = digitalio.DigitalInOut(pins.LASER_EN)
@@ -36,7 +38,7 @@ class Hardware(HardwareBase):
         self._drdy_io.direction = digitalio.Direction.INPUT
         # noinspection PyTypeChecker
         self.magnetometer = rm3100.RM3100_I2C(self._i2c, drdy_pin=self._drdy_io, cycle_count=2000)
-        self._uart = busio.UART(pins.TX, pins.RX, baudrate=9600)
+        self._uart = busio.UART(pins.TX, pins.RX, baudrate=9600, timeout=0.1)
         self._uart.reset_input_buffer()
         self._laser = laser_egismos.AsyncLaser(self._uart)
         if pins.BUZZER_B is None:
@@ -73,9 +75,18 @@ class Hardware(HardwareBase):
         self._las_en_pin.value = value
 
     async def laser_on(self, value: bool) -> None:
+        await self._laser_mutex()
         await self._laser.set_laser(value)
 
+    async def _laser_mutex(self):
+        """This function waits for the laser task to complete before proceeding"""
+        if self.laser_task and not self.laser_task.done():
+            if asyncio.current_task() is not self.laser_task:
+                #don't wait if we're actually *in* the laser task
+                await self.laser_task
+
     async def laser_measure(self) -> float:
+        await self._laser_mutex()
         self._laser.async_reader.s.read()  # clear the buffer
         return await self._laser.measure()
 

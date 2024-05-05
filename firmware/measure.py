@@ -106,7 +106,6 @@ async def get_raw_measurement(devices: hardware.HardwareBase, disp: display.Disp
         logger.debug(f"Mag: {mag}")
         grav = devices.accelerometer.acceleration
         logger.debug(f"Grav: {grav}")
-        await asyncio.sleep(0.1)
         await devices.laser_on(True)
     finally:
         disp.sleep(wake=True)
@@ -135,26 +134,20 @@ async def take_reading(devices: hardware.HardwareBase,
         logger.info(f"Measurement error: {repr(exc)}")
         if not isinstance(exc, asyncio.TimeoutError):
             # don't wibble the laser if it's timed out, it'll just get more confused
-            for i in range(5):
-                await devices.laser_on(False)
-                await asyncio.sleep(0.1)
-                await devices.laser_on(True)
-                await asyncio.sleep(0.1)
+            devices.flash_laser(5,0.1)
         devices.beep_sad()
+        await asyncio.sleep(0)
         return False
     else:
         leg = Leg(azimuth, inclination, distance)
         readings.store_reading(leg, cfg)
         devices.bt.disto.send_data(azimuth, inclination, distance)
         if readings.triple_shot():
-            for _ in range(2):
-                await devices.laser_on(False)
-                await asyncio.sleep(0.2)
-                await devices.laser_on(True)
-                await asyncio.sleep(0.2)
+            devices.flash_laser(2,0.2)
             devices.beep_happy()
         else:
             devices.beep_bip()
+        await asyncio.sleep(0)
         return True
 
 

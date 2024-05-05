@@ -20,7 +20,7 @@ BOOTLOADER_NAME = "XIAO-SENSE"
 
 DEFAULT_HW_VERSION = "1.0.0"
 
-DEFAULT_HW_VERSION = "6.1.0"
+DEFAULT_HW_VERSION = "6.2.0"
 
 RESET_DEVICE = False
 
@@ -45,6 +45,11 @@ parser.add_argument("-hw", "--hw-version",
 
 parser.add_argument("-d", "--debug",
                     help="Place a DEBUG file in the root directory, putting device in debug mode",
+                    action="store_true")
+
+parser.add_argument("-l", "--calibration",
+                    help="Place a calibration file in the root directory,"
+                         "allowing to perform a (incorrect) calibration",
                     action="store_true")
 
 options = parser.parse_args()
@@ -171,7 +176,7 @@ def set_hw_version(major, minor, patch):
         ser.write(b'\x04')  # send Ctrl-D to start auto running code.py
 
 
-def install_code(debug: bool):
+def install_code(debug: bool, calibration: bool):
     clear_folder(path)
     os.mkdir(fw_path)
     os.mkdir(versions_path)
@@ -190,6 +195,9 @@ def install_code(debug: bool):
         print("Setting debug mode")
         with open(os.path.join(path, "DEBUG"), "w"):
             pass
+    if calibration:
+        print("adding calibration file")
+        shutil.copy("../tests/calibration_data.json", path)
     print("Installing init files")
     shutil.copy("safemode.py", path)
     shutil.copy("boot.py", path)
@@ -233,4 +241,4 @@ else:
 if options.skip_code:
     print("Skipping code installation")
 else:
-    install_code(debug=options.debug)
+    install_code(debug=options.debug, calibration=options.calibration)
