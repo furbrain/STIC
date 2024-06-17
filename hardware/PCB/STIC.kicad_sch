@@ -5695,7 +5695,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-0000634c8fe1")
 		(property "Reference" "LS1"
 			(at 54.2798 154.5082 0)
@@ -9259,7 +9259,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_Part_Number" " CL21B475KOFZFNE "
+		(property "Manufacturer_Part_Number" "CL10A105KB8NNNC"
 			(at 74.93 90.17 0)
 			(effects
 				(font
@@ -9355,7 +9355,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_Part_Number" " CL21B475KOFZFNE "
+		(property "Manufacturer_Part_Number" "CL10A105KB8NNNC"
 			(at 78.74 120.65 0)
 			(effects
 				(font
