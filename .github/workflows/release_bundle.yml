@@ -11,7 +11,7 @@ jobs:
               run: |
                 sudo add-apt-repository ppa:kicad/kicad-8.0-releases
                 sudo apt update
-                sudo apt install -y wget libgl1 texlive-latex-base texlive-latex-extra latexmk kicad
+                sudo apt install -y wget libgl1 texlive-latex-base texlive-latex-extra latexmk kicad openscad
                 sudo pip install sphinx==6.1.3 sphinx-rtd-theme==1.2.0
             
             - name: Get freecad from cache
@@ -44,6 +44,7 @@ jobs:
                 ls
                 cd case
                 ~/bin/freecad --appimage-extract-and-run -c export_hardware.py
+                python3 generate_dxf.py
                 cd build
                 zip -r ../../hardware.zip *
             - name: export PCB files
