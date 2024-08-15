@@ -257,7 +257,8 @@ Select this using **A** to return to the main menu or press **B** to continue cy
 Bluetooth
 +++++++++
 
-At present the SAP6 can only be used with SexyTopo (version 1.7.0 or higher required) though you can connect to it
+At present the SAP6 can be used with `SexyTopo <https://play.google.com/store/apps/details?id=org.hwyl.sexytopo>`_ (version 1.7.0 or higher required)
+or `TopoDroid <http://www.marcocorvi.altervista.org/caving/speleoapps/topodroid.htm>`_ (version 6.2.63 or later). You can also connect to it
 directly using a USB C cable (see below)
 
 Disconnect
