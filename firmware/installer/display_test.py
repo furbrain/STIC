@@ -49,6 +49,8 @@ def test_display(button: digitalio.DigitalInOut):
             time.sleep(0.1)
         oled.root_group = None
         time.sleep(1)
+
+
 while True:
     while not button.value:
         time.sleep(0.1)

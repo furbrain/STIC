@@ -15,6 +15,23 @@ import atexit
 # noinspection PyUnresolvedReferences
 import firmware.version as version
 
+def show_pattern(disp):
+    splash = displayio.Group()
+    palette = displayio.Palette(2)
+    palette[0] = 0x000000
+    palette[1] = 0xFFFFFF
+    bitmap_a = displayio.Bitmap(128,64,2)
+    bitmap_a.fill(1)
+    bitmap_b = displayio.Bitmap(108,44,2)
+    bitmap_b.fill(0)
+    tile_a = displayio.TileGrid(bitmap_a, pixel_shader=palette, x=0, y=0)
+    tile_b = displayio.TileGrid(bitmap_b, pixel_shader=palette, x=10, y=10)
+    splash.append(tile_a)
+    splash.append(tile_b)
+    splash.append(label.Label(terminalio.FONT, text="Press B", color=0xffffff, x=30, y=31))
+    disp.root_group = splash
+
+
 pins = version.get_pins()
 
 print("Checking voltage")
@@ -93,14 +110,10 @@ print("\n")
 print("Testing display")
 bus = displayio.I2CDisplay(i2c, device_address=0x3c)
 # noinspection PyTypeChecker
-oled = adafruit_displayio_sh1106.SH1106(bus, width=128, height=64, auto_refresh=False,
+oled = adafruit_displayio_sh1106.SH1106(bus, width=128, height=64,
                                         rotation=0, colstart=2)
 atexit.register(displayio.release_displays)
-group = displayio.Group()
-text = label.Label(terminalio.FONT, text="Press B", color=0xffffff, x=30, y=31)
-group.append(text)
-oled.root_group = group
-oled.refresh()
+show_pattern(oled)
 
 button_b = digitalio.DigitalInOut(pins.BUTTON_B)
 button_b.switch_to_input(digitalio.Pull.UP)
@@ -108,6 +121,8 @@ if button_b.value == 0:
     raise RuntimeError("Button B already pressed?")
 while button_b.value == 1:
     pass
+oled.root_group = None
+
 button_b.deinit()
 las_en_pin.deinit()
 print("All tests complete, no errors found")
