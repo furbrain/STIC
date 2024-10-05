@@ -3881,7 +3881,7 @@
 		(uuid "9d0bd597-a031-4f20-b346-d93b51b6e675")
 	)
 	(no_connect
-		(at 238.76 114.3)
+		(at 237.49 123.19)
 		(uuid "b3139e00-bcc5-4b6d-be7a-1d45dd4f7703")
 	)
 	(no_connect
@@ -3889,7 +3889,7 @@
 		(uuid "cffed1f7-94e5-4276-8973-a3669209f1ce")
 	)
 	(no_connect
-		(at 238.76 106.68)
+		(at 237.49 115.57)
 		(uuid "e0a42ef5-73f7-4ff4-b67e-8b32cdf02a30")
 	)
 	(no_connect
@@ -5252,8 +5252,8 @@
 	)
 	(text_box "These components are not on the board, placed here so they are included in the BOM"
 		(exclude_from_sim no)
-		(at 228.6 63.5 0)
-		(size 46.99 64.77)
+		(at 227.33 64.77 0)
+		(size 45.72 63.5)
 		(stroke
 			(width 0)
 			(type default)
@@ -8538,7 +8538,7 @@
 	)
 	(symbol
 		(lib_id "Device:Battery_Cell")
-		(at 238.76 111.76 0)
+		(at 237.49 120.65 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8546,7 +8546,7 @@
 		(dnp yes)
 		(uuid "00000000-0000-0000-0000-000065aa960b")
 		(property "Reference" "BT1"
-			(at 241.7572 109.3216 0)
+			(at 240.4872 118.2116 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8556,7 +8556,7 @@
 			)
 		)
 		(property "Value" "Lipo Battery 523450 950mAh"
-			(at 241.7572 110.49 0)
+			(at 240.4872 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8565,7 +8565,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 238.76 110.236 90)
+			(at 237.49 119.126 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8574,7 +8574,7 @@
 			)
 		)
 		(property "Datasheet" "https://cpc.farnell.com/unbranded/lp-523450-is-3/battery-lithium-pol-3-7v-950-mah/dp/BT06802"
-			(at 238.76 110.236 90)
+			(at 237.49 119.126 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8583,7 +8583,7 @@
 			)
 		)
 		(property "Description" "Lipo Battery 950mAh, cheaper from CPC or Amazon 523450 needed. Check polarity"
-			(at 238.76 111.76 0)
+			(at 237.49 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8592,7 +8592,7 @@
 			)
 		)
 		(property "Farnell Part Number" "2077888 "
-			(at 238.76 111.76 0)
+			(at 237.49 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8601,7 +8601,7 @@
 			)
 		)
 		(property "Manufacturer_Part_Number" "LP-523450-IS-3"
-			(at 238.76 111.76 0)
+			(at 237.49 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8610,7 +8610,7 @@
 			)
 		)
 		(property "LCSC Part Number" ""
-			(at 238.76 111.76 0)
+			(at 237.49 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9488,6 +9488,104 @@
 			(project "STIC"
 				(path "/9d05c150-179f-4a8a-bd17-6d3f46b64a83"
 					(reference "C3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "STIC-rescue:Conn_01x03_Male-Connector")
+		(at 236.22 109.22 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board no)
+		(dnp yes)
+		(uuid "f3ca0824-298f-4b67-bb39-e6e4978709f9")
+		(property "Reference" "J6"
+			(at 238.9632 102.0826 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "5 way molex cable"
+			(at 254 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 236.22 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 236.22 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 236.22 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Farnell Part Number" "2671462 "
+			(at 236.22 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Part_Number" "15134-0500"
+			(at 236.22 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part Number" ""
+			(at 236.22 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "3"
+			(uuid "4ddfbd5a-9bf3-4672-830c-22d3bea15f0c")
+		)
+		(pin "2"
+			(uuid "1a965bad-0907-46c3-b49a-7ac7b8ed4155")
+		)
+		(pin "1"
+			(uuid "ffc03955-7913-4388-93c5-efd8cb8df11b")
+		)
+		(instances
+			(project "STIC"
+				(path "/9d05c150-179f-4a8a-bd17-6d3f46b64a83"
+					(reference "J6")
 					(unit 1)
 				)
 			)
