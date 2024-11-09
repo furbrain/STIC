@@ -142,6 +142,7 @@ class App:
         while True:
             await asyncio.sleep(0.5)
             self.display.set_bt_connected(self.devices.bt.connected)
+            self.devices.bt.advertise_if_idle()
             self.display.set_bt_pending_count(self.devices.bt.pending_count())
 
     async def bt_quit_now(self):

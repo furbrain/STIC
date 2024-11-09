@@ -25,10 +25,13 @@ class BluetoothServices:
         logger.debug(self.ble.connections)
         self.ble.name = version.get_short_name()
         logger.debug(f"BLE name is {self.ble.name}")
+        self.advertise_if_idle()
+
+    def advertise_if_idle(self):
         if not self.ble.connected and not self.ble.advertising:
-            if sys.platform=='nRF52840':
+            if sys.platform == 'nRF52840':
                 logger.debug("BLE advertising high power")
-                self.ble._adapter.start_advertising(bytes(self.advertisement),tx_power=8)
+                self.ble._adapter.start_advertising(bytes(self.advertisement), tx_power=8)
             else:
                 logger.debug("BLE advertising")
                 self.ble.start_advertising(BluetoothServices.advertisement)
