@@ -1,4 +1,5 @@
 import time
+import sys
 
 import _bleio
 from adafruit_ble import BLERadio
@@ -25,8 +26,12 @@ class BluetoothServices:
         self.ble.name = version.get_short_name()
         logger.debug(f"BLE name is {self.ble.name}")
         if not self.ble.connected and not self.ble.advertising:
-            logger.debug("BLE advertising")
-            self.ble.start_advertising(BluetoothServices.advertisement)
+            if sys.platform=='nRF52840':
+                logger.debug("BLE advertising high power")
+                self.ble._adapter.start_advertising(bytes(self.advertisement),tx_power=8)
+            else:
+                logger.debug("BLE advertising")
+                self.ble.start_advertising(BluetoothServices.advertisement)
 
     def __enter__(self):
         return self
