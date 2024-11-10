@@ -5,6 +5,11 @@ from . import config
 from . import display
 from . import hardware
 from .version import get_long_name, get_short_name, get_sw_version, get_hw_version_as_str
+try:
+    import numpy as np
+except ImportError:
+    # noinspection PyUnresolvedReferences
+    from ulab import numpy as np
 
 
 # noinspection PyUnusedLocal
@@ -17,12 +22,14 @@ async def raw_readings(devices: hardware.HardwareBase, cfg: config.Config, disp:
             pass
         acc = devices.accelerometer.acceleration
         mag = devices.magnetometer.magnetic
-        text = "Raw Accel Mag\r\n"
+        text = "Raw  Accel  Mag\r\n"
         for axis, a, m in zip("XYZ", acc, mag):
-            text += f"{axis}   {a:05.3f} {m:05.2f}\r\n"
+            text += f"{axis}   {a: 06.3f} {m: 06.2f}\r\n"
         text += f"Voltage: {devices.batt_voltage:4.2f}V"
         disp.show_info(text)
 
+def scale_readings(readings, scale):
+    return readings * scale / np.linalg.norm(readings)
 
 async def calibrated_readings(devices: hardware.HardwareBase, cfg: config.Config, disp: display.DisplayBase):
     if cfg.calib is None:
@@ -39,12 +46,12 @@ async def calibrated_readings(devices: hardware.HardwareBase, cfg: config.Config
         mag = devices.magnetometer.magnetic
         # noinspection PyTypeChecker
         mag_strength, grav_strength = cfg.calib.get_field_strengths(mag, grav)
-        grav = cfg.calib.grav.apply(grav)
-        mag = cfg.calib.mag.apply(mag)
-        text = "    Grav  Mag\r\n"
+        grav = scale_readings(cfg.calib.grav.apply(grav), grav_strength)
+        mag = scale_readings(cfg.calib.mag.apply(mag), mag_strength)
+        text = "      Accel  Mag\r\n"
         for axis, g, m in zip("XYZ", grav, mag):
-            text += f"{axis}   {g: 05.3f} {m: 05.3f}\r\n"
-        text += f"|V| {grav_strength: 05.3f} {mag_strength: 05.3f}\r\n"
+            text += f"{axis}   {g: 7.3f} {m: 6.2f}\r\n"
+        text += f"|V| {grav_strength: 7.3f} {mag_strength: 6.2f}"
         disp.show_info(text)
 
 
