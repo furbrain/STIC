@@ -580,10 +580,12 @@ Creating a new hardware class
 
 This is only needed if you have changed the sensors or display. You will need to create a new file in the ``versions``
 directory - you can name this what you want. It should contain a class called ``Hardware`` that subclasses
-``HardwareBase`` - it should override all the methods marked as ``@abstractmethod``, and should have all the members
+``HardwareBase`` from ``hardware.py``. It should override all the methods marked as ``@abstractmethod``, and should have all the members
 described. Note that ``Magnetometer`` and ``Accelerometer`` classes should have properties ``acceleration`` and
 ``magnetic`` respectively: see
-`<https://docs.circuitpython.org/en/latest/docs/design_guide.html#sensor-properties-and-units>`_.
+`<https://docs.circuitpython.org/en/latest/docs/design_guide.html#sensor-properties-and-units>`_. This
+means that most of the CircuitPython sensor drivers for accelerometers and magnetometers will
+"just work" if you create an instance of them.
 
 See ``versions\hardware_v1.py`` for an example of how to implement this. Note the ``__init__`` function takes a ``pins``
 parameter - this allows you to have different versions of your setup with different PCB layouts without needing to keep
