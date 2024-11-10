@@ -368,6 +368,9 @@ libraries built into it:
 * `caveble <https://github.com/furbrain/CircuitPython_CaveBLE>`_: This module is a cave survey specific module to talk
   to cave surveying apps such as SexyTopo
 
+You can get this special version of CircuitPython from
+`<https://github.com/furbrain/SAP6_board/releases/download/1.0/sap6_cp_9.0.0.uf2>`_
+
 File layout
 ***********
 
@@ -489,7 +492,48 @@ Making the sled
 Installing software
 *******************
 
-**FIXME**
+You will first need a copy of my version of CircuitPython, which comes bundled with a few extra modules to save space,
+you can download it from `https://github.com/furbrain/SAP6_board/releases/download/1.0/sap6_cp_9.0.0.uf2`_. The extra
+modules are listed in :ref:`Hacking`
+
+You also need to put the device in bootloader mode: press the reset button twice in quick succession and plug into
+your computer - it should show up as a drive called "XIAO_SENSE"
+
+Linux
+#####
+
+If you have access to a linux computer, then there is a script in ``firmware\installer`` called installer.py::
+
+    usage: installer.py [-h] [-f] [-t] [-c] [-hw HW_VERSION] [-d] [-l]
+
+    Installer for the SAP6
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -f, --skip-firmware   Do not try to update the CircuitPython Firmware
+      -t, --skip-tests      Skip the testing section - just install the code
+      -c, --skip-code       Skip the code installation
+      -hw HW_VERSION, --hw-version HW_VERSION
+                            Specify the hardware version, set to 0 to skip
+      -d, --debug           Place a DEBUG file in the root directory, putting
+                            device in debug mode
+      -l, --calibration     Place a calibration file in the root
+                            directory,allowing to perform a (incorrect)
+                            calibration
+
+
+Copy the Circuitpython inyo the installer directory and call it ``firmware.uf2``
+
+Next run the script without any arguments; it will find the device, install the CircuitPython firmware, and then take
+you through a testing procedure for the board - it will check that everything is working; you will need to press button
+A, you should hear two beeps of different tones, then the display will ask you to press button B.
+
+It will then install the rest of the code and you should be up and running
+
+Windows
+#######
+
+Installation instructions not done yet...
 
 Final Assembly
 **************
@@ -518,3 +562,88 @@ You can see a video of this process at
 You will next need to calibrate the device before you use it. If you are successful in building your own, please let me
 know, especially if you have any suggestions to make for this guide.
 
+Make A Derivative
++++++++++++++++++
+
+Want to use different hardware? Planning to use different sensors or displays - or even processors?
+Here's how to adapt the code to include your own hardware. You will need to be comfortable with enclosure design,
+PCB design and CircuitPython programming. This section covers the changes you will need to make to the code.
+
+Select a hardware version
+*************************
+
+Please select a number greater than 20 as the main version number for your series of ponies! This allows me to make my
+own increments and keep my major version numbers sensible.
+
+Creating a new hardware class
+*****************************
+
+This is only needed if you have changed the sensors or display. You will need to create a new file in the ``versions``
+directory - you can name this what you want. It should contain a class called ``Hardware`` that subclasses
+``HardwareBase`` - it should override all the methods marked as ``@abstractmethod``, and should have all the members
+described. Note that ``Magnetometer`` and ``Accelerometer`` classes should have properties ``acceleration`` and
+``magnetic`` respectively: see
+`<https://docs.circuitpython.org/en/latest/docs/design_guide.html#sensor-properties-and-units>`_.
+
+See ``versions\hardware_v1.py`` for an example of how to implement this. Note the ``__init__`` function takes a ``pins``
+parameter - this allows you to have different versions of your setup with different PCB layouts without needing to keep
+updating the hardware class. You can create a new ``Pins`` class in ``pins.py``
+
+Creating a new display class
+****************************
+
+``versions\display128x64.py`` is a display implementation for a 128x64 display. If you wish to use a different size
+display you will need to subclass ``DisplayBase`` from ``display.py`` - again you will need to override all the
+``@abstractmethod`` functions. You will then need to ensure your ``Hardware`` class returns an instance of this class
+when ``create_display()`` is called.
+
+Creating a new layout
+*********************
+
+Once these two steps are complete, you will need to create a ``Layout`` - this represents a specific physical
+implementation of the device. For example, there are two versions of the SAP6, the second (v6.2) is slightly shorter
+so it will fit into a Peli Micro case. You can see that there are two different layouts in ``layout.py`` - one has a
+slightly shorter laser offset. This could allow you to create a different enclosure, even have the PCB at right angles
+to how it normally is, and just add a new layout file without needing to change anything else.
+
+Start by creating a new Layout with the same mag and grav axes and laser_offset. Set the pins entry to the name of your
+``Pins`` *class*, and the hardware entry to the name of your hardware *file*.
+
+In ``version.py`` add an entry to the ``LAYOUTS`` dict, with the version numbers for your layout.
+
+Working out correct values for axes and laser_offset
+****************************************************
+
+You need to tell the pony which way round its magnetic and gravitational sensors are. With the laser pointing away from
+you and the display upwards, the X axis is positive to your right, the Y axis is positive away from you (along the laser
+beam) and the Z axis is upwards. You can use ``Settings->Info->Raw Data`` to visualise the raw output of the
+magnetometer and accelerometer. You specify the orientation as follows (taken from `CircuitPython_mag_cal documentation
+<https://circuitpython-mag-cal.readthedocs.io/en/latest/api.html#mag_cal.Axes>`_):
+
+    For each axis XYZ of your device, state the corresponding axis of your sensor.
+    Add a + or - in front to let us know if it is inverted. So for a sensor that is correctly mounted it will be
+    "+X+Y+Z". If the sensors Y axis points to the left of the device, the X is forwards and Z is down,
+    specify this as "-Y+X-Z"
+
+To determine the value for ``laser_offset``, run the :ref:`laser calibration procedure <Laser>`, then check config.json for
+the value to use as a default.
+
+Telling the pony what it is
+***************************
+
+You need to put the hardware version in the pony's non-volatile memory - this is stored even when turned off and is not
+affected if the filesystem is wiped. To set the hardware version, access the serial console and enter the following::
+
+    import microcontroller
+    microcontroller.nvm[-3:] = bytearray((XX,YY,ZZ))
+
+where XX, YY, ZZ are your version numbers
+
+When it's all done and working, create a pull request and I will merge it into the main repo.
+
+Why not just fork the repo and overwrite the hardware code?
+***********************************************************
+
+Well you could! This is open source after all. However, by going through the steps above
+means that you can continue to benefit from any updates to the main SAP6 codebase - you can just
+download and copy over new versions of the firmware and everything should just work.
