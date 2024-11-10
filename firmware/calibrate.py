@@ -1,4 +1,6 @@
 import asyncio
+import traceback
+
 import mag_cal
 from async_button import Button
 import json
@@ -16,6 +18,10 @@ except ImportError:
 from . import utils
 from . import config
 from .debug import logger
+
+if not hasattr(mag_cal.Calibration,"align_sensor_roll"):
+    from .calibrate_roll import align_sensor_roll
+    mag_cal.Calibration.align_sensor_roll = align_sensor_roll
 
 # import display and hardware only for type checking - does not import on device
 try:
@@ -74,6 +80,8 @@ async def live_calibration(mag_data, grav_data, devices, cfg, disp):
         paired_data = [(mag_data[a:b], grav_data[a:b]) for a, b in runs]
         await updater.update("Fitting Axes")
         cal.fit_to_axis(paired_data)
+        await updater.update("Aligning rolls")
+        cal.align_sensor_roll(mag_data,grav_data)
         await updater.update("Non-linear adjust")
         cal.fit_non_linear_quick(paired_data)
         cal.set_field_characteristics(mag_data, grav_data)
