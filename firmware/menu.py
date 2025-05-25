@@ -48,6 +48,7 @@ class ConfigOptions(Options):
 
 async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display.DisplayBase):
     global action_item
+    action_item = None
     logger.debug("Menu task started")
     gc.collect()
     devices.laser_enable(True)
@@ -165,6 +166,7 @@ async def menu(devices: hardware.HardwareBase, cfg: config.Config, disp: display
             logger.debug("Menu: Scroll")
             devices.beep_bop()
             menu_root.scroll(1)
+            action_item = None
             # clear memory before show group to minimise memory usage
         disp.clear_memory()
         menu_root.show_menu()
