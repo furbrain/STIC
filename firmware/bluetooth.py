@@ -2,7 +2,7 @@ import time
 import sys
 
 import _bleio
-from adafruit_ble import BLERadio
+from adafruit_ble import BLERadio, Advertisement
 from adafruit_ble.advertising.standard import ProvideServicesAdvertisement
 import caveble
 from adafruit_ble.services.standard import BatteryService
@@ -31,7 +31,12 @@ class BluetoothServices:
         if not self.ble.connected and not self.ble.advertising:
             if sys.platform == 'nRF52840':
                 logger.debug("BLE advertising high power")
-                self.ble._adapter.start_advertising(bytes(self.advertisement), tx_power=8)
+                scan_response = Advertisement()
+                scan_response.complete_name = self.ble.name
+                scan_response.tx_power = 8
+                self.ble._adapter.start_advertising(bytes(self.advertisement),
+                                                    scan_response=bytes(scan_response),
+                                                    tx_power=8)
             else:
                 logger.debug("BLE advertising")
                 self.ble.start_advertising(BluetoothServices.advertisement)
