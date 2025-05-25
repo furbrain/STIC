@@ -92,4 +92,4 @@ def align_sensor_roll(self, mag_data, grav_data):
     mag_data = self.mag.apply(mag_data)
     grav_data = self.grav.apply(grav_data)
     rot = calib_fit_rotM_cstdip(mag_data, grav_data, 1, False)
-    self.mag.transform = np.dot(self.mag.transform, rot.T)
+    self.mag.transform = np.dot(self.mag.transform, rot.transpose())
