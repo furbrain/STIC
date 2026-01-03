@@ -117,40 +117,56 @@ async def take_reading(devices: hardware.HardwareBase,
                        disp: display.DisplayBase) -> bool:
     # take a reading
     try:
-        mag, grav, distance = await get_raw_measurement(devices, disp, True)
-        if cfg.calib is None:
-            raise NotCalibrated()
-        # noinspection PyTypeChecker
-        azimuth, inclination, _ = cfg.calib.get_angles(mag, grav)
-        distance += cfg.laser_cal
-        logger.debug(f"Distance: {distance}m")
-        if cfg.anomaly_strictness is not None:
+        try:
+            mag, grav, distance = await get_raw_measurement(devices, disp, True)
+            if cfg.calib is None:
+                raise NotCalibrated()
             # noinspection PyTypeChecker
-            cfg.calib.raise_if_anomaly(mag, grav, cfg.anomaly_strictness)
-    except tuple(ERROR_MESSAGES.keys()) as exc:
-        for key in ERROR_MESSAGES.keys():
-            if isinstance(exc, key):
-                disp.show_big_info(ERROR_MESSAGES[key])
-        logger.info(f"Measurement error: {repr(exc)}")
-        if not isinstance(exc, asyncio.TimeoutError):
-            # don't wibble the laser if it's timed out, it'll just get more confused
-            devices.flash_laser(5,0.1)
-        devices.beep_sad()
-        await asyncio.sleep(0)
-        return False
-    else:
-        leg = Leg(azimuth, inclination, distance)
-        readings.store_reading(leg, cfg)
-        devices.bt.disto.send_data(azimuth, inclination, distance)
-        if readings.triple_shot():
-            devices.flash_laser(2,0.2)
-            devices.beep_happy()
+            azimuth, inclination, _ = cfg.calib.get_angles(mag, grav)
+            distance += cfg.laser_cal
+            logger.debug(f"Distance: {distance}m")
+            if cfg.anomaly_strictness is not None:
+                # noinspection PyTypeChecker
+                cfg.calib.raise_if_anomaly(mag, grav, cfg.anomaly_strictness)
+        except tuple(ERROR_MESSAGES.keys()) as exc:
+            for key in ERROR_MESSAGES.keys():
+                if isinstance(exc, key):
+                    # spic17: for error messages happening often during measurement display bitmaps instead of text
+                    # because this saves a lot of memory and thus significantly reduces
+                    # the number of out of memory exceptions
+                    if (key == MagneticAnomalyError) or (key == DipAnomalyError):
+                        disp.show_bitmap_info('error_magnetic')
+                    elif (key == GravityAnomalyError):
+                        disp.show_bitmap_info('error_movement')
+                    elif (key == LaserError):
+                        disp.show_bitmap_info('error_laser')
+                    else:
+                        # all other error messages                
+                        disp.show_big_info(ERROR_MESSAGES[key])
+            logger.info(f"Measurement error: {repr(exc)}")
+            if not isinstance(exc, asyncio.TimeoutError):
+                # don't wibble the laser if it's timed out, it'll just get more confused
+                devices.flash_laser(5,0.1)
+            devices.beep_sad()
+            await asyncio.sleep(0)
+            return False
         else:
-            devices.beep_bip()
-        await asyncio.sleep(0)
-        return True
-
-
+            leg = Leg(azimuth, inclination, distance)
+            readings.store_reading(leg, cfg)
+            devices.bt.disto.send_data(azimuth, inclination, distance)
+            if readings.triple_shot():
+                devices.flash_laser(2,0.2)
+                devices.beep_happy()
+            else:
+                devices.beep_bip()
+            await asyncio.sleep(0)
+            return True
+    except MemoryError:
+        # spic17: better not do anything not strictly neccessary in these delicate moments after a memory error   
+        # TODO: do something more drastic here after maybe 3 occurences  (reboot?)
+        #       because the device may not be able to recover otherwise?
+        return False
+    
 async def take_multiple_readings(devices, disp, fname, prelude, reminder):
     devices.laser_enable(True)
     disp.show_info(prelude)
