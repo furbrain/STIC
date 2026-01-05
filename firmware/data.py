@@ -112,7 +112,10 @@ class Readings:
         """
         if len(self._queue) < 3:
             return False
-        return self._same_shots(self._queue[-1], self._queue[-2]) and self._same_shots(self._queue[-2], self._queue[-3])
+        # spic17: we need to compare all three pairs of measurements instead of just 1+2 and 2+3 here
+        # in order to ensure that first and third shots are near enough each other, too
+        # (otherwise the sap would recognize legs that sexytopo does not).
+        return self._same_shots(self._queue[-1], self._queue[-2]) and self._same_shots(self._queue[-2], self._queue[-3]) and self._same_shots(self._queue[-1], self._queue[-3])
 
 
 readings = Readings()
