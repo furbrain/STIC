@@ -128,14 +128,21 @@ async def take_reading(devices: hardware.HardwareBase,
             # noinspection PyTypeChecker
             cfg.calib.raise_if_anomaly(mag, grav, cfg.anomaly_strictness)
     except tuple(ERROR_MESSAGES.keys()) as exc:
+        isMagneticError = False
         for key in ERROR_MESSAGES.keys():
             if isinstance(exc, key):
+                if (key == MagneticAnomalyError) or (key == DipAnomalyError):
+                    isMagneticError = True
                 disp.show_big_info(ERROR_MESSAGES[key])
         logger.info(f"Measurement error: {repr(exc)}")
         if not isinstance(exc, asyncio.TimeoutError):
             # don't wibble the laser if it's timed out, it'll just get more confused
             devices.flash_laser(5,0.1)
-        devices.beep_sad()
+        if isMagneticError:
+            # spic17: send acoustic signal for magnetic error (this is relevant for the surveyor).
+            devices.beep_sad_magnetic()
+        else:   
+            devices.beep_sad()
         await asyncio.sleep(0)
         return False
     else:
