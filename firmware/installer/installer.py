@@ -240,3 +240,5 @@ if options.skip_code:
     print("Skipping code installation")
 else:
     install_code(debug=options.debug, calibration=options.calibration)
+
+print("Finished\a\n")
