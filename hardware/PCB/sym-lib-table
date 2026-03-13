@@ -3,4 +3,6 @@
   (lib (name "AP7361C-33Y5-13")(type "Legacy")(uri "${KICAD_USER_TEMPLATE_DIR}/AP7361C-33Y5-13/AP7361C-33Y5-13.lib")(options "")(descr ""))
   (lib (name "XC6802A42XMR-G")(type "Legacy")(uri "${KICAD_USER_TEMPLATE_DIR}/XC6802A42XMR-G/XC6802A42XMR-G.lib")(options "")(descr ""))
   (lib (name "STIC-rescue")(type "KiCad")(uri "${KIPRJMOD}/STIC-rescue.kicad_sym")(options "")(descr ""))
+  (lib (name "Seeed_Studio_XIAO_Series_kicad8")(type "KiCad")(uri "/home/phil/Downloads/Seeed_Studio_XIAO_Series_kicad8.kicad_sym")(options "")(descr ""))
+  (lib (name "ASM330LHHTR")(type "KiCad")(uri "${KICAD_USER_TEMPLATE_DIR}/ASM330LHHTR.kicad_sym")(options "")(descr ""))
 )

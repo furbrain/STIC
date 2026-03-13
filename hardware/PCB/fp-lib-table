@@ -1,0 +1,5 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "encoder")(type "KiCad")(uri "${KIPRJMOD}/encoder.pretty")(options "")(descr ""))
+  (lib (name "Seeeduino XIAO KICAD")(type "KiCad")(uri "${KICAD_USER_TEMPLATE_DIR}/Seeeduino XIAO KICAD")(options "")(descr ""))
+)
