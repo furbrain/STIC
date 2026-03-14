@@ -24,8 +24,8 @@ LASER_TIMEOUT = 4.5
 ERROR_MESSAGES: Dict[type, str] = {
     LaserError: "Laser\nRead\nFailed",
     asyncio.TimeoutError: "Laser\nRead\nTimeout",
-    MagneticAnomalyError: "Magnetic\nAnomaly:\nIron nearby?",
-    DipAnomalyError: "Magnetic\nAnomaly:\nIron nearby?",
+    MagneticAnomalyError: "Magnetic\nAnomaly\nDetected",
+    DipAnomalyError: "Magnetic\nAnomaly\nDetected",
     NotCalibrated: "Calibration\nneeded\nHold B 3s",
     GravityAnomalyError: "Device\nMovement\nDetected",
 }
