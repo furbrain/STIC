@@ -50,6 +50,18 @@ If the reading is successful you will see three numbers on the screen:
 If the reading fails you will hear an error double beep and see an error message.
 The laser will also flash rapidly several times.
 
+.. |error_laser| image:: error_laser.png
+
+.. |error_magnetic| image:: error_magnetic.png
+
+.. |error_movement| image:: error_movement.png
+
+In software version 1.6.0 and later the error messages are graphical:
+
+  * Laser read error: |error_laser|
+  * Magnetic anomaly: |error_magnetic|
+  * Excess movement: |error_movement|
+
 The laser stays on in :ref:`measure <measure>` mode. This does not require much power
 
 Press **B** to cycle through previous readings. If you have enabled :ref:`show extents <Show Extents>`, you will first
