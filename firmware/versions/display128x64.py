@@ -55,17 +55,26 @@ class Display(DisplayBase):
 
     @staticmethod
     def create_big_text_group(big_text: Sequence[str], index_txt):
-        measurement_group = displayio.Group()
-        azimuth = label.Label(font_20, text=big_text[0], color=0xffffff, x=1, y=9)
-        inclination = label.Label(font_20, text=big_text[1], color=0xffffff, x=1, y=31)
-        distance = label.Label(font_20, text=big_text[2], color=0xffffff, x=1, y=53)
-        reading_index = label.Label(terminalio.FONT, text=index_txt, color=0xffffff)
-        reading_index.anchored_position = (127, 32)
-        reading_index.anchor_point = (1.0, 0.5)
-        measurement_group.append(azimuth)
-        measurement_group.append(inclination)
-        measurement_group.append(distance)
-        measurement_group.append(reading_index)
+        # spic17: watchout for memory exceptions here.
+        try:
+            measurement_group = displayio.Group()
+            azimuth = label.Label(font_20, text=big_text[0], color=0xffffff, x=1, y=9)
+            inclination = label.Label(font_20, text=big_text[1], color=0xffffff, x=1, y=31)
+            distance = label.Label(font_20, text=big_text[2], color=0xffffff, x=1, y=53)
+            reading_index = label.Label(terminalio.FONT, text=index_txt, color=0xffffff)
+            reading_index.anchored_position = (127, 32)
+            reading_index.anchor_point = (1.0, 0.5)
+            measurement_group.append(azimuth)
+            measurement_group.append(inclination)
+            measurement_group.append(distance)
+            measurement_group.append(reading_index)
+        except MemoryError:
+            # Out of memory error. Catch and display nothing. Oftentimes we will recover afterwards
+            # (this seems purely a matter of garbage collection mechanisms, which seem not very
+            # predictable in this embedded system)
+            # Maybe use 'BitmapLabel' for optimization?
+            # Maybe call check_mem to try invoking garbage collection?
+            measurement_group = displayio.Group()
         return measurement_group
 
     def _set_group_with_icons(self, group):
@@ -153,8 +162,25 @@ class Display(DisplayBase):
 
     def show_big_info(self, text):
         group = self.create_big_text_group(text.splitlines(), "")
-        self.show_group(group)
+        logger.debug("show_big_info tvo")
+        try:
+            self.show_group(group)
+        except MemoryError:
+            # spic17: do nothing when memory is spent. We may still recover when gc occurs.
+            pass
 
+    def show_bitmap_info(self, bitmap_name):
+        group = displayio.Group()
+        info_bmp = bitmaps[bitmap_name]
+        info_tile = displayio.TileGrid(info_bmp, pixel_shader=palette, x=0, y=0)
+        group.append(info_tile)
+        try:
+            self._set_group_with_icons(group)
+            self.refresh()
+        except MemoryError:
+            # spic17: do nothing. Doing anything here may lead to an outer memory error.
+            # hopefully, we recover - otherwise we are off no worse than when crashing directly.
+            pass
     def show_group(self, group: Optional[displayio.Group]):
         self.oled.root_group = group
         self.refresh()

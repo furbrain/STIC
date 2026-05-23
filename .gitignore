@@ -130,6 +130,7 @@ dmypy.json
 
 # freecad backups, 3d models, printer files, dxfs
 *.FCStd1
+*.FCBak
 *.stl
 *.fpp
 *.dxf
