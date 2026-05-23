@@ -122,6 +122,32 @@ async def take_reading(devices: hardware.HardwareBase,
             if cfg.calib is None:
                 raise NotCalibrated()
             # noinspection PyTypeChecker
+            cfg.calib.raise_if_anomaly(mag, grav, cfg.anomaly_strictness)
+    except tuple(ERROR_MESSAGES.keys()) as exc:
+        isMagneticError = False
+        for key in ERROR_MESSAGES.keys():
+            if isinstance(exc, key):
+                if (key == MagneticAnomalyError) or (key == DipAnomalyError):
+                    isMagneticError = True
+                disp.show_big_info(ERROR_MESSAGES[key])
+        logger.info(f"Measurement error: {repr(exc)}")
+        if not isinstance(exc, asyncio.TimeoutError):
+            # don't wibble the laser if it's timed out, it'll just get more confused
+            devices.flash_laser(5,0.1)
+        if isMagneticError:
+            # spic17: send acoustic signal for magnetic error (this is relevant for the surveyor).
+            devices.beep_sad_magnetic()
+        else:   
+            devices.beep_sad()
+        await asyncio.sleep(0)
+        return False
+    else:
+        leg = Leg(azimuth, inclination, distance)
+        readings.store_reading(leg, cfg)
+        devices.bt.disto.send_data(azimuth, inclination, distance)
+        if readings.triple_shot():
+            devices.flash_laser(2,0.2)
+            devices.beep_happy()
             azimuth, inclination, _ = cfg.calib.get_angles(mag, grav)
             distance += cfg.laser_cal
             logger.debug(f"Distance: {distance}m")

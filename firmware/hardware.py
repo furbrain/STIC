@@ -15,6 +15,7 @@ HAPPY = (("C6", 50.0), ("E6", 50.0), ("G6", 50.0), ("C7", 50.0))
 BIP = (("A7", 50),)
 BOP = (("C7", 50),)
 SAD = (("G6", 100), ("C6", 200))
+SAD_MAGNETIC = (("G6", 100), ("C6", 100), ("G6", 100), ("C6", 200))
 
 
 # noinspection PyAttributeOutsideInit
@@ -85,6 +86,9 @@ class HardwareBase:
 
     def beep_sad(self):
         self.buzzer.play(SAD)
+
+    def beep_sad_magnetic(self):
+        self.buzzer.play(SAD_MAGNETIC)
 
     async def beep_wait(self):
         await self.buzzer.wait()
