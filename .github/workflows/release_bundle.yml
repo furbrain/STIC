@@ -57,6 +57,10 @@ jobs:
               run: |
                 cd firmware
                 zip ../firmware.zip *.py versions/*.py images/*.bmp
+            - name: export image files
+              run: |
+                cd firmware/images
+                zip ../../images.zip *.bmp
             - name: generate manual
               run: |
                 cd firmware/docs
@@ -70,6 +74,7 @@ jobs:
                   hardware.zip
                   pcb.zip
                   firmware.zip
+                  images.zip
                   manual.pdf
             - name: Release
               uses: softprops/action-gh-release@v1
